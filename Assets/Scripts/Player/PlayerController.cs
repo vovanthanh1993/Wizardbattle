@@ -1,0 +1,364 @@
+﻿using Fusion;
+using Fusion.Addons.KCC;
+using System.Collections;
+using TMPro;
+using Unity.Jobs;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
+public class PlayerController : NetworkBehaviour
+{
+    #region Serialized Fields
+    
+    [Header("Movement Settings")]
+    [SerializeField] private KCC _kcc;
+    [SerializeField] private float _maxPitch = 60f; // Giảm từ 85f xuống 60f
+    [SerializeField] private float _minPitch = -25f; // Giới hạn nhìn xuống (25 độ)
+    [SerializeField] private float _lookSensitivity = 0.15f;
+    [SerializeField] private Vector3 _jumpImpulse = new(0f, 10f, 0f);
+    
+    [Header("Combat Settings")]
+    [SerializeField] private float _fireRate = 2f;
+    [SerializeField] private GameObject _fireBallPrefab;
+    [SerializeField] private Transform _firePoint;
+    
+    [Header("Camera Settings")]
+    [SerializeField] private Transform _camTarget;
+    
+    [Header("Respawn Settings")]
+    [SerializeField] private float _respawnTime = 3f;
+    
+    #endregion
+
+    #region Networked Properties
+    
+    [Networked] private NetworkButtons _previousButtons { get; set; }
+    
+    #endregion
+
+    #region Private Fields
+    
+    private Vector2 _baseLookRotation;
+    private float _timeRemaining;
+    private bool _isRespawning = false;
+    
+    // Component References
+    private PlayerStatus _playerStatus;
+    private PlayerAnimation _playerAnimation;
+    
+    private float _nextFireTime;
+    
+    #endregion
+
+    #region Unity Lifecycle
+    
+    public override void Spawned()
+    {
+        InitializeComponents();
+        SetupInputAuthority();
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (IsDisable) return;
+
+        HandleRespawn();
+
+        if (_isRespawning || IsDead) return;
+
+        HandleInput();
+    }
+
+    public override void Render()
+    {
+        UpdateCameraTarget();
+        _playerAnimation?.UpdateAnimations();
+        _playerAnimation?.HandlePlayerDead();
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasStateChanged)
+    {
+        CleanupInputAuthority();
+    }
+
+    private void LateUpdate()
+    {
+        _playerStatus?.UpdateUIElements();
+    }
+    
+    #endregion
+
+    #region Initialization
+    
+    private void InitializeComponents()
+    {
+        _kcc = GetComponent<KCC>();
+        _playerStatus = GetComponent<PlayerStatus>();
+        _playerAnimation = GetComponent<PlayerAnimation>();
+    }
+
+    private void SetupInputAuthority()
+    {
+        if (!Object.HasInputAuthority) return;
+        
+        string playerName = UIManager.Instance.GetPlayerName();
+        _playerStatus?.SetPlayerName(playerName);
+        _playerStatus.IsDisable = false;
+
+        SetupCamera();
+    }
+
+    private void SetupCamera()
+    {
+        _camTarget.gameObject.SetActive(true);
+        CameraController.Instance.SetTarget(_camTarget);
+        _kcc.Settings.ForcePredictedLookRotation = true;
+    }
+
+    private void CleanupInputAuthority()
+    {
+        if (!Object.HasInputAuthority) return;
+        
+        CameraController.Instance.SetTarget(null);
+        _camTarget.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    
+    #endregion
+
+    #region Input Handling
+    
+    private void HandleInput()
+    {
+        if (!GetInput(out NetworkInputData input)) return;
+        
+        HandleJump(input);
+        HandleShoot(input);
+        HandleLookRotation(input);
+        HandleMovement(input);
+        UpdatePreviousInput(input);
+    }
+
+    private void HandleJump(NetworkInputData input)
+    {
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && _kcc.FixedData.IsGrounded)
+        {
+            _kcc.Jump(_jumpImpulse);
+        }
+    }
+
+    private void HandleShoot(NetworkInputData input)
+    {
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority)
+        {
+            Shoot();
+        }
+    }
+
+    private void HandleLookRotation(NetworkInputData input)
+    {
+        _kcc.AddLookRotation(input.LookDelta * _lookSensitivity, _minPitch, _maxPitch);
+        _baseLookRotation = _kcc.GetLookRotation();
+    }
+
+    private void HandleMovement(NetworkInputData input)
+    {
+        Vector3 worldDirection = _kcc.FixedData.TransformRotation * input.Direction.X0Y();
+        _kcc.SetInputDirection(worldDirection);
+
+        if (Object.HasStateAuthority)
+        {
+            float moveSpeed = worldDirection.magnitude;
+            _playerAnimation?.SetMoveSpeed(moveSpeed);
+        }
+    }
+
+    private void UpdatePreviousInput(NetworkInputData input)
+    {
+        _previousButtons = input.Buttons;
+    }
+    
+    #endregion
+
+    #region Combat
+    
+    public void Shoot()
+    {
+        if (Runner.SimulationTime < _nextFireTime) return;
+
+        UIManager.Instance.StartFireballCooldown(_fireRate);
+        // Get camera direction and start position
+        Vector3 cameraDirection = GetCameraDirection();
+        Vector3 start = GetFireballStartPosition();
+        Vector3 direction = cameraDirection;
+        float speed = 25f;
+        float lifetime = 3f;
+
+        RpcSpawnFireBallLocal(start, direction, speed, lifetime);
+
+        _playerAnimation?.TriggerShoot();
+        _nextFireTime = Runner.SimulationTime + _fireRate;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayFireballSound();
+        }
+    }
+    
+    private Vector3 GetCameraDirection()
+    {
+        // Get the camera's forward direction
+        Camera mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            Vector3 cameraDirection = mainCamera.transform.forward;
+            return cameraDirection.normalized;
+        }
+        
+        // Fallback to firePoint direction if camera not found
+        return _firePoint.forward;
+    }
+    
+    private Vector3 GetFireballStartPosition()
+    {
+        Camera mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            // Always start from player position (firePoint) but use camera direction
+            Vector3 cameraDirection = GetCameraDirection();
+            return _firePoint.position + cameraDirection * 1.5f;
+        }
+        
+        // Fallback to firePoint position
+        return _firePoint.position + _firePoint.forward * 1.5f;
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RpcSpawnFireBallLocal(Vector3 position, Vector3 direction, float speed, float lifetime)
+    {
+        FireBall fireball = GetFireBallFromPool(position, direction);
+        
+        if (fireball != null)
+        {
+            fireball.Init(direction, speed, lifetime, Object);
+        }
+    }
+
+    private FireBall GetFireBallFromPool(Vector3 position, Vector3 direction)
+    {
+        FireBall fireball = null;
+        
+        if (GamePoolManager.Instance != null)
+        {
+            fireball = GamePoolManager.Instance.GetFireBall();
+        }
+        else
+        {
+            var fireballObj = Instantiate(_fireBallPrefab, position, Quaternion.LookRotation(direction));
+            fireball = fireballObj.GetComponent<FireBall>();
+        }
+        
+        if (fireball != null)
+        {
+            fireball.transform.position = position;
+            fireball.transform.rotation = Quaternion.LookRotation(direction);
+        }
+        
+        return fireball;
+    }
+    
+    #endregion
+
+    #region Respawn System
+    
+    private void HandleRespawn()
+    {
+        if (IsDead && !_isRespawning && Object.HasInputAuthority)
+        {
+            StartRespawn();
+        }
+    }
+
+    private void StartRespawn()
+    {
+        _isRespawning = true;
+        _timeRemaining = _respawnTime;
+        if (Object.HasInputAuthority)
+        {
+            StartCoroutine(HandleRespawnCountdown());
+        }
+    }
+
+    private IEnumerator HandleRespawnCountdown()
+    {
+        while (_timeRemaining > 0)
+        {
+            UIManager.Instance.ShowReSpawnTime(string.Format(GameConstants.RESPAWN_FORMAT, Mathf.Ceil(_timeRemaining).ToString()));
+            _timeRemaining -= Time.deltaTime;
+            yield return null;
+        }
+
+        CompleteRespawn();
+    }
+
+    private void CompleteRespawn()
+    {
+        if (Object.HasInputAuthority)
+        {
+            Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
+            _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
+        }
+        _playerStatus?.ResetPlayer();
+        UIManager.Instance.ShowReSpawnTime("");
+        StartCoroutine(FinishRespawn());
+    }
+
+    private IEnumerator FinishRespawn()
+    {
+        yield return new WaitForSeconds(1f);
+        _isRespawning = false;
+    }
+    
+    #endregion
+
+    #region Visual & Camera
+    
+    private void UpdateCameraTarget()
+    {
+        _camTarget.localRotation = Quaternion.Euler(_kcc.GetLookRotation().x, 0f, 0f);
+    }
+    
+    #endregion
+
+    #region Properties
+    
+    public bool IsDead => _playerStatus?.IsDead ?? false;
+    public bool IsDisable => _playerStatus?.IsDisable ?? false;
+    public string PlayerName => _playerStatus?.PlayerName.ToString() ?? "";
+    public int Kills => _playerStatus?.Kills ?? 0;
+    public int Deaths => _playerStatus?.Deaths ?? 0;
+    
+    #endregion
+
+    #region Public Methods
+    
+    public void HandlePlayerHurt()
+    {
+        _playerAnimation?.TriggerHurt();
+        AudioManager.Instance?.PlayPlayerHitSound();
+    }
+
+    public void UpdateHealthBar(float currentHealth, float maxHealth)
+    {
+        _playerStatus?.UpdateHealthBar(currentHealth, maxHealth);
+    }
+
+    public void SetDisable(bool isDisable)
+    {
+        _playerStatus?.SetDisable(isDisable);
+    }
+    
+    #endregion
+}

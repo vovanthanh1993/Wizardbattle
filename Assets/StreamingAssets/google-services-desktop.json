@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "381819246771",
+    "firebase_url": "https://wizardbattle-b3901-default-rtdb.firebaseio.com",
+    "project_id": "wizardbattle-b3901",
+    "storage_bucket": "wizardbattle-b3901.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381819246771:android:9826aaba8a056bb83e78c6",
+        "android_client_info": {
+          "package_name": "com.company.wizardbattle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpCFf3slBsB2CbRaCVjw2lRpoZTAkYVko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

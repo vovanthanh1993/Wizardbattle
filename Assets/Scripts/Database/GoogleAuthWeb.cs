@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 public class GoogleAuthWeb : MonoBehaviour
 {
     [Header("Google OAuth Configuration")]
-    [SerializeField] private string clientId = "1"; //"332085799900-65iqjq46pmg2dnj3kce87kv30phtaakf.apps.googleusercontent.com";
-    [SerializeField] private string clientSecret = "2";//"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";
+    [SerializeField] private string clientId = "332085799900-65iqjq46pmg2dnj3kce87kv30phtaakf.apps.googleusercontent.com";
+    [SerializeField] private string clientSecret = "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";
     [SerializeField] private string redirectUri = "http://localhost:5000/callback/";
     
     [Header("Scene Management")]

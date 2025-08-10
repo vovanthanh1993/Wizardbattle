@@ -4,7 +4,11 @@ using UnityEngine;
 public enum InputButtons
 {
     Jump,
-    Fire
+    Fire,
+
+    Heal,
+
+    Stealth
 }
 public struct NetworkInputData : INetworkInput
 {

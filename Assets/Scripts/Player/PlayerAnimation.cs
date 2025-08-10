@@ -12,6 +12,8 @@ public class PlayerAnimation : NetworkBehaviour
     [Networked] private bool _didShoot { get; set; }
     [Networked] private float _moveSpeed { get; set; }
     [Networked] private bool _hurt { get; set; }
+    [Networked] private bool _isStealth { get; set; }
+
 
     private GameObject _cachedKCCCollider;
 
@@ -96,7 +98,9 @@ public class PlayerAnimation : NetworkBehaviour
     {
         if (_model != null)
         {
-            _model.SetActive(!IsDead);
+            // Chỉ hiện model khi không phải stealth mode và không chết
+            bool shouldShowModel = !IsDead && !_isStealth;
+            _model.SetActive(shouldShowModel);
         }
         if (_cachedKCCCollider == null)
         {
@@ -119,7 +123,15 @@ public class PlayerAnimation : NetworkBehaviour
             }
         }
     }
-    
+    public void SetModelVisibility(bool visible) {
+        _isStealth = !visible; // true khi ẩn, false khi hiện
+        
+        if (_model != null)
+        {
+            _model.SetActive(visible);
+        }
+    }
+
     #endregion
 
     #region Properties

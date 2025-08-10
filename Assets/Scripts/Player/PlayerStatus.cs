@@ -22,9 +22,12 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerHealth _playerHealth;
 
+    private PlayerAnimation _playerAnimation;
+
     public override void Spawned()
     {
         _playerHealth = GetComponent<PlayerHealth>();
+        _playerAnimation = GetComponent<PlayerAnimation>();
         UpdatePlayerName();
     }
 
@@ -40,6 +43,7 @@ public class PlayerStatus : NetworkBehaviour
 
     private void UpdatePlayerName()
     {
+        if(Object.HasInputAuthority) _playerNameText.gameObject.SetActive(false);
         if (_playerNameText != null)
         {
             _playerNameText.text = PlayerName.ToString();
@@ -85,6 +89,11 @@ public class PlayerStatus : NetworkBehaviour
         }
     }
 
+    public void Heal(int healAmount)
+    {
+        _playerHealth?.Heal(healAmount);
+    }
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void ResetPlayerRpc()
     {
@@ -114,29 +123,11 @@ public class PlayerStatus : NetworkBehaviour
 
     public void AddKill()
     {
-        if (Object.HasInputAuthority)
-        {
-            AddKillRpc();
-        }
-    }
-
-    public void AddDeath()
-    {
-        if (Object.HasInputAuthority)
-        {
-            AddDeathRpc();
-        }
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void AddKillRpc()
-    {
         Kills++;
         StartCoroutine(RunDelayedLeaderboardUpdate());
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void AddDeathRpc()
+    public void AddDeath()
     {
         Deaths++;
         StartCoroutine(RunDelayedLeaderboardUpdate());

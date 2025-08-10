@@ -26,6 +26,7 @@ public class GoogleAuthWeb : MonoBehaviour
     // Events
     public event Action<FirebaseUser> OnSignInSuccess;
     public event Action<string> OnSignInError;
+    public event Action<PlayerData> OnPlayerDataCreated;
 
     private void Start()
     {
@@ -241,6 +242,9 @@ public class GoogleAuthWeb : MonoBehaviour
                 Debug.LogFormat("User signed in successfully: {0} ({1})", displayName, email);
                 OnSignInSuccess?.Invoke(user);
                 
+                // Create player data after successful sign in
+                await CreatePlayerData(email, displayName, user.UserId);
+                
                 if (autoLoadMenuOnSuccess)
                 {
                     LoadMenuScene();
@@ -263,6 +267,9 @@ public class GoogleAuthWeb : MonoBehaviour
                     Debug.LogFormat("New user created successfully: {0} ({1})", displayName, email);
                     OnSignInSuccess?.Invoke(newUser);
                     
+                    // Create player data for new user
+                    await CreatePlayerData(email, displayName, newUser.UserId);
+                    
                     if (autoLoadMenuOnSuccess)
                     {
                         LoadMenuScene();
@@ -274,6 +281,66 @@ public class GoogleAuthWeb : MonoBehaviour
                 Debug.LogError($"Account creation failed: {createError.Message}");
                 OnSignInError?.Invoke($"Authentication failed: {createError.Message}");
             }
+        }
+    }
+    
+    private async Task CreatePlayerData(string email, string displayName, string userId)
+    {
+        try
+        {
+            Debug.Log($"Creating player data for: {email}");
+            
+            // Wait for FirebaseDataManager to be ready
+            int maxWaitTime = 20;
+            int waitCount = 0;
+            
+            while ((FirebaseDataManager.Instance == null || !FirebaseDataManager.Instance.IsInitialized()) && waitCount < maxWaitTime)
+            {
+                await Task.Delay(1000);
+                waitCount++;
+                Debug.Log($"Waiting for FirebaseDataManager... ({waitCount}/{maxWaitTime})");
+            }
+            
+            if (FirebaseDataManager.Instance == null || !FirebaseDataManager.Instance.IsInitialized())
+            {
+                Debug.LogError("FirebaseDataManager not available after waiting");
+                OnSignInError?.Invoke("Firebase Data Manager not available");
+                return;
+            }
+            
+            // Check if player data already exists
+            PlayerData existingData = await FirebaseDataManager.Instance.LoadPlayerData();
+            
+            if (existingData != null)
+            {
+                Debug.Log($"Player data already exists for: {email} (Player: {existingData.playerName})");
+                OnPlayerDataCreated?.Invoke(existingData);
+                return;
+            }
+            
+            // Create new player data with random name
+            PlayerData newPlayerData = new PlayerData(email, displayName, userId);
+            
+            Debug.Log($"Created new player data: {newPlayerData.playerName} for {email}");
+            
+            // Save to Firebase
+            bool saveSuccess = await FirebaseDataManager.Instance.SavePlayerData(newPlayerData);
+            
+            if (saveSuccess)
+            {
+                Debug.Log($"Player data saved successfully: {newPlayerData.playerName}");
+                OnPlayerDataCreated?.Invoke(newPlayerData);
+            }
+            else
+            {
+                Debug.LogError("Failed to save player data");
+                OnSignInError?.Invoke("Failed to save player data");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error creating player data: {e.Message}");
+            OnSignInError?.Invoke($"Error creating player data: {e.Message}");
         }
     }
     

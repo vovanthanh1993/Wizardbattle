@@ -592,6 +592,51 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &388404518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 388404520}
+  - component: {fileID: 388404519}
+  m_Layer: 0
+  m_Name: FirebaseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &388404519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388404518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55cbc64b1a836f5429c78b56c7463bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  databaseUrl: https://wizardbattle-b3901-default-rtdb.firebaseio.com/
+--- !u!4 &388404520
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388404518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 216.44511, y: 434.19955, z: 19057.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &876438579
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,50 +770,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876438579}
   m_CullTransparentMesh: 1
---- !u!1 &943022962
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 943022964}
-  - component: {fileID: 943022963}
-  m_Layer: 0
-  m_Name: FirebaseAuthSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &943022963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 943022962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d9ec532d02bf4e4194b3224300451bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &943022964
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 943022962}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 27.42931, y: 3.676447, z: 159.90536}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &973093815
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +779,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 973093817}
-  - component: {fileID: 973093816}
   - component: {fileID: 973093818}
   m_Layer: 0
   m_Name: GoogleAuthPC
@@ -787,21 +787,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &973093816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 973093815}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f9332534bdc3c44a5738b080d59e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clientId: 332085799900-65iqjq46pmg2dnj3kce87kv30phtaakf.apps.googleusercontent.com
-  clientSecret: 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
-  redirectUri: http://localhost:5000/
 --- !u!4 &973093817
 Transform:
   m_ObjectHideFlags: 0
@@ -832,6 +817,8 @@ MonoBehaviour:
   clientId: 332085799900-65iqjq46pmg2dnj3kce87kv30phtaakf.apps.googleusercontent.com
   clientSecret: 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
   redirectUri: http://localhost:8080/callback
+  menuSceneName: MainMenu
+  autoLoadMenuOnSuccess: 1
 --- !u!1 &1486971921
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +927,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 55365581}
   - {fileID: 315746968}
-  - {fileID: 943022964}
   - {fileID: 1486971925}
   - {fileID: 19347528}
   - {fileID: 973093817}
+  - {fileID: 388404520}

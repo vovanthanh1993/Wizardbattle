@@ -19,7 +19,13 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Vector3 _jumpImpulse = new(0f, 10f, 0f);
     
     [Header("Combat Settings")]
-    [SerializeField] private float _fireRate = 2f;
+    [SerializeField] private float _fireRate = 10f;
+    [SerializeField] private float _jumpRate = 40f;
+    [SerializeField] private float _healRate = 60f;
+    [SerializeField] private int _healAmount = 30;
+
+    [SerializeField] private int  _stealthRate = 30;
+    [SerializeField] private int  _stealthDuration = 5;
     [SerializeField] private GameObject _fireBallPrefab;
     [SerializeField] private Transform _firePoint;
     
@@ -48,11 +54,9 @@ public class PlayerController : NetworkBehaviour
     private PlayerAnimation _playerAnimation;
     
     private float _nextFireTime;
-    
-    #endregion
-
-    #region Unity Lifecycle
-    
+    private float _nextJumpTime;
+    private float _nextHealTime;
+    private float _nextStealthTime;
     public override void Spawned()
     {
         InitializeComponents();
@@ -136,6 +140,8 @@ public class PlayerController : NetworkBehaviour
         
         HandleJump(input);
         HandleShoot(input);
+        HandleSkillHeal(input);
+        HandleSkillStealth(input);
         HandleLookRotation(input);
         HandleMovement(input);
         UpdatePreviousInput(input);
@@ -143,9 +149,24 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleJump(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && _kcc.FixedData.IsGrounded)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded)
+        { 
+            RpcJump();
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RpcJump()
+    {
+        if (Runner.SimulationTime < _nextJumpTime) return;
+        
+        _kcc.Jump(_jumpImpulse);
+        _nextJumpTime = Runner.SimulationTime + _jumpRate;
+        
+        // Chỉ player có InputAuthority mới update UI
+        if (Object.HasInputAuthority)
         {
-            _kcc.Jump(_jumpImpulse);
+            UIManager.Instance.StartJumpCooldown(_jumpRate);
         }
     }
 
@@ -157,6 +178,45 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    private void HandleSkillHeal(NetworkInputData input)
+    {
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority)
+        {
+            RpcHeal();
+        }
+    }
+
+    private void HandleSkillStealth(NetworkInputData input)
+    {
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority)
+        {
+            RpcStealth();
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RpcStealth()
+    {
+        if (Runner.SimulationTime < _nextStealthTime) return;
+        
+        _nextStealthTime = Runner.SimulationTime + _stealthRate;
+        if (Object.HasInputAuthority) UIManager.Instance.StartStealthCooldown(_stealthRate);
+        
+        // Ẩn model trong 5 giây sử dụng PlayerAnimation
+        StartCoroutine(StealthCoroutine());
+        
+        if (AudioManager.Instance != null)
+        {
+            //AudioManager.Instance.PlayHealSound();
+        }
+    }
+
+    private IEnumerator StealthCoroutine()
+    {
+        _playerAnimation.SetModelVisibility(false);
+        yield return new WaitForSeconds(_stealthDuration);
+        _playerAnimation.SetModelVisibility(true);
+    }
     private void HandleLookRotation(NetworkInputData input)
     {
         _kcc.AddLookRotation(input.LookDelta * _lookSensitivity, _minPitch, _maxPitch);
@@ -204,6 +264,19 @@ public class PlayerController : NetworkBehaviour
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayFireballSound();
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RpcHeal()
+    {
+        if (Runner.SimulationTime < _nextHealTime) return;
+        _playerStatus?.Heal(_healAmount);
+        _nextHealTime = Runner.SimulationTime + _healRate;
+        if (Object.HasInputAuthority) UIManager.Instance.StartHealingCooldown(_healRate);
+        if (AudioManager.Instance != null)
+        {
+            //AudioManager.Instance.PlayHealSound();
         }
     }
     
@@ -305,11 +378,8 @@ public class PlayerController : NetworkBehaviour
 
     private void CompleteRespawn()
     {
-        if (Object.HasInputAuthority)
-        {
-            Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
-            _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
-        }
+        Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
+        _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
         _playerStatus?.ResetPlayer();
         UIManager.Instance.ShowReSpawnTime("");
         StartCoroutine(FinishRespawn());

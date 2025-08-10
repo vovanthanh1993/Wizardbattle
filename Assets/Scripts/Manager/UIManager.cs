@@ -60,8 +60,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _killFeedText;
     [SerializeField] private GameObject _killFeedBackGround;
 
+    
+    [Header("Skill UI")]
     [SerializeField] private Image _fireBallCoolDown;
+    [SerializeField] private TMP_Text _fireBallCoolDownText;
+    [SerializeField] private Image _jumpCoolDown;
+    [SerializeField] private TMP_Text _jumpCoolDownText;
+    [SerializeField] private Image _healingCoolDown;
+    [SerializeField] private TMP_Text _healingCoolDownText;
 
+    [SerializeField] private Image _stealthCoolDown;
+    [SerializeField] private TMP_Text _stealthCoolDownText;
+    
     private List<RoomData> _currentRoomList = new List<RoomData>();
 
     private void Awake()
@@ -398,29 +408,66 @@ public class UIManager : MonoBehaviour
         _killFeedBackGround.SetActive(false);
     }
 
-    // Gọi hàm này để bắt đầu hiệu ứng cooldown
     public void StartFireballCooldown(float duration)
     {
-        StopCoroutine("FireballCooldownRoutine");
-        StartCoroutine(FireballCooldownRoutine(duration));
+        StartCooldownRoutine("FireballCooldownRoutine", _fireBallCoolDown, _fireBallCoolDownText, duration);
     }
 
-    private IEnumerator FireballCooldownRoutine(float duration)
+    public void StartJumpCooldown(float duration)
     {
-        if (_fireBallCoolDown == null) yield break;
+        StartCooldownRoutine("JumpCooldownRoutine", _jumpCoolDown, _jumpCoolDownText, duration);
+    }
 
-        _fireBallCoolDown.fillAmount = 1f;
-        _fireBallCoolDown.gameObject.SetActive(true);
+    public void StartHealingCooldown(float duration)
+    {
+        StartCooldownRoutine("HealingCooldownRoutine", _healingCoolDown, _healingCoolDownText, duration);
+    }
 
+    public void StartStealthCooldown(float duration)
+    {
+        StartCooldownRoutine("StealthCooldownRoutine", _stealthCoolDown, _stealthCoolDownText, duration);
+    }
+
+    private void StartCooldownRoutine(string routineName, Image cooldownImage, TMP_Text cooldownText, float duration)
+    {
+        StopCoroutine(routineName);
+        StartCoroutine(CooldownRoutine(cooldownImage, cooldownText, duration));
+    }
+
+    private IEnumerator CooldownRoutine(Image cooldownImage, TMP_Text cooldownText, float duration)
+    {
+        if (cooldownImage == null) yield break;
+
+        // Setup cooldown UI
+        cooldownImage.fillAmount = 1f;
+        cooldownImage.gameObject.SetActive(true);
+        if (cooldownText != null)
+        {
+            cooldownText.gameObject.SetActive(true);
+        }
+
+        // Run cooldown timer
         float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            _fireBallCoolDown.fillAmount = 1f - (elapsed / duration);
+            cooldownImage.fillAmount = 1f - (elapsed / duration);
+            
+            if (cooldownText != null)
+            {
+                float remaining = Mathf.Max(0f, duration - elapsed);
+                int seconds = Mathf.CeilToInt(remaining);
+                cooldownText.text = seconds.ToString();
+            }
             yield return null;
         }
 
-        _fireBallCoolDown.fillAmount = 0f;
-        _fireBallCoolDown.gameObject.SetActive(false);
+        // Hide cooldown UI
+        cooldownImage.fillAmount = 0f;
+        cooldownImage.gameObject.SetActive(false);
+        if (cooldownText != null)
+        {
+            cooldownText.gameObject.SetActive(false);
+        }
     }
 }

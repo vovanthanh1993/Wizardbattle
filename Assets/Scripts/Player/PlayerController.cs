@@ -65,7 +65,10 @@ public class PlayerController : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (IsDisable) return;
+        if (IsDisable) {
+            _kcc.enabled = false;
+            return;
+        }
 
         HandleRespawn();
 

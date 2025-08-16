@@ -67,7 +67,7 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         return spawnPoint;
     }
 
-    public void EndGame(string winnerName)
+    public void EndGame()
     {
         foreach (var player in Runner.ActivePlayers)
         {
@@ -75,13 +75,23 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
             if (playerObject == null) continue;
 
             var playerController = playerObject.GetComponent<PlayerController>();
+            var playerStatus = playerObject.GetComponent<PlayerStatus>();
+            
             if (playerController != null)
             {
                 playerController.SetDisable(true);
+                playerController.SetIdleAnimation();
             }
         }
 
-        UIManager.Instance.ShowWinScreen(winnerName);
+        RpcShowResultForAllPlayers();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcShowResultForAllPlayers()
+    {
+        // Mỗi người chơi sẽ thấy kết quả của riêng mình
+        PvpResultPopup.Instance.ShowResultPopupForPlayer();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

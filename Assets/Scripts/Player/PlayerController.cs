@@ -79,7 +79,10 @@ public class PlayerController : NetworkBehaviour
 
     public override void Render()
     {
-        UpdateCameraTarget();
+        if (!IsDisable)
+        {
+            UpdateCameraTarget();
+        }
         _playerAnimation?.UpdateAnimations();
         _playerAnimation?.HandlePlayerDead();
     }
@@ -91,7 +94,10 @@ public class PlayerController : NetworkBehaviour
 
     private void LateUpdate()
     {
-        _playerStatus?.UpdateUIElements();
+        if (!IsDisable)
+        {
+            _playerStatus?.UpdateUIElements();
+        }
     }
     
     #endregion
@@ -152,7 +158,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleJump(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && !IsDisable)
         { 
             RpcJump();
         }
@@ -175,7 +181,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleShoot(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority && !IsDisable)
         {
             Shoot();
         }
@@ -183,7 +189,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleSkillHeal(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && !IsDisable)
         {
             RpcHeal();
         }
@@ -191,7 +197,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleSkillStealth(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && !IsDisable)
         {
             RpcStealth();
         }
@@ -351,7 +357,7 @@ public class PlayerController : NetworkBehaviour
     
     private void HandleRespawn()
     {
-        if (IsDead && !_isRespawning && Object.HasInputAuthority)
+        if (IsDead && !_isRespawning && Object.HasInputAuthority && !IsDisable)
         {
             StartRespawn();
         }
@@ -431,6 +437,11 @@ public class PlayerController : NetworkBehaviour
     public void SetDisable(bool isDisable)
     {
         _playerStatus?.SetDisable(isDisable);
+    }
+
+    public void SetIdleAnimation()
+    {
+        _playerAnimation?.SetIdleAnimation();
     }
     
     #endregion

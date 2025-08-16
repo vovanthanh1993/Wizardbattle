@@ -60,7 +60,8 @@ public class PlayerHealth : NetworkBehaviour
 
                 if (shooterStatus != null && shooterStatus.Kills >= GameManager.Instance.KillsToWin)
                 {
-                    shooterStatus.AnnounceWinner(shooterStatus.PlayerName.ToString());
+                    shooterStatus.IsWin = true;
+                    GameManager.Instance.EndGame();
                     return;
                 }
             }

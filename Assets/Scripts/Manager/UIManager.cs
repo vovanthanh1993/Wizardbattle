@@ -37,8 +37,6 @@ public class UIManager : MonoBehaviour
     [Header("Health UI")]
     [SerializeField] private Image _healthBarImage;
 
-    [SerializeField] private GameObject _winPanel;
-    [SerializeField] private TMP_Text _winnerText;
     [SerializeField] private Transform _leaderBoardContent;
     [SerializeField] private GameObject _linePrefab;
     [SerializeField] private TMP_InputField _playerNameInput;
@@ -207,7 +205,6 @@ public class UIManager : MonoBehaviour
         _connectingPanel.SetActive(false);
         _gameplayPanel.SetActive(false);
         _createPanel.SetActive(false);
-        _winPanel.SetActive(false);
         _joinPanel.SetActive(false);
         _inGameButtonsPanel.SetActive(false);
         SetStatus("");
@@ -219,7 +216,6 @@ public class UIManager : MonoBehaviour
         _menuPanel.SetActive(false);
         _connectingPanel.SetActive(true);
         _gameplayPanel.SetActive(false);
-        _winPanel.SetActive(false);
         _joinPanel.SetActive(false);
         SetStatus(message);
     }
@@ -230,7 +226,6 @@ public class UIManager : MonoBehaviour
         _menuPanel.SetActive(false);
         _connectingPanel.SetActive(false);
         _gameplayPanel.SetActive(true);
-        _winPanel.SetActive(false);
         _joinPanel.SetActive(false);
         SetStatus(GameConstants.CONNECTED_STATUS);
 
@@ -305,8 +300,8 @@ public class UIManager : MonoBehaviour
     {
         _menuPanel.SetActive(false);
         _connectingPanel.SetActive(false);
-        _winPanel.SetActive(true);
-        _winnerText.text = string.Format(GameConstants.WIN_GAME_FORMAT, winnerName);
+        //_winnerText.text = string.Format(GameConstants.WIN_GAME_FORMAT, winnerName);
+        PvpResultPopup.Instance.ShowResultPopup(true);
     }
 
     public void AddPlayerToLeaderboard(string playerName, int kills, int deaths)

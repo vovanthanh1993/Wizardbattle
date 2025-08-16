@@ -668,6 +668,7 @@ GameObject:
   - component: {fileID: 7996996577157155421}
   - component: {fileID: 1525740565885459540}
   - component: {fileID: -563316670505428142}
+  - component: {fileID: 1750402979198258442}
   m_Layer: 0
   m_Name: PurplePlayer
   m_TagString: Untagged
@@ -764,7 +765,7 @@ MonoBehaviour:
     ColliderLayer: 3
     CollisionLayerMask:
       serializedVersion: 2
-      m_Bits: 9
+      m_Bits: 265
     Features: -1
     InputAuthorityBehavior: 0
     StateAuthorityBehavior: 0
@@ -826,6 +827,10 @@ MonoBehaviour:
   _jumpImpulse: {x: 0, y: 10, z: 0}
   _fireRate: 3
   _jumpRate: 40
+  _healRate: 60
+  _healAmount: 30
+  _stealthRate: 30
+  _stealthDuration: 5
   _fireBallPrefab: {fileID: 8965056113716486154, guid: 6c5d7fb0689ca1d40a445a15ed3743f8, type: 3}
   _firePoint: {fileID: 2512815303255413150}
   _camTarget: {fileID: 6007721544089383532}
@@ -901,6 +906,21 @@ MonoBehaviour:
   _Deaths: 0
   _IsDead: 0
   _IsDisable: 0
+--- !u!114 &1750402979198258442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8794004da1ea41ea949840991219921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _requireTerrainCollider: 1
+  _minMoveDistance: 0.001
+  _capsuleScale: 0.9
 --- !u!1 &1251583507443948
 GameObject:
   m_ObjectHideFlags: 0

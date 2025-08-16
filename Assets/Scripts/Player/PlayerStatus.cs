@@ -20,6 +20,8 @@ public class PlayerStatus : NetworkBehaviour
     [Networked] public bool IsDead { get; set; }
     [Networked] public bool IsDisable { get; set; }
 
+    [Networked] public bool IsWin { get; set; } = false;
+
     private PlayerHealth _playerHealth;
 
     private PlayerAnimation _playerAnimation;
@@ -131,21 +133,6 @@ public class PlayerStatus : NetworkBehaviour
     {
         Deaths++;
         StartCoroutine(RunDelayedLeaderboardUpdate());
-    }
-
-    public void AnnounceWinner(string winnerName)
-    {
-        if (Object.HasStateAuthority)
-        {
-            RpcAnnounceWinner(winnerName);
-        }
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RpcAnnounceWinner(string winnerName)
-    {
-        IsDisable = true;
-        GameManager.Instance.EndGame(winnerName);
     }
     
     #endregion

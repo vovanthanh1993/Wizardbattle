@@ -55,6 +55,21 @@ public class PlayerAnimation : NetworkBehaviour
     {
         _moveSpeed = speed;
     }
+
+    public void SetIdleAnimation()
+    {
+        _moveSpeed = 0f;
+        _didShoot = false;
+        _hurt = false;
+        _isStealth = false;
+        
+        if (_animator != null)
+        {
+            _animator.SetFloat("MoveSpeed", 0f);
+            _animator.ResetTrigger("Fire");
+            _animator.ResetTrigger("Hurt");
+        }
+    }
     
     #endregion
 

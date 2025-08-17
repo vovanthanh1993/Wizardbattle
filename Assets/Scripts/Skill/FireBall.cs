@@ -83,7 +83,7 @@ public class FireBall : MonoBehaviour
             explosion.transform.rotation = Quaternion.identity;
             if (AudioManager.Instance != null)
             {
-                AudioManager.Instance.PlayExplosionSound();
+                AudioManager.Instance.PlayExplosionSoundAtPosition(explosionPosition);
             }
         }
 

@@ -124,6 +124,7 @@ public class PlayerController : NetworkBehaviour
 
     private void SetupCamera()
     {
+        if (IsDisable) return;
         _camTarget.gameObject.SetActive(true);
         CameraController.Instance.SetTarget(_camTarget);
         _kcc.Settings.ForcePredictedLookRotation = true;
@@ -269,11 +270,6 @@ public class PlayerController : NetworkBehaviour
 
         _playerAnimation?.TriggerShoot();
         _nextFireTime = Runner.SimulationTime + _fireRate;
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayFireballSound();
-        }
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
@@ -321,10 +317,10 @@ public class PlayerController : NetworkBehaviour
     public void RpcSpawnFireBallLocal(Vector3 position, Vector3 direction, float speed, float lifetime)
     {
         FireBall fireball = GetFireBallFromPool(position, direction);
-        
         if (fireball != null)
         {
             fireball.Init(direction, speed, lifetime, Object);
+            AudioManager.Instance.PlayFireballSoundAtPosition(_firePoint.position);
         }
     }
 
@@ -426,7 +422,16 @@ public class PlayerController : NetworkBehaviour
     public void HandlePlayerHurt()
     {
         _playerAnimation?.TriggerHurt();
-        AudioManager.Instance?.PlayPlayerHitSound();
+        RpcPlayPlayerHitSound();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcPlayPlayerHitSound()
+    {
+        if (Object.HasInputAuthority)
+        {
+            AudioManager.Instance.PlayPlayerHitSound();
+        }
     }
 
     public void UpdateHealthBar(float currentHealth, float maxHealth)
@@ -437,6 +442,7 @@ public class PlayerController : NetworkBehaviour
     public void SetDisable(bool isDisable)
     {
         _playerStatus?.SetDisable(isDisable);
+        _kcc.enabled = false;
     }
 
     public void SetIdleAnimation()

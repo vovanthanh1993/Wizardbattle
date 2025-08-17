@@ -79,8 +79,8 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
             
             if (playerController != null)
             {
-                playerController.SetDisable(true);
                 playerController.SetIdleAnimation();
+                playerController.SetDisable(true);
             }
         }
 
@@ -90,7 +90,10 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RpcShowResultForAllPlayers()
     {
-        // Mỗi người chơi sẽ thấy kết quả của riêng mình
+        Camera mainCamera = Camera.main;
+        mainCamera.GetComponent<CameraController>().SetTarget(null);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         PvpResultPopup.Instance.ShowResultPopupForPlayer();
     }
 

@@ -141,9 +141,19 @@ public class AudioManager : MonoBehaviour
         PlaySFX(_fireballSound);
     }
 
+    public void PlayFireballSoundAtPosition(Vector3 position)
+    {
+        PlaySFXAtPosition(_fireballSound, position);
+    }
+
     public void PlayExplosionSound()
     {
         PlaySFX(_explosionSound);
+    }
+
+    public void PlayExplosionSoundAtPosition(Vector3 position)
+    {
+        PlaySFXAtPosition(_explosionSound, position);
     }
 
     public void PlayPlayerHitSound()
@@ -161,6 +171,24 @@ public class AudioManager : MonoBehaviour
         if (!_sfxEnabled || sfxClip == null || _sfxSource == null) return;
 
         _sfxSource.PlayOneShot(sfxClip);
+    }
+
+    private void PlaySFXAtPosition(AudioClip sfxClip, Vector3 position)
+    {
+        if (!_sfxEnabled || sfxClip == null) return;
+        GameObject tempAudio = new GameObject("TempAudio");
+        tempAudio.transform.position = position;
+        
+        AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
+        audioSource.clip = sfxClip;
+        audioSource.volume = _sfxVolume; 
+        audioSource.spatialBlend = 1.0f;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 50f;
+        audioSource.minDistance = 1f;
+        
+        audioSource.Play();
+        Destroy(tempAudio, sfxClip.length);
     }
     #endregion
 

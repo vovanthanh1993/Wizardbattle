@@ -819,13 +819,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185bb5b4951436149a16a471cb39ddec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _kcc: {fileID: -6361111458387397937}
+  _kcc: {fileID: 0}
   _maxPitch: 85
   _minPitch: -25
   _lookSensitivity: 0.15
   _jumpImpulse: {x: 0, y: 10, z: 0}
   _fireRate: 3
-  _jumpRate: 40
+  _jumpRate: 30
+  _healRate: 90
+  _healAmount: 30
+  _stealthRate: 60
+  _stealthDuration: 5
   _fireBallPrefab: {fileID: 8965056113716486154, guid: 6c5d7fb0689ca1d40a445a15ed3743f8, type: 3}
   _firePoint: {fileID: 2512815303255413150}
   _camTarget: {fileID: 6007721544089383532}
@@ -901,6 +905,7 @@ MonoBehaviour:
   _Deaths: 0
   _IsDead: 0
   _IsDisable: 0
+  _IsWin: 0
 --- !u!1 &1251583507443948
 GameObject:
   m_ObjectHideFlags: 0

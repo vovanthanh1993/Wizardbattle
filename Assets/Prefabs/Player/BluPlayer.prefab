@@ -668,6 +668,7 @@ GameObject:
   - component: {fileID: 7996996577157155421}
   - component: {fileID: 1525740565885459540}
   - component: {fileID: -563316670505428142}
+  - component: {fileID: 1593952797027979787}
   m_Layer: 0
   m_Name: BluPlayer
   m_TagString: Untagged
@@ -825,9 +826,11 @@ MonoBehaviour:
   _lookSensitivity: 0.15
   _jumpImpulse: {x: 0, y: 10, z: 0}
   _fireRate: 3
-  _jumpRate: 40
-  _healRate: 60
-  _healAmount: 30
+  _jumpRate: 30
+  _healRate: 90
+  _healAmount: 35
+  _stealthRate: 60
+  _stealthDuration: 5
   _fireBallPrefab: {fileID: 8965056113716486154, guid: 6c5d7fb0689ca1d40a445a15ed3743f8, type: 3}
   _firePoint: {fileID: 2512815303255413150}
   _camTarget: {fileID: 6007721544089383532}
@@ -903,6 +906,22 @@ MonoBehaviour:
   _Deaths: 0
   _IsDead: 0
   _IsDisable: 0
+  _IsWin: 0
+--- !u!114 &1593952797027979787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 6, y: 6}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1251583507443948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2981,7 +3000,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3681678241498253377}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.122735426, y: 0, z: 0, w: 0.99243945}
   m_LocalPosition: {x: 1.077, y: 1.429, z: 1.141}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

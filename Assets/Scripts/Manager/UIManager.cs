@@ -69,6 +69,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Image _stealthCoolDown;
     [SerializeField] private TMP_Text _stealthCoolDownText;
+
+    [SerializeField] private GameObject _disconnectPopup;
     
     private List<RoomData> _currentRoomList = new List<RoomData>();
 
@@ -146,10 +148,13 @@ public class UIManager : MonoBehaviour
         NetworkRunnerHandler.Instance.ConnectToSession(roomName, GameMode.Host);
     }
 
-    private void OnBackToMenuClicked()
+    public void OnBackToMenuClicked()
     {
         SceneManager.LoadScene(GameConstants.LOBBY_SCENE);
-        Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);
+        if(NetworkRunnerHandler.Instance.Runner != null)
+        {
+            Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);
+        }
         ShowMenu();
     }
 
@@ -207,6 +212,7 @@ public class UIManager : MonoBehaviour
         _createPanel.SetActive(false);
         _joinPanel.SetActive(false);
         _inGameButtonsPanel.SetActive(false);
+        _disconnectPopup.SetActive(false);
         SetStatus("");
     }
 
@@ -222,6 +228,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameplay()
     {
+        _disconnectPopup.SetActive(false);
         _createPanel.SetActive(false);
         _menuPanel.SetActive(false);
         _connectingPanel.SetActive(false);
@@ -464,5 +471,10 @@ public class UIManager : MonoBehaviour
         {
             cooldownText.gameObject.SetActive(false);
         }
+    }
+
+    public void ShowDisconnectPopup(bool isShow)
+    {
+        _disconnectPopup.SetActive(isShow);
     }
 }

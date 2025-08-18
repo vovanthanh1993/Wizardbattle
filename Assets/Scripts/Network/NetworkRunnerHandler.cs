@@ -223,12 +223,14 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        UIManager.Instance.BackToMenu();
+        if(GameManager.Instance.GameState != GameState.Ended)
+            UIManager.Instance.ShowDisconnectPopup(true);
         UIManager.Instance.SetStatus(GameConstants.STATUS_SERVER_DISCONNECTED);
     }
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        UIManager.Instance.BackToMenu();
+        if(GameManager.Instance.GameState != GameState.Ended)
+            UIManager.Instance.ShowDisconnectPopup(true);
         UIManager.Instance.SetStatus(GameConstants.STATUS_SERVER_DISCONNECTED);
     }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

@@ -28,6 +28,8 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
 
     private NetworkRunner Runner => NetworkRunnerHandler.Instance.Runner;
 
+    [Networked] public GameState GameState { get; set; } = GameState.Waiting;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -90,6 +92,7 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RpcShowResultForAllPlayers()
     {
+        GameState = GameState.Ended;
         Camera mainCamera = Camera.main;
         mainCamera.GetComponent<CameraController>().SetTarget(null);
         Cursor.lockState = CursorLockMode.None;

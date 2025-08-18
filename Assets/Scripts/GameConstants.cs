@@ -11,7 +11,7 @@ public static class GameConstants
 {
     // Scenes
     public const string LOBBY_SCENE = "MainMenu";
-    public const int GAMEPLAY_SCENE_INDEX = 2;
+    public const int GAMEPLAY_SCENE_INDEX = 1;
 
     // UI Messages
     public const string CONNECTING = "Connecting...";

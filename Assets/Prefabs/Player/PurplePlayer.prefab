@@ -822,7 +822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kcc: {fileID: 0}
   _maxPitch: 85
-  _minPitch: -25
+  _minPitch: -30
   _lookSensitivity: 0.15
   _jumpImpulse: {x: 0, y: 10, z: 0}
   _fireRate: 3

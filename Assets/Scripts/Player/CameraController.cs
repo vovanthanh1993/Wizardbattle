@@ -13,13 +13,13 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float dampingFactor = 0.95f;
     
     [Header("Camera Angles")]
-    [SerializeField] private Vector3 angle1Position = new Vector3(0, 2, -5);
+    [SerializeField] private Vector3 angle1Position = new Vector3(0, 1.5f, -3f);
     [SerializeField] private Vector3 angle1Rotation = new Vector3(15, 0, 0);
     
-    [SerializeField] private Vector3 angle2Position = new Vector3(0, 5, -8);
+    [SerializeField] private Vector3 angle2Position = new Vector3(0, 3f, -5f);
     [SerializeField] private Vector3 angle2Rotation = new Vector3(25, 0, 0);
     
-    [SerializeField] private Vector3 angle3Position = new Vector3(0, 8, -12);
+    [SerializeField] private Vector3 angle3Position = new Vector3(0, 5f, -8f);
     [SerializeField] private Vector3 angle3Rotation = new Vector3(35, 0, 0);
     
     [Header("Current Settings")]

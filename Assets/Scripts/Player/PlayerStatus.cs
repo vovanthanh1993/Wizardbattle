@@ -24,6 +24,8 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerHealth _playerHealth;
 
+    [Networked] public int Coin { get; set; }
+
     private PlayerAnimation _playerAnimation;
 
     public override void Spawned()
@@ -127,6 +129,18 @@ public class PlayerStatus : NetworkBehaviour
     {
         Kills++;
         StartCoroutine(RunDelayedLeaderboardUpdate());
+    }
+
+    public void AddCoin(int amount)
+    {
+        Coin += amount;
+        RpcPlayUpdateCoinText();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RpcPlayUpdateCoinText()
+    {
+        UIManager.Instance.UpdateCoinText(Coin);
     }
 
     public void AddDeath()

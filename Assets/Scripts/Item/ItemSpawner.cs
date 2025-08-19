@@ -10,7 +10,12 @@ public class ItemSpawner : NetworkBehaviour
     [SerializeField] private Transform[] _spawnPoints;
     [SerializeField] private float _respawnDelay = 20f;
 
+    [SerializeField] private NetworkPrefabRef _coinPrefabRef;
+    [SerializeField] private Transform[] _spawnPointsCoin;
+    [SerializeField] private float _respawnCoinDelay = 10f;
+
     private NetworkObject _currentHealthItem;
+    private NetworkObject _currentCoinItem;
 
     private void Awake()
     {
@@ -27,6 +32,7 @@ public class ItemSpawner : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             SpawnHealthItem();
+            SpawnCoinItem();
         }
     }
 
@@ -43,6 +49,19 @@ public class ItemSpawner : NetworkBehaviour
         StartCoroutine(RespawnAfterDelay());
     }
 
+    public void OnCoinItemPickedUp()
+    {
+        if (!Object.HasStateAuthority) return;
+
+        if (_currentCoinItem != null)
+        {
+            Runner.Despawn(_currentCoinItem);
+            _currentCoinItem = null;
+        }
+
+        StartCoroutine(RespawnCoinAfterDelay());
+    }
+
     private IEnumerator RespawnAfterDelay()
     {
         yield return new WaitForSeconds(_respawnDelay);
@@ -57,6 +76,22 @@ public class ItemSpawner : NetworkBehaviour
         Transform spawnPoint = _spawnPoints[randomIndex];
 
         _currentHealthItem = Runner.Spawn(_healthItemPrefabRef, spawnPoint.position, spawnPoint.rotation);
-        var healthItem = _currentHealthItem.GetComponent<HealthItem>();
+        //var healthItem = _currentHealthItem.GetComponent<HealthItem>();
+    }
+
+    private void SpawnCoinItem()
+    {
+        if (_spawnPointsCoin == null || _spawnPointsCoin.Length == 0) return;
+
+        int randomIndex = Random.Range(0, _spawnPointsCoin.Length);
+        Transform spawnPoint = _spawnPointsCoin[randomIndex];
+
+        _currentCoinItem = Runner.Spawn(_coinPrefabRef, spawnPoint.position, spawnPoint.rotation);
+    }
+
+    private IEnumerator RespawnCoinAfterDelay()
+    {
+        yield return new WaitForSeconds(_respawnCoinDelay);
+        SpawnCoinItem();
     }
 }

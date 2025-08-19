@@ -19,12 +19,13 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     public int KillsToWin => _killsToWin;
 
     [Header("Player Settings")]
-    [SerializeField] private NetworkPrefabRef _playerPrefabRef;
+    [SerializeField] private NetworkPrefabRef[] _playerPrefabRefs;
 
     [Header("Spawn Points")]
     [SerializeField] private Transform[] _spawnPoints;
 
     private List<int> _availableSpawnIndices;
+    private int _currentPrefabIndex = 0;
 
     private NetworkRunner Runner => NetworkRunnerHandler.Instance.Runner;
 
@@ -43,6 +44,7 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
 
     private void Start()
     {
+        UIManager.Instance.UpdateTargetText(_killsToWin);
         _availableSpawnIndices = new List<int>();
         for (int i = 0; i < _spawnPoints.Length; i++)
         {
@@ -128,8 +130,12 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         if (!Runner.IsServer)
             return;
         Transform spawnPoint = GetSpawnPoint();
-        var playerObject = Runner.Spawn(_playerPrefabRef, spawnPoint.position, spawnPoint.rotation, player);
+
+        NetworkPrefabRef selectedPrefab = _playerPrefabRefs[_currentPrefabIndex];
+        var playerObject = Runner.Spawn(selectedPrefab, spawnPoint.position, spawnPoint.rotation, player);
         Runner.SetPlayerObject(player, playerObject);
+        
+        _currentPrefabIndex = (_currentPrefabIndex + 1) % _playerPrefabRefs.Length;
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]

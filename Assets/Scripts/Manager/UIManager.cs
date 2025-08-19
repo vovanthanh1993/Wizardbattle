@@ -74,6 +74,9 @@ public class UIManager : MonoBehaviour
     
     private List<RoomData> _currentRoomList = new List<RoomData>();
 
+    [SerializeField] private TMP_Text _coinText;
+    [SerializeField] private TMP_Text _targetText;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -476,5 +479,15 @@ public class UIManager : MonoBehaviour
     public void ShowDisconnectPopup(bool isShow)
     {
         _disconnectPopup.SetActive(isShow);
+    }
+
+    public void UpdateCoinText(int amount)
+    {
+        _coinText.text = amount.ToString();
+    }
+
+    public void UpdateTargetText(int num)
+    {
+        _targetText.text = num.ToString();
     }
 }

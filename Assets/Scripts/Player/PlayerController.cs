@@ -425,13 +425,10 @@ public class PlayerController : NetworkBehaviour
         RpcPlayPlayerHitSound();
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
     public void RpcPlayPlayerHitSound()
     {
-        if (Object.HasInputAuthority)
-        {
-            AudioManager.Instance.PlayPlayerHitSound();
-        }
+        AudioManager.Instance.PlayPlayerHitSound();
     }
 
     public void UpdateHealthBar(float currentHealth, float maxHealth)

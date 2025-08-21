@@ -28,6 +28,8 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerAnimation _playerAnimation;
 
+    [SerializeField] private ParticleSystem _healthParticleSystem;
+
     public override void Spawned()
     {
         _playerHealth = GetComponent<PlayerHealth>();
@@ -96,7 +98,20 @@ public class PlayerStatus : NetworkBehaviour
     public void Heal(int healAmount)
     {
         _playerHealth?.Heal(healAmount);
+        StartCoroutine(PlayHealthParticleEffect());
     }
+
+    private IEnumerator PlayHealthParticleEffect()
+    {
+        _healthParticleSystem.gameObject.SetActive(true);
+        _healthParticleSystem.Play();
+        
+        yield return new WaitForSeconds(2);
+
+        _healthParticleSystem.gameObject.SetActive(false);
+    }
+
+    
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void ResetPlayerRpc()

@@ -19,7 +19,7 @@ public class PlayerHealth : NetworkBehaviour
         {
             UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
             _lastHealth = CurrentHealth;
-        }
+        } else GetComponent<PlayerController>()?.UpdateHealthBar(CurrentHealth, MaxHealth);
     }
 
     public override void FixedUpdateNetwork()

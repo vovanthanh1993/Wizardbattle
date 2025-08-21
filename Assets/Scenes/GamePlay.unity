@@ -5315,7 +5315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28caafbe1c272444cbb96e7cdc0165b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _killsToWin: 1
+  _killsToWin: 5
   _playerPrefabRefs:
   - RawGuidValue: ccd8c3b89aa02e943a08ab9238a8a70c
   - RawGuidValue: e3363772c8f6dfe4d87beb14c9a60bee

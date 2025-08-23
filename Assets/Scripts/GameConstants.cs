@@ -10,8 +10,8 @@ using UnityEngine.UI;
 public static class GameConstants
 {
     // Scenes
-    public const string LOBBY_SCENE = "MainMenu";
-    public const int GAMEPLAY_SCENE_INDEX = 1;
+    public const string LOBBY_SCENE = "MainMenuScene";
+    public const int GAMEPLAY_SCENE_INDEX = 2;
 
     // UI Messages
     public const string CONNECTING = "Connecting...";

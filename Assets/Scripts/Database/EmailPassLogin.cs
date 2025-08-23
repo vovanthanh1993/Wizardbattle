@@ -291,7 +291,7 @@ public class EmailPassLogin : MonoBehaviour
                  _loginUi.SetActive(false);
                  _successUi.SetActive(true);
                  //_successUi.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = "Id: " + result.User.UserId;
-                 SceneManager.LoadScene("MainMenu");
+                 SceneManager.LoadScene("MainMenuScene");
              }
              else {
                  ShowLogMsg("Please verify email!!");

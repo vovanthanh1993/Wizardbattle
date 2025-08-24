@@ -16,6 +16,7 @@ public class FirebaseDataManager : MonoBehaviour
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
     private bool isInitialized = false;
+    private PlayerData currentPlayerData;
 
     // Events
     public event Action<PlayerData> OnPlayerDataLoaded;
@@ -32,6 +33,7 @@ public class FirebaseDataManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     private void Start()
@@ -182,6 +184,7 @@ public class FirebaseDataManager : MonoBehaviour
             await saveTask;
             
             Debug.Log($"Player data saved successfully for user: {userId}");
+            currentPlayerData = playerData;
             OnPlayerDataSaved?.Invoke(true);
             return true;
         }
@@ -259,6 +262,7 @@ public class FirebaseDataManager : MonoBehaviour
                 }
                 
                 Debug.Log($"Player data loaded successfully for user: {userId}");
+                currentPlayerData = playerData;
                 OnPlayerDataLoaded?.Invoke(playerData);
                 return playerData;
             }
@@ -416,7 +420,51 @@ public class FirebaseDataManager : MonoBehaviour
 
     public string GetCurrentUserDisplayName()
     {
-        return auth?.CurrentUser?.DisplayName;
+        if (currentPlayerData != null)
+        {
+            return currentPlayerData.displayName;
+        }
+        return "Unknown Player";
+    }
+
+    public PlayerData GetCurrentPlayerData()
+    {
+        return currentPlayerData;
+    }
+
+    public float GetCurrentUserDamage()
+    {
+        return currentPlayerData.damage;
+    }
+
+    public float GetCurrentUserAmmor()
+    {
+        return currentPlayerData.ammor;
+    }
+
+    public int GetCurrentUserLevel()
+    {
+        return currentPlayerData.level;
+    }
+
+    public float GetCurrentUserXp()
+    {
+        return currentPlayerData.xp;
+    }
+
+    public float GetCurrentUserCoin()
+    {
+        return currentPlayerData.coin;
+    }
+
+    public float GetCurrentUserDiamond()
+    {
+        return currentPlayerData.diamond;
+    }
+
+    public int GetCurrentUserLife()
+    {
+        return currentPlayerData.life;
     }
 
     public void SignOut()

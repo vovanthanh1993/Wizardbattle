@@ -6,7 +6,6 @@ public class PlayerData
 {
     // Basic info
     public string userId;
-    public string playerName;
     public string email;
     public string displayName;
     public DateTime createdAt;
@@ -36,6 +35,16 @@ public class PlayerData
     public string[] unlockedCharacters;
     public string[] unlockedSkills;
     public string[] unlockedCosmetics;
+
+    // PlayerUpdate
+    public float damage;
+    public float ammor;
+    public int level;
+    public float xp;
+    public float coin;
+    public float diamond;
+
+    public int life;
     
     // Constructor for new player
     public PlayerData(string email, string displayName, string userId)
@@ -43,11 +52,9 @@ public class PlayerData
         this.email = email;
         this.displayName = displayName;
         this.userId = userId;
-        this.playerName = GenerateRandomPlayerName();
         this.createdAt = DateTime.Now;
         this.lastLoginTime = DateTime.Now;
         
-        // Initialize default values
         this.totalKills = 0;
         this.totalDeaths = 0;
         this.gamesPlayed = 0;
@@ -69,6 +76,14 @@ public class PlayerData
         this.unlockedCharacters = new string[] { "Default" };
         this.unlockedSkills = new string[] { "FireBall" };
         this.unlockedCosmetics = new string[0];
+
+        this.damage = 40;
+        this.ammor = 0;
+        this.level = 1;
+        this.xp = 0;
+        this.coin = 100;
+        this.diamond = 100;
+        this.life = 5;
     }
     
     private string GenerateRandomPlayerName()

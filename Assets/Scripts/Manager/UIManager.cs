@@ -26,8 +26,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button _quickJoinButton;
     [SerializeField] private Button _refreshButton;
     [SerializeField] private Button _backToMenuButton;
-    [SerializeField] private Button _joinBackButton;
-    [SerializeField] private Button _quitButton;
     [SerializeField] private Button _resumeButton;
 
     [Header("Room List")]
@@ -39,7 +37,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Transform _leaderBoardContent;
     [SerializeField] private GameObject _linePrefab;
-    [SerializeField] private TMP_InputField _playerNameInput;
+    [SerializeField] private TMP_Text _playerNameInput;
     [SerializeField] private GameObject _createPanel;
     [SerializeField] private TMP_InputField _createRoomInput;
     [SerializeField] private Button _createOKButton;
@@ -77,6 +75,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _coinText;
     [SerializeField] private TMP_Text _targetText;
 
+    [SerializeField] private TopLeftPanel _topLeftPanel;
+    [SerializeField] private TopRightPanel _topRightPanel;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -102,7 +103,6 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        InitPlayerName();
         ShowMenu();
         _createButton.onClick.AddListener(HandleCreateClicked);
         _joinButton.onClick.AddListener(HandleJoinClicked);
@@ -111,8 +111,6 @@ public class UIManager : MonoBehaviour
         _backToMenuButton.onClick.AddListener(OnBackToMenuClicked);
         _createOKButton.onClick.AddListener(HandleCreateOKClicked);
         _joinOKButton.onClick.AddListener(HandleJoinOKClicked);
-        _joinBackButton.onClick.AddListener(ShowMenu);
-        _quitButton.onClick.AddListener(QuitGame);
         _resumeButton.onClick.AddListener(HandleResumeClicked);
         _roomScrollView.OnCellClicked(HandleCellClicked);
     }
@@ -353,12 +351,6 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetString(GameConstants.PLAYER_PREFS_NAME_KEY, name);
         PlayerPrefs.Save();
         return true;
-    }
-
-    private void InitPlayerName()
-    {
-        if (PlayerPrefs.HasKey(GameConstants.PLAYER_PREFS_NAME_KEY))
-            _playerNameInput.text = PlayerPrefs.GetString(GameConstants.PLAYER_PREFS_NAME_KEY);
     }
 
     public string GetPlayerName()

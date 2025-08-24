@@ -313,7 +313,6 @@ public class GoogleAuthWeb : MonoBehaviour
             
             if (existingData != null)
             {
-                Debug.Log($"Player data already exists for: {email} (Player: {existingData.playerName})");
                 OnPlayerDataCreated?.Invoke(existingData);
                 return;
             }
@@ -321,14 +320,11 @@ public class GoogleAuthWeb : MonoBehaviour
             // Create new player data with random name
             PlayerData newPlayerData = new PlayerData(email, displayName, userId);
             
-            Debug.Log($"Created new player data: {newPlayerData.playerName} for {email}");
-            
             // Save to Firebase
             bool saveSuccess = await FirebaseDataManager.Instance.SavePlayerData(newPlayerData);
             
             if (saveSuccess)
             {
-                Debug.Log($"Player data saved successfully: {newPlayerData.playerName}");
                 OnPlayerDataCreated?.Invoke(newPlayerData);
             }
             else

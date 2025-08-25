@@ -21,9 +21,6 @@ public class UIManager : MonoBehaviour
 
     [Header("Room UI")]
     [SerializeField] private TMP_InputField _roomInput;
-    [SerializeField] private Button _createButton;
-    [SerializeField] private Button _joinButton;
-    [SerializeField] private Button _quickJoinButton;
     [SerializeField] private Button _refreshButton;
     [SerializeField] private Button _backToMenuButton;
     [SerializeField] private Button _resumeButton;
@@ -38,13 +35,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform _leaderBoardContent;
     [SerializeField] private GameObject _linePrefab;
     [SerializeField] private TMP_Text _playerNameInput;
-    [SerializeField] private GameObject _createPanel;
-    [SerializeField] private TMP_InputField _createRoomInput;
-    [SerializeField] private Button _createOKButton;
-    [SerializeField] private TMP_Text _roomNameText;
-    [SerializeField] private GameObject _joinPanel;
-    [SerializeField] private TMP_InputField _joinRoomInput;
-    [SerializeField] private Button _joinOKButton;
     [SerializeField] private TMP_Text _countdownText;
     [SerializeField] private GameObject _countdownPanel;
     [SerializeField] private GameObject _leaderBoardPanel;
@@ -78,6 +68,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TopLeftPanel _topLeftPanel;
     [SerializeField] private TopRightPanel _topRightPanel;
 
+    [SerializeField] private GameObject _loadingPanel;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -88,6 +80,11 @@ public class UIManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void ShowLoadingPanel(bool isShow)
+    {
+        _loadingPanel.SetActive(isShow);
     }
 
     public void ShowReSpawnTime(string respawnMess)
@@ -104,13 +101,8 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         ShowMenu();
-        _createButton.onClick.AddListener(HandleCreateClicked);
-        _joinButton.onClick.AddListener(HandleJoinClicked);
-        _quickJoinButton.onClick.AddListener(HandleQuickJoinClicked);
         _refreshButton.onClick.AddListener(HandleRefreshRoomClicked);
         _backToMenuButton.onClick.AddListener(OnBackToMenuClicked);
-        _createOKButton.onClick.AddListener(HandleCreateOKClicked);
-        _joinOKButton.onClick.AddListener(HandleJoinOKClicked);
         _resumeButton.onClick.AddListener(HandleResumeClicked);
         _roomScrollView.OnCellClicked(HandleCellClicked);
     }
@@ -130,23 +122,6 @@ public class UIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-    }
-
-    private void HandleCreateOKClicked()
-    {
-        if (!IsPlayerNameValid()) return;
-
-        string roomName = _createRoomInput.text.Trim();
-
-        if (string.IsNullOrEmpty(roomName))
-        {
-            SetStatus(GameConstants.ROOM_NAME_REQUIRED);
-            return;
-        }
-
-        _createPanel.SetActive(false);
-        ShowConnecting(GameConstants.CREATING_ROOM);
-        NetworkRunnerHandler.Instance.ConnectToSession(roomName, GameMode.Host);
     }
 
     public void OnBackToMenuClicked()
@@ -169,49 +144,11 @@ public class UIManager : MonoBehaviour
         UpdateRoomListUI(new List<SessionInfo>());
     }
 
-    private void HandleCreateClicked()
-    {
-        if (!IsPlayerNameValid()) return;
-        _createPanel.SetActive(true);
-        _joinPanel.SetActive(false);
-        _menuPanel.SetActive(false);
-    }
-
-    private void HandleJoinClicked()
-    {
-        if (!IsPlayerNameValid()) return;
-        NetworkRunnerHandler.Instance.JoinLobby();
-        ShowConnecting(GameConstants.JOINING_ROOM);
-    }
-
-    public void ShowJoinPanel()
-    {
-        _joinPanel.SetActive(true);
-        _createPanel.SetActive(false);
-        _menuPanel.SetActive(false);
-    }
-
-    private void HandleJoinOKClicked()
-    {
-        string roomName = string.IsNullOrEmpty(_joinRoomInput.text) ? GameConstants.DEFAULT_ROOM_NAME : _joinRoomInput.text;
-        ShowConnecting(GameConstants.JOINING_ROOM);
-        NetworkRunnerHandler.Instance.ConnectToSession(roomName, GameMode.Client);
-    }
-
-    private void HandleQuickJoinClicked()
-    {
-        if (!IsPlayerNameValid()) return;
-        ShowConnecting(GameConstants.SEARCHING_ROOM);
-        NetworkRunnerHandler.Instance.QuickJoinOrCreateRoom();
-    }
-
     public void ShowMenu()
     {
         _menuPanel.SetActive(true);
         _connectingPanel.SetActive(false);
         _gameplayPanel.SetActive(false);
-        _createPanel.SetActive(false);
-        _joinPanel.SetActive(false);
         _inGameButtonsPanel.SetActive(false);
         _disconnectPopup.SetActive(false);
         SetStatus("");
@@ -219,31 +156,27 @@ public class UIManager : MonoBehaviour
 
     public void ShowConnecting(string message = GameConstants.CONNECTING)
     {
-        _createPanel.SetActive(false);
         _menuPanel.SetActive(false);
         _connectingPanel.SetActive(true);
         _gameplayPanel.SetActive(false);
-        _joinPanel.SetActive(false);
         SetStatus(message);
     }
 
     public void ShowGameplay()
     {
         _disconnectPopup.SetActive(false);
-        _createPanel.SetActive(false);
         _menuPanel.SetActive(false);
         _connectingPanel.SetActive(false);
         _gameplayPanel.SetActive(true);
-        _joinPanel.SetActive(false);
-        SetStatus(GameConstants.CONNECTED_STATUS);
+        //SetStatus(GameConstants.CONNECTED_STATUS);
 
-        if (_roomNameText != null && NetworkRunnerHandler.Instance != null)
+        /*if (_roomNameText != null && NetworkRunnerHandler.Instance != null)
         {
             string roomName = NetworkRunnerHandler.Instance.Runner?.SessionInfo?.Name;
             _roomNameText.text = string.IsNullOrEmpty(roomName)
                 ? GameConstants.UNKNOWN_ROOM
                 : string.Format(GameConstants.ROOM_NAME_DISPLAY_FORMAT, roomName);
-        }
+        }*/
     }
 
     public void SetStatus(string message)

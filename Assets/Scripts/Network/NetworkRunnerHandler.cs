@@ -61,17 +61,11 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     private async Task JoinLobbyAsync()
     {
         CreateRunner();
-        //UIManager.Instance.SetStatus(GameConstants.STATUS_JOINING_LOBBY);
         var result = await _runner.JoinSessionLobby(GameConstants.LOBBY);
-        if (result.Ok)
+        if (!result.Ok)
         {
-            //UIManager.Instance.SetStatus(GameConstants.STATUS_IN_LOBBY);
+            UIManager.Instance.ShowNoticePopup(GameConstants.STATUS_FAILED_LOBBY + result.ShutdownReason);
         }
-        else
-        {
-            //UIManager.Instance.SetStatus(GameConstants.STATUS_FAILED_LOBBY + result.ShutdownReason);
-        }
-        //UIManager.Instance.ShowJoinPanel();
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
@@ -97,20 +91,16 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         CreateRunner();
 
-        //UIManager.Instance.SetStatus(GameConstants.STATUS_JOINING_LOBBY);
         UIManager.Instance.ShowLoadingPanel(true);
         await _runner.JoinSessionLobby(GameConstants.LOBBY);
 
         _sessionListTcs = new TaskCompletionSource<List<SessionInfo>>();
 
-        //UIManager.Instance.SetStatus(GameConstants.STATUS_GETTING_ROOM_LIST);
         List<SessionInfo> sessionList = await _sessionListTcs.Task;
 
         if (sessionList.Count > 0)
         {
             var randomRoom = sessionList[UnityEngine.Random.Range(0, sessionList.Count)];
-            //UIManager.Instance.SetStatus($"{GameConstants.STATUS_JOINING_ROOM}{randomRoom.Name}");
-
             var result = await _runner.StartGame(new StartGameArgs
             {
                 GameMode = GameMode.Client,
@@ -125,16 +115,13 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             }
             else
             {
-                UIManager.Instance.ShowMenu();
-                //UIManager.Instance.SetStatus(GameConstants.STATUS_FAILED_JOIN_ROOM);
+                UIManager.Instance.ShowNoticePopup(GameConstants.STATUS_FAILED_JOIN_ROOM);
             }
         }
         else
         {
             // Create new room
             string roomName = UnityEngine.Random.Range(GameConstants.RANDOM_ROOM_MIN, GameConstants.RANDOM_ROOM_MAX).ToString();
-            //UIManager.Instance.SetStatus($"{GameConstants.STATUS_CREATING_ROOM}{roomName}");
-
             var result = await _runner.StartGame(new StartGameArgs
             {
                 GameMode = GameMode.Host,
@@ -150,8 +137,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             }
             else
             {
-                UIManager.Instance.ShowMenu();
-                //UIManager.Instance.SetStatus(GameConstants.STATUS_FAILED_CREATE_ROOM);
+                UIManager.Instance.ShowNoticePopup(GameConstants.STATUS_FAILED_CREATE_ROOM);
             }
         }
         UIManager.Instance.ShowLoadingPanel(false);
@@ -172,8 +158,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         }
         else if (mode == GameMode.Client && !_existingRoomNames.Contains(roomName))
         {
-            //UIManager.Instance.SetStatus(GameConstants.STATUS_ROOM_NOT_FOUND);
-            //UIManager.Instance.ShowJoinPanel();
+            UIManager.Instance.ShowNoticePopup(GameConstants.STATUS_ROOM_NOT_FOUND);
             UIManager.Instance.ShowLoadingPanel(false);
             return;
         }
@@ -188,15 +173,13 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         };
 
         var result = await _runner.StartGame(args);
-        UIManager.Instance.ShowLoadingPanel(false);
         if (result.Ok)
         {
             UIManager.Instance.ShowGameplay();
         }
         else
         {
-            UIManager.Instance.ShowMenu();
-            //UIManager.Instance.SetStatus($"{GameConstants.STATUS_FAILED_CONNECT}{result.ShutdownReason}");
+            UIManager.Instance.ShowNoticePopup($"{GameConstants.STATUS_FAILED_CONNECT}{result.ShutdownReason}");
         }
     }
 
@@ -218,7 +201,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner)
     {
         _sceneReady = true;
-        //UIManager.Instance.SetStatus("");
+        UIManager.Instance.ShowLoadingPanel(false);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -229,13 +212,11 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         if(GameManager.Instance.GameState != GameState.Ended)
             UIManager.Instance.ShowDisconnectPopup(true);
-        //UIManager.Instance.SetStatus(GameConstants.STATUS_SERVER_DISCONNECTED);
     }
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
         if(GameManager.Instance.GameState != GameState.Ended)
             UIManager.Instance.ShowDisconnectPopup(true);
-        //UIManager.Instance.SetStatus(GameConstants.STATUS_SERVER_DISCONNECTED);
     }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

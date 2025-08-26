@@ -10,13 +10,17 @@ public class MultiplayerManager : MonoBehaviour
     [SerializeField] private Button _quickJoinButton;
 
     [SerializeField] private TMP_InputField _createRoomInput;
+    [SerializeField] private TMP_InputField _joinRoomInput;
+    [SerializeField] private Button _joinRoomButton;
 
     [SerializeField] private GameObject _createPanel;
+    [SerializeField] private GameObject _joinPanel;
 
     void Start() {
         _createRoomButton.onClick.AddListener(HandleCreateRoom);
         _joinButton.onClick.AddListener(HandleJoinClicked);
         _quickJoinButton.onClick.AddListener(HandleQuickJoin);
+        _joinRoomButton.onClick.AddListener(HandleJoinOKClicked);
     }
 
     private void HandleJoinClicked()
@@ -37,19 +41,21 @@ public class MultiplayerManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(roomName))
         {
-            //SetStatus(GameConstants.ROOM_NAME_REQUIRED);
+            UIManager.Instance.ShowNoticePopup(GameConstants.ROOM_NAME_REQUIRED);
             return;
         }
 
         _createPanel.SetActive(false);
-        //ShowConnecting(GameConstants.CREATING_ROOM);
         NetworkRunnerHandler.Instance.ConnectToSession(roomName, GameMode.Host);
     }
 
-    /*private void HandleJoinOKClicked()
+    private void HandleJoinOKClicked()
     {
         string roomName = string.IsNullOrEmpty(_joinRoomInput.text) ? GameConstants.DEFAULT_ROOM_NAME : _joinRoomInput.text;
-        ShowConnecting(GameConstants.JOINING_ROOM);
         NetworkRunnerHandler.Instance.ConnectToSession(roomName, GameMode.Client);
-    }*/
+    }
+
+    public void ShowJoinPanel(bool isShow) {
+        _joinPanel.SetActive(isShow);
+    }
 }

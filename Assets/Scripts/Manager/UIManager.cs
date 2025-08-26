@@ -13,11 +13,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Panels")]
     [SerializeField] private GameObject _menuPanel;
-    [SerializeField] private GameObject _connectingPanel;
     [SerializeField] private GameObject _gameplayPanel;
-
-    [Header("Status Text")]
-    [SerializeField] private TMP_Text _statusText;
 
     [Header("Room UI")]
     [SerializeField] private TMP_InputField _roomInput;
@@ -69,6 +65,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TopRightPanel _topRightPanel;
 
     [SerializeField] private GameObject _loadingPanel;
+    [SerializeField] private NoticePopup _noticePopup;
+
+    [SerializeField] public MultiplayerManager multiplayerManager;
 
     private void Awake()
     {
@@ -85,6 +84,10 @@ public class UIManager : MonoBehaviour
     public void ShowLoadingPanel(bool isShow)
     {
         _loadingPanel.SetActive(isShow);
+    }
+
+    public void ShowNoticePopup(string text){
+        _noticePopup.ShowNoticePopup(text);
     }
 
     public void ShowReSpawnTime(string respawnMess)
@@ -147,27 +150,17 @@ public class UIManager : MonoBehaviour
     public void ShowMenu()
     {
         _menuPanel.SetActive(true);
-        _connectingPanel.SetActive(false);
         _gameplayPanel.SetActive(false);
         _inGameButtonsPanel.SetActive(false);
         _disconnectPopup.SetActive(false);
-        SetStatus("");
-    }
-
-    public void ShowConnecting(string message = GameConstants.CONNECTING)
-    {
-        _menuPanel.SetActive(false);
-        _connectingPanel.SetActive(true);
-        _gameplayPanel.SetActive(false);
-        SetStatus(message);
     }
 
     public void ShowGameplay()
     {
         _disconnectPopup.SetActive(false);
         _menuPanel.SetActive(false);
-        _connectingPanel.SetActive(false);
         _gameplayPanel.SetActive(true);
+        multiplayerManager.ShowJoinPanel(false);
         //SetStatus(GameConstants.CONNECTED_STATUS);
 
         /*if (_roomNameText != null && NetworkRunnerHandler.Instance != null)
@@ -176,7 +169,7 @@ public class UIManager : MonoBehaviour
             _roomNameText.text = string.IsNullOrEmpty(roomName)
                 ? GameConstants.UNKNOWN_ROOM
                 : string.Format(GameConstants.ROOM_NAME_DISPLAY_FORMAT, roomName);
-        }*/
+        }
     }
 
     public void SetStatus(string message)
@@ -193,6 +186,7 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         _statusText.gameObject.SetActive(false);
+    }*/
     }
 
     public void UpdateHealth(float current, float maxHealth)
@@ -240,8 +234,6 @@ public class UIManager : MonoBehaviour
     public void ShowWinScreen(string winnerName)
     {
         _menuPanel.SetActive(false);
-        _connectingPanel.SetActive(false);
-        //_winnerText.text = string.Format(GameConstants.WIN_GAME_FORMAT, winnerName);
         PvpResultPopup.Instance.ShowResultPopup(true);
     }
 
@@ -277,7 +269,7 @@ public class UIManager : MonoBehaviour
         string name = _playerNameInput.text.Trim();
         if (string.IsNullOrEmpty(name))
         {
-            SetStatus(GameConstants.PLAYER_NAME_REQUIRED);
+            _noticePopup.ShowNoticePopup(GameConstants.PLAYER_NAME_REQUIRED);
             return false;
         }
 
@@ -307,8 +299,7 @@ public class UIManager : MonoBehaviour
     {
         RoomData selectedRoom = this._currentRoomList[index];
         string roomNameToJoin = selectedRoom.RoomName;
-        ShowConnecting(GameConstants.JOINING_ROOM);
-        SetStatus(string.Format(GameConstants.JOIN_ROOM_FORMAT, roomNameToJoin));
+        //SetStatus(string.Format(GameConstants.JOIN_ROOM_FORMAT, roomNameToJoin));
         NetworkRunnerHandler.Instance.ConnectToSession(roomNameToJoin, GameMode.Client);
     }
 

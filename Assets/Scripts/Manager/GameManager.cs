@@ -118,7 +118,7 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
                 playerName = "Unknown Player";
             }
 
-            UIManager.Instance.SetStatus($"{playerName} has left the game");
+            //UIManager.Instance.SetStatus($"{playerName} has left the game");
             Runner.Despawn(Runner.GetPlayerObject(player));
         }
 
@@ -143,7 +143,7 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.SetStatus($"{playerName} has joined the game");
+            //UIManager.Instance.SetStatus($"{playerName} has joined the game");
         }
     }
 

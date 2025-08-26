@@ -22,8 +22,8 @@ public class EmailPassLogin : MonoBehaviour
 
     [Header("Extra")]
     [SerializeField] private GameObject _loadingScreen;
-    [SerializeField] private GameObject _loginUi, _signupUi, _noticePopup;
-    [SerializeField] private TextMeshProUGUI _noticeText;
+    [SerializeField] private GameObject _loginUi, _signupUi;
+    [SerializeField] private NoticePopup _noticePopup;
 
     private FirebaseAuth auth;
     private bool isFirebaseInitialized = false;
@@ -343,8 +343,7 @@ public class EmailPassLogin : MonoBehaviour
     #region extra
     void ShowLogMsg(string msg)
     {
-        _noticePopup.SetActive(true);
-        _noticeText.text = msg;
+        _noticePopup.ShowNoticePopup(msg);
     }
 
     private bool IsValidEmail(string email)

@@ -301,13 +301,14 @@ public class EmailPassLogin : MonoBehaviour
                 if (result.User.IsEmailVerified)
                 {
                     _loginUi.SetActive(false);
-                    SceneManager.LoadScene("MainMenuScene");
+                    await LoadSceneAsync("MainMenuScene");
                 }
                 else {
+                    _loadingScreen.SetActive(false);
                     ShowLogMsg("Please verify your email before logging in!");
                 }
                 
-                _loadingScreen.SetActive(false);
+                
             });
         }
         catch (System.Exception ex)
@@ -318,6 +319,18 @@ public class EmailPassLogin : MonoBehaviour
         }
     }
 
+    private async Task LoadSceneAsync(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        
+        while (!asyncLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            Debug.Log($"Loading progress: {progress * 100}%");
+            await Task.Yield();
+        }
+        _loadingScreen.SetActive(false);
+    }
     private async Task UpdateLastLoginTime(string userId)
     {
         try

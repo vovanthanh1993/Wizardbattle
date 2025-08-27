@@ -153,6 +153,8 @@ public class UIManager : MonoBehaviour
         _gameplayPanel.SetActive(false);
         _inGameButtonsPanel.SetActive(false);
         _disconnectPopup.SetActive(false);
+        _topLeftPanel.InitData();
+        _topRightPanel.InitData();
     }
 
     public void ShowGameplay()

@@ -398,6 +398,43 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
+    public async Task<bool> UpdatePlayerAttributes(float damage, float ammor, int level, float xp, float coin, float diamond, int life)
+    {
+        PlayerData currentData = await LoadPlayerData();
+        if (currentData == null)
+        {
+            return false;
+        }
+
+        currentData.damage = damage;
+        currentData.ammor = ammor;
+        currentData.level = level;
+        currentData.xp = xp;
+        currentData.coin = coin;
+        currentData.diamond = diamond;
+        currentData.life = life;
+
+        return await SavePlayerData(currentData);
+    }
+
+    public async Task<bool> UpdatePlayerAttributes(PlayerData playerData)
+    {
+        PlayerData currentData = await LoadPlayerData();
+        if (currentData == null)
+        {
+            return false;
+        }
+
+        currentData.damage = playerData.damage;
+        currentData.ammor = playerData.ammor;
+        currentData.level = playerData.level;
+        currentData.xp = playerData.xp;
+        currentData.coin = playerData.coin;
+        currentData.diamond = playerData.diamond;
+
+        return await SavePlayerData(currentData);
+    }
+
     public bool IsInitialized()
     {
         return isInitialized;

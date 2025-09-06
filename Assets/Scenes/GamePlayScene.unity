@@ -448,7 +448,7 @@ GameObject:
   - component: {fileID: 121132571}
   - component: {fileID: 121132573}
   - component: {fileID: 121132572}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12011,7 +12011,6 @@ GameObject:
   - component: {fileID: 2086015688}
   - component: {fileID: 2086015687}
   - component: {fileID: 2086015686}
-  - component: {fileID: 2086015690}
   - component: {fileID: 2086015691}
   m_Layer: 0
   m_Name: Camera
@@ -12138,19 +12137,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2086015690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2086015684}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ad35a44224e454ca95fa79c292caf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  smoothSpeed: 10
 --- !u!114 &2086015691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12169,6 +12155,12 @@ MonoBehaviour:
   deceleration: 3
   useDamping: 1
   dampingFactor: 0.95
+  enableObstacleAvoidance: 1
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleCheckRadius: 0.5
+  minDistanceFromObstacle: 1
   angle1Position: {x: 0, y: 2, z: -5}
   angle1Rotation: {x: 15, y: 0, z: 0}
   angle2Position: {x: 0, y: 5, z: -8}

@@ -12,6 +12,12 @@ public class CameraController : MonoBehaviour
     [SerializeField] private bool useDamping = true;
     [SerializeField] private float dampingFactor = 0.95f;
     
+    [Header("Obstacle Avoidance")]
+    [SerializeField] private bool enableObstacleAvoidance = true;
+    [SerializeField] private LayerMask obstacleLayerMask = -1;
+    [SerializeField] private float obstacleCheckRadius = 0.5f;
+    [SerializeField] private float minDistanceFromObstacle = 1f;
+    
     [Header("Camera Angles")]
     [SerializeField] private Vector3 angle1Position = new Vector3(0, 1.5f, -3f);
     [SerializeField] private Vector3 angle1Rotation = new Vector3(15, 0, 0);
@@ -110,7 +116,18 @@ public class CameraController : MonoBehaviour
         }
         
         // Calculate target position relative to player
-        _targetPosition = basePosition + _target.rotation * offsetPosition;
+        Vector3 desiredPosition = basePosition + _target.rotation * offsetPosition;
+        
+        // Kiểm tra và tránh vật cản
+        if (enableObstacleAvoidance)
+        {
+            _targetPosition = CheckForObstacles(basePosition, desiredPosition);
+        }
+        else
+        {
+            _targetPosition = desiredPosition;
+        }
+        
         _targetRotation = _target.rotation * Quaternion.Euler(offsetRotation);
     }
 
@@ -174,5 +191,30 @@ public class CameraController : MonoBehaviour
     {
         smoothSpeed = positionSmooth;
         rotationSmoothSpeed = rotationSmooth;
+    }
+    
+    private Vector3 CheckForObstacles(Vector3 playerPosition, Vector3 desiredCameraPosition)
+    {
+        Vector3 direction = desiredCameraPosition - playerPosition;
+        float distance = direction.magnitude;
+        
+        // Raycast từ player đến vị trí camera mong muốn
+        RaycastHit hit;
+        if (Physics.SphereCast(playerPosition, obstacleCheckRadius, direction.normalized, out hit, distance, obstacleLayerMask))
+        {
+            // Nếu có vật cản, di chuyển camera gần player hơn
+            Vector3 adjustedPosition = playerPosition + direction.normalized * (hit.distance - minDistanceFromObstacle);
+            
+            // Đảm bảo camera không quá gần player
+            float minDistance = 1f;
+            if (Vector3.Distance(adjustedPosition, playerPosition) < minDistance)
+            {
+                adjustedPosition = playerPosition + direction.normalized * minDistance;
+            }
+            
+            return adjustedPosition;
+        }
+        
+        return desiredCameraPosition;
     }
 } 

@@ -49,7 +49,10 @@ public class PlayerStatus : NetworkBehaviour
 
     private void UpdatePlayerName()
     {
-        if(Object.HasInputAuthority) _playerNameText.gameObject.SetActive(false);
+        if(Object.HasInputAuthority) {
+            _playerNameText.gameObject.SetActive(false);
+            _pivotHealthBar.gameObject.SetActive(false);
+        }
         if (_playerNameText != null)
         {
             _playerNameText.text = PlayerName.ToString();

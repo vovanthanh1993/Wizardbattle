@@ -24,11 +24,11 @@ public class PlayerHealth : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasInputAuthority && CurrentHealth != _lastHealth)
+        /*if (Object.HasInputAuthority && CurrentHealth != _lastHealth)
         {
             UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
             _lastHealth = CurrentHealth;
-        }
+        }*/
     }
 
     public void TakeDamage(int damage, NetworkObject shooter)
@@ -78,7 +78,14 @@ public class PlayerHealth : NetworkBehaviour
     }
     private void OnCurrentHealthChanged()
     {
-        GetComponent<PlayerController>()?.UpdateHealthBar(CurrentHealth, MaxHealth);
+        if (Object.HasInputAuthority)
+        {
+            UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
+        }
+        else
+        {
+            GetComponent<PlayerController>()?.UpdateHealthBar(CurrentHealth, MaxHealth);
+        }
     }
 
     public void ResetHealth()

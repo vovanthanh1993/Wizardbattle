@@ -24,7 +24,8 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerHealth _playerHealth;
 
-    [Networked] public int Coin { get; set; }
+    [Networked] public long XP { get; set; }
+    [Networked] public int Level { get; set; } = 1;
 
     private PlayerAnimation _playerAnimation;
 
@@ -146,19 +147,20 @@ public class PlayerStatus : NetworkBehaviour
     public void AddKill()
     {
         Kills++;
+        AddXP(50);
         StartCoroutine(RunDelayedLeaderboardUpdate());
     }
 
-    public void AddCoin(int amount)
+    public void AddXP(long amount)
     {
-        Coin += amount;
-        RpcPlayUpdateCoinText();
+        XP += amount;
+        RpcPlayUpdateLevelUI();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
-    public void RpcPlayUpdateCoinText()
+    public void RpcPlayUpdateLevelUI()
     {
-        UIManager.Instance.UpdateCoinText(Coin);
+        UIManager.Instance.UpdateLevelUI(XP);
     }
 
     public void AddDeath()

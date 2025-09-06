@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject _menuPanel;
     [SerializeField] private GameObject _gameplayPanel;
+    public GamePlayPanel GamePlayPanel => _gameplayPanel?.GetComponent<GamePlayPanel>();
 
     [Header("Room UI")]
     [SerializeField] private TMP_InputField _roomInput;
@@ -399,9 +400,9 @@ public class UIManager : MonoBehaviour
         _disconnectPopup.SetActive(isShow);
     }
 
-    public void UpdateCoinText(int amount)
+    public void UpdateLevelUI(long amount)
     {
-        _coinText.text = amount.ToString();
+        _gameplayPanel.GetComponent<GamePlayPanel>().UpdateLevelUI(amount);
     }
 
     public void UpdateTargetText(int num)

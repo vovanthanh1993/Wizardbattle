@@ -15,7 +15,7 @@ public class ItemSpawner : NetworkBehaviour
     [SerializeField] private float _respawnCoinDelay = 10f;
 
     private NetworkObject _currentHealthItem;
-    private NetworkObject _currentCoinItem;
+    private NetworkObject _currentXpItem;
 
     private void Awake()
     {
@@ -49,14 +49,14 @@ public class ItemSpawner : NetworkBehaviour
         StartCoroutine(RespawnAfterDelay());
     }
 
-    public void OnCoinItemPickedUp()
+    public void OnXpItemPickedUp()
     {
         if (!Object.HasStateAuthority) return;
 
-        if (_currentCoinItem != null)
+        if (_currentXpItem != null)
         {
-            Runner.Despawn(_currentCoinItem);
-            _currentCoinItem = null;
+            Runner.Despawn(_currentXpItem);
+            _currentXpItem = null;
         }
 
         StartCoroutine(RespawnCoinAfterDelay());
@@ -76,7 +76,6 @@ public class ItemSpawner : NetworkBehaviour
         Transform spawnPoint = _spawnPoints[randomIndex];
 
         _currentHealthItem = Runner.Spawn(_healthItemPrefabRef, spawnPoint.position, spawnPoint.rotation);
-        //var healthItem = _currentHealthItem.GetComponent<HealthItem>();
     }
 
     private void SpawnCoinItem()
@@ -86,7 +85,7 @@ public class ItemSpawner : NetworkBehaviour
         int randomIndex = Random.Range(0, _spawnPointsCoin.Length);
         Transform spawnPoint = _spawnPointsCoin[randomIndex];
 
-        _currentCoinItem = Runner.Spawn(_coinPrefabRef, spawnPoint.position, spawnPoint.rotation);
+        _currentXpItem = Runner.Spawn(_coinPrefabRef, spawnPoint.position, spawnPoint.rotation);
     }
 
     private IEnumerator RespawnCoinAfterDelay()

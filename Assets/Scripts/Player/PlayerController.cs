@@ -159,7 +159,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleJump(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && !IsDisable)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && !IsDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill2)
         { 
             RpcJump();
         }
@@ -190,7 +190,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleSkillHeal(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && !IsDisable)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && !IsDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill1)
         {
             RpcHeal();
         }
@@ -198,7 +198,7 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleSkillStealth(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && !IsDisable)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && !IsDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
         {
             RpcStealth();
         }

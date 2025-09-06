@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 312360928190724753}
   - component: {fileID: 4889092874125031234}
   m_Layer: 0
-  m_Name: Cuboid
+  m_Name: XpItem
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,4 +264,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75640899ddba5174e957a740c7a7fcfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinAmount: 20
+  _xpAmount: 50
+  _xpVariation: 5

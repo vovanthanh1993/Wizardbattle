@@ -1,13 +1,24 @@
 using UnityEngine;
 using Fusion;
-public class CoinItem : NetworkBehaviour
+
+public class XpItem : NetworkBehaviour
 {
-    [SerializeField] private int _coinAmount = 20;
+    [Header("XP Settings")]
+    [SerializeField] private int _xpAmount = 50;
+    [SerializeField] private int _xpVariation = 5;
+    
     [Networked] private bool _isPickedUp { get; set; }
+    [Networked] private int _actualXpAmount { get; set; }
 
     public override void Spawned()
     {
         _isPickedUp = false;
+        if (Object.HasStateAuthority)
+        {
+            _actualXpAmount = _xpAmount + Random.Range(-_xpVariation, _xpVariation + 1);
+            _actualXpAmount = Mathf.Max(1, _actualXpAmount);
+        }
+        
         gameObject.SetActive(true);
     }
 
@@ -19,9 +30,9 @@ public class CoinItem : NetworkBehaviour
         if (playerStatus != null && Object.HasStateAuthority)
         {
             _isPickedUp = true;
-            playerStatus.AddCoin(_coinAmount);
+            playerStatus.AddXP(_actualXpAmount);
             RpcHideItem();
-            ItemSpawner.Instance.OnCoinItemPickedUp();
+            ItemSpawner.Instance.OnXpItemPickedUp();
         }
     }
 
@@ -29,5 +40,10 @@ public class CoinItem : NetworkBehaviour
     private void RpcHideItem()
     {
         gameObject.SetActive(false);
+    }
+    
+    public int GetXpAmount()
+    {
+        return _actualXpAmount;
     }
 }

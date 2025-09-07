@@ -45,6 +45,7 @@ public class PlayerData
     public float diamond;
 
     public int life;
+    public int health;
     
     // Constructor for new player
     public PlayerData(string email, string displayName, string userId)
@@ -84,6 +85,7 @@ public class PlayerData
         this.coin = 100;
         this.diamond = 100;
         this.life = 5;
+        this.health = 1000;
     }
     
     private string GenerateRandomPlayerName()

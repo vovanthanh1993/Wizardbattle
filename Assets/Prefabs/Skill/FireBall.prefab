@@ -14644,7 +14644,7 @@ GameObject:
   - component: {fileID: 3983662216405637073}
   - component: {fileID: 8185874006213917305}
   m_Layer: 0
-  m_Name: Fireball
+  m_Name: FireBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14782,7 +14782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _explosionPrefab: {fileID: 8965056113716486154}
   _explosionRadius: 3
-  _explosionDamage: 60
+  _explosionDamage: 600
 --- !u!1001 &5429585234580106743
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -16250,7 +16250,6 @@ MonoBehaviour:
   _resumeButton: {fileID: 757751508}
   _roomListParent: {fileID: 397942466}
   _roomEntryPrefab: {fileID: 4572749713950144417, guid: 075fb883a9a7dbc4a8e426f93c2c412c, type: 3}
-  _healthBarImage: {fileID: 466689401}
   _leaderBoardContent: {fileID: 1098245958}
   _linePrefab: {fileID: 0}
   _playerNameInput: {fileID: 2001792473}
@@ -20226,6 +20225,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _xpBarImage: {fileID: 745208795}
   _levelText: {fileID: 2005104725}
+  _healthBarImage: {fileID: 466689401}
+  _healthText: {fileID: 1556254637}
   _baseXP: 100
   _xpMultiplier: 1.5
   _skillUI1: {fileID: 78265133}

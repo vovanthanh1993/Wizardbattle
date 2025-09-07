@@ -7,6 +7,10 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private Image _xpBarImage;
     [SerializeField] private TMP_Text _levelText;
 
+    [Header("Health UI")]
+    [SerializeField] private Image _healthBarImage;
+    [SerializeField] private TMP_Text _healthText;
+
     [Header("Level Calculation")]
     [SerializeField] private int _baseXP = 100;
     [SerializeField] private float _xpMultiplier = 1.5f;
@@ -88,5 +92,19 @@ public class GamePlayPanel : MonoBehaviour
     private long CalculateXPToNextLevel(int currentLevel)
     {
         return CalculateXPForLevel(currentLevel + 1);
+    }
+
+    public void UpdateHealth(float current, float maxHealth)
+    {
+        float fill = Mathf.Clamp01(current / maxHealth);
+        if (_healthBarImage != null) {
+            _healthBarImage.fillAmount = fill;
+            _healthText.text = $"{current}/{maxHealth}";
+        }    
+    }
+
+    public void ResetLevel() {
+        UpdateLevelUI(1);
+        UpdateXpBar(0, _baseXP);
     }
 }

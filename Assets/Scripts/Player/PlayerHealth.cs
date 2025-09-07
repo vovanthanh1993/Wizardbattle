@@ -9,11 +9,12 @@ public class PlayerHealth : NetworkBehaviour
 
     [Networked] public bool IsDead { get; set; }
 
-    public int MaxHealth = 100;
+    public int MaxHealth = 1000;
     private int _lastHealth;
 
     public override void Spawned()
     {
+        MaxHealth = FirebaseDataManager.Instance.GetCurrentPlayerData().health;
         ResetHealth();
         if (Object.HasInputAuthority)
         {

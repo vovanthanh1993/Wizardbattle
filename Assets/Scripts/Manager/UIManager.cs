@@ -26,9 +26,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform _roomListParent;
     [SerializeField] private GameObject _roomEntryPrefab;
 
-    [Header("Health UI")]
-    [SerializeField] private Image _healthBarImage;
-
     [SerializeField] private Transform _leaderBoardContent;
     [SerializeField] private GameObject _linePrefab;
     [SerializeField] private TMP_Text _playerNameInput;
@@ -130,6 +127,7 @@ public class UIManager : MonoBehaviour
 
     public void OnBackToMenuClicked()
     {
+        ResetLevel();
         SceneManager.LoadScene(GameConstants.LOBBY_SCENE);
         if(NetworkRunnerHandler.Instance.Runner != null)
         {
@@ -194,9 +192,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateHealth(float current, float maxHealth)
     {
-        float fill = Mathf.Clamp01(current / maxHealth);
-        if (_healthBarImage != null)
-            _healthBarImage.fillAmount = fill;
+        GamePlayPanel.UpdateHealth(current, maxHealth);
     }
 
     public void UpdateAllLeaderboards()
@@ -408,5 +404,9 @@ public class UIManager : MonoBehaviour
     public void UpdateTargetText(int num)
     {
         _targetText.text = num.ToString();
+    }
+
+    public void ResetLevel() {
+        GamePlayPanel.ResetLevel();
     }
 }

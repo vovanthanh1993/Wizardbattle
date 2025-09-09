@@ -41,8 +41,10 @@ public class PlayerData
     public float ammor;
     public int level;
     public float xp;
-    public float coin;
-    public float diamond;
+    public float gold;
+    public float ruby;
+
+    public int key;
 
     public int life;
     public int health;
@@ -82,10 +84,11 @@ public class PlayerData
         this.ammor = 0;
         this.level = 1;
         this.xp = 0;
-        this.coin = 100;
-        this.diamond = 100;
+        this.gold = 100;
+        this.ruby = 100;
         this.life = 5;
         this.health = 1000;
+        this.key = 5;
     }
     
     private string GenerateRandomPlayerName()

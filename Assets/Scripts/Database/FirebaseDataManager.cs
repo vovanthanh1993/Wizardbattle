@@ -398,7 +398,7 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
-    public async Task<bool> UpdatePlayerAttributes(float damage, float ammor, int level, float xp, float coin, float diamond, int life)
+    public async Task<bool> UpdatePlayerAttributes(float damage, float ammor, int level, float xp, float gold, float ruby, int life)
     {
         PlayerData currentData = await LoadPlayerData();
         if (currentData == null)
@@ -410,8 +410,8 @@ public class FirebaseDataManager : MonoBehaviour
         currentData.ammor = ammor;
         currentData.level = level;
         currentData.xp = xp;
-        currentData.coin = coin;
-        currentData.diamond = diamond;
+        currentData.gold = gold;
+        currentData.ruby = ruby;
         currentData.life = life;
 
         return await SavePlayerData(currentData);
@@ -429,8 +429,8 @@ public class FirebaseDataManager : MonoBehaviour
         currentData.ammor = playerData.ammor;
         currentData.level = playerData.level;
         currentData.xp = playerData.xp;
-        currentData.coin = playerData.coin;
-        currentData.diamond = playerData.diamond;
+        currentData.gold = playerData.gold;
+        currentData.ruby = playerData.ruby;
 
         return await SavePlayerData(currentData);
     }
@@ -489,14 +489,33 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData.xp;
     }
 
-    public float GetCurrentUserCoin()
+    public float GetCurrentUserGold()
     {
-        return currentPlayerData.coin;
+        return currentPlayerData.gold;
     }
 
-    public float GetCurrentUserDiamond()
+    public float GetCurrentUserRuby()
     {
-        return currentPlayerData.diamond;
+        return currentPlayerData.ruby;
+    }
+
+    public int GetCurrentUserKey()
+    {
+        return currentPlayerData.key;
+    }
+
+    public async Task<bool> BuyGold(int ruby, int gold)
+    {
+        currentPlayerData.ruby -= ruby;
+        currentPlayerData.gold += gold;
+        return await SavePlayerData(currentPlayerData);
+    }
+
+    public async Task<bool> BuyKey(int ruby, int key)
+    {
+        currentPlayerData.ruby -= ruby;
+        currentPlayerData.key += key;
+        return await SavePlayerData(currentPlayerData);
     }
 
     public int GetCurrentUserLife()

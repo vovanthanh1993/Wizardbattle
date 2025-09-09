@@ -55,12 +55,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _disconnectPopup;
     
     private List<RoomData> _currentRoomList = new List<RoomData>();
-
-    [SerializeField] private TMP_Text _coinText;
     [SerializeField] private TMP_Text _targetText;
 
     [SerializeField] private TopLeftPanel _topLeftPanel;
     [SerializeField] private TopRightPanel _topRightPanel;
+    
+    public TopRightPanel TopRightPanel => _topRightPanel;
 
     [SerializeField] private GameObject _loadingPanel;
     [SerializeField] private NoticePopup _noticePopup;

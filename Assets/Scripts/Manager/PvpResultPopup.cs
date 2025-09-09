@@ -114,28 +114,28 @@ public class PvpResultPopup : MonoBehaviour
                 Debug.Log($"Ammor: {currentData.ammor}");
                 Debug.Log($"Level: {currentData.level}");
                 Debug.Log($"XP: {currentData.xp}");
-                Debug.Log($"Coin: {currentData.coin}");
-                Debug.Log($"Diamond: {currentData.diamond}");
+                Debug.Log($"Gold: {currentData.gold}");
+                Debug.Log($"Ruby: {currentData.ruby}");
                 Debug.Log($"Life: {currentData.life}");
                 Debug.Log("==========================");
 
                 float newXP = currentData.xp;
-                float newCoin = currentData.coin;
-                float newDiamond = currentData.diamond;
+                float newGold = currentData.gold;
+                float newRuby = currentData.ruby;
                 int newLife = currentData.life;
 
                 if (isWin)
                 {
                     newXP += 100f;          // Increase XP
-                    newCoin += 10f;        // Increase coin
-                    newDiamond += 100f;      // Increase diamond
+                    newGold += 10f;        // Increase gold
+                    newRuby += 100f;      // Increase ruby
                     newLife -= 1;
                 }
                 else
                 {
                     newXP += 50f;           // Small XP increase
-                    newCoin += 2f;         // Small coin increase
-                    newDiamond += 10f;
+                    newGold += 2f;         // Small gold increase
+                    newRuby += 10f;
                     newLife -= 1;
                 }
                 
@@ -145,8 +145,8 @@ public class PvpResultPopup : MonoBehaviour
                 // Update currentData with new values before saving
                 currentData.level = newLevel;
                 currentData.xp = newXP;
-                currentData.coin = newCoin;
-                currentData.diamond = newDiamond;
+                currentData.gold = newGold;
+                currentData.ruby = newRuby;
                 currentData.life = newLife;
                 
                 // Update PlayerData

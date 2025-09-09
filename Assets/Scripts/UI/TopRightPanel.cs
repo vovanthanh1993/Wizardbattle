@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 public class TopRightPanel : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _coinText;
-    [SerializeField] private TMP_Text _diamondText;
-    [SerializeField] private TMP_Text _lifeText;
+    
+    [SerializeField] private TMP_Text _rubyText;
+    [SerializeField] private TMP_Text _goldText;
+    [SerializeField] private TMP_Text _keyText;
 
     void Start()
     {
@@ -15,8 +16,8 @@ public class TopRightPanel : MonoBehaviour
     }
 
     public void InitData() {
-        _coinText.text = FirebaseDataManager.Instance.GetCurrentUserCoin().ToString();
-        _diamondText.text = FirebaseDataManager.Instance.GetCurrentUserDiamond().ToString();
-        _lifeText.text = FirebaseDataManager.Instance.GetCurrentUserLife().ToString();
+        _rubyText.text = FirebaseDataManager.Instance.GetCurrentUserRuby().ToString();
+        _goldText.text = FirebaseDataManager.Instance.GetCurrentUserGold().ToString();
+        _keyText.text = FirebaseDataManager.Instance.GetCurrentUserKey().ToString();
     }
 }

@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 4463087711601304157}
   - component: {fileID: 105804585375339151}
   - component: {fileID: 312360928190724753}
-  - component: {fileID: 4889092874125031234}
+  - component: {fileID: 6335399562246553710}
   m_Layer: 0
   m_Name: XpItem
   m_TagString: Item
@@ -170,7 +170,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3154553133391768021}
   - {fileID: 4463087711601304157}
-  - {fileID: 4889092874125031234}
+  - {fileID: 6335399562246553710}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3154553133391768021
 MonoBehaviour:
@@ -252,7 +252,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4889092874125031234
+--- !u!114 &6335399562246553710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -261,8 +261,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6484256260061122135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75640899ddba5174e957a740c7a7fcfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 544c7892140a55945aec964f3dbcdb65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _xpAmount: 50
+  _xpAmount: 20
   _xpVariation: 5

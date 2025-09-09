@@ -301,7 +301,7 @@ public class EmailPassLogin : MonoBehaviour
                 if (result.User.IsEmailVerified)
                 {
                     _loginUi.SetActive(false);
-                    await LoadSceneAsync("MainMenuScene");
+                    await LoadSceneAsync(GameConstants.HOME_SCENE);
                 }
                 else {
                     _loadingScreen.SetActive(false);

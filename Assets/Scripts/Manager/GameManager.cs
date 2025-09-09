@@ -1,5 +1,6 @@
 ﻿using Fusion;
 using Fusion.Addons.KCC;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,12 +101,29 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         PvpResultPopup.Instance.ShowResultPopupForPlayer();
+
+        if(NetworkRunnerHandler.Instance.Runner != null)
+        {
+            StartCoroutine(DestroyNetworkRunnerAfterFrame());
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RpcUpdateLeaderboard()
     {
         UIManager.Instance.UpdateAllLeaderboards();
+    }
+
+    private IEnumerator DestroyNetworkRunnerAfterFrame()
+    {
+        // Wait for one frame
+        yield return null;
+        
+        // Now destroy the NetworkRunner
+        if(NetworkRunnerHandler.Instance.Runner != null)
+        {
+            Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);
+        }
     }
 
     public void PlayerLeft(PlayerRef player)

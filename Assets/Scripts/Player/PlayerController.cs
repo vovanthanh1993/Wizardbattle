@@ -96,7 +96,11 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsDisable)
         {
-            _playerStatus?.UpdateUIElements();
+            // Only update UI every few frames to reduce AABB calculations
+            if (Time.frameCount % 3 == 0) // Update every 3rd frame
+            {
+                _playerStatus?.UpdateUIElements();
+            }
         }
     }
     

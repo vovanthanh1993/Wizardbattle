@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public static class GameConstants
 {
     // Scenes
-    public const string LOBBY_SCENE = "MainMenuScene";
+    public const string HOME_SCENE = "HomeScene";
     public const int GAMEPLAY_SCENE_INDEX = 2;
 
     // UI Messages

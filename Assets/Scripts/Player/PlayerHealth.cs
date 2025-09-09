@@ -15,6 +15,7 @@ public class PlayerHealth : NetworkBehaviour
     public override void Spawned()
     {
         MaxHealth = FirebaseDataManager.Instance.GetCurrentPlayerData().health;
+        Debug.Log("MaxHealth: " + MaxHealth);
         ResetHealth();
         if (Object.HasInputAuthority)
         {

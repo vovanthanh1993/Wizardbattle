@@ -110,7 +110,7 @@ public class UIManager : MonoBehaviour
 
     public void BackToMenu()
     {
-        SceneManager.LoadScene(GameConstants.LOBBY_SCENE);
+        SceneManager.LoadScene(GameConstants.HOME_SCENE);
         ShowMenu();
     }
 
@@ -128,7 +128,7 @@ public class UIManager : MonoBehaviour
     public void OnBackToMenuClicked()
     {
         ResetLevel();
-        SceneManager.LoadScene(GameConstants.LOBBY_SCENE);
+        SceneManager.LoadScene(GameConstants.HOME_SCENE);
         if(NetworkRunnerHandler.Instance.Runner != null)
         {
             Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);

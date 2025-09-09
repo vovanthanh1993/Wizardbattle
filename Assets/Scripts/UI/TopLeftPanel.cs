@@ -7,6 +7,7 @@ public class TopLeftPanel : MonoBehaviour
     [SerializeField] private TMP_Text _levelText;
     [SerializeField] private TMP_Text _damageText;
     [SerializeField] private TMP_Text _ammorText;
+    [SerializeField] private TMP_Text _healthText;
 
     void Start()
     {
@@ -18,5 +19,6 @@ public class TopLeftPanel : MonoBehaviour
         _levelText.text = FirebaseDataManager.Instance.GetCurrentUserLevel().ToString();
         _damageText.text = FirebaseDataManager.Instance.GetCurrentUserDamage().ToString();
         _ammorText.text = FirebaseDataManager.Instance.GetCurrentUserAmmor().ToString();
+        _healthText.text = FirebaseDataManager.Instance.GetCurrentPlayerData().health.ToString();
     }
 }

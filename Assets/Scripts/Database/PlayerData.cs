@@ -77,13 +77,13 @@ public class PlayerData
         this.sfxVolume = 1.0f;
         this.musicVolume = 0.8f;
         
-        this.unlockedAchievements = new bool[10]; // 10 achievements
+        this.unlockedAchievements = new bool[10];
         this.achievementPoints = 0;
         this.unlockedCharacters = new string[] { "Default" };
         this.unlockedSkills = new string[] { "FireBall" };
         this.unlockedCosmetics = new string[0];
 
-        this.damage = 40;
+        this.damage = 200;
         this.ammor = 0;
         this.level = 1;
         this.xp = 0;

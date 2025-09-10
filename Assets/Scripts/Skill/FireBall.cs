@@ -7,7 +7,7 @@ public class FireBall : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private float _explosionRadius = 3f;
-    [SerializeField] private int _explosionDamage = 500;
+    [SerializeField] private float _explosionDamage = 400f;
 
     private Vector3 _direction;
     private float _speed;
@@ -102,23 +102,24 @@ public class FireBall : MonoBehaviour
             {
                 // Calculate damage based on distance
                 float distance = Vector3.Distance(explosionPosition, playerRoot.transform.position);
-                int damage = CalculateDamageByDistance(distance);
-                
+                float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
+                Debug.Log("Damage: " + damage);
                 // Send RPC to deal damage
-                RpcRequestDamage(playerRoot, damage, _shooter);
+                RpcRequestDamage(playerRoot, Mathf.RoundToInt(damage), _shooter);
                 damagedPlayers.Add(playerRoot);
             }
         }
     }
 
-    private int CalculateDamageByDistance(float distance)
+    private float CalculateDamageByDistance(float distance, float shooterDamage)
     {
-        if (distance <= 0) return _explosionDamage;
+        Debug.Log("Shooter Damage: " + _explosionDamage + shooterDamage);
+        if (distance <= 0) return _explosionDamage + shooterDamage;
         if (distance >= _explosionRadius) return 0;
         
         // Damage decreases with distance (linear falloff)
         float damageMultiplier = 1f - (distance / _explosionRadius);
-        return Mathf.RoundToInt(_explosionDamage * damageMultiplier);
+        return Mathf.RoundToInt((_explosionDamage + shooterDamage) * damageMultiplier);
     }
 
     private void ReturnToPool()

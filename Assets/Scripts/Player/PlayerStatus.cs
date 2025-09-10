@@ -29,6 +29,9 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerAnimation _playerAnimation;
 
+    public float Damage { get; set; }
+    public float Ammor { get; set; }
+
     [SerializeField] private ParticleSystem _healthParticleSystem;
 
     public override void Spawned()
@@ -36,6 +39,11 @@ public class PlayerStatus : NetworkBehaviour
         _playerHealth = GetComponent<PlayerHealth>();
         _playerAnimation = GetComponent<PlayerAnimation>();
         UpdatePlayerName();
+        if (Object.HasInputAuthority) 
+        {
+            Damage = FirebaseDataManager.Instance.GetCurrentUserDamage();
+            Ammor = FirebaseDataManager.Instance.GetCurrentUserAmmor();
+        }
     }
 
     #region Player Name Management

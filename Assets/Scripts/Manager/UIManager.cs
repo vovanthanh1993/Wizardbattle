@@ -61,6 +61,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TopRightPanel _topRightPanel;
     
     public TopRightPanel TopRightPanel => _topRightPanel;
+    public TopLeftPanel TopLeftPanel => _topLeftPanel;
 
     [SerializeField] private GameObject _loadingPanel;
     [SerializeField] private NoticePopup _noticePopup;

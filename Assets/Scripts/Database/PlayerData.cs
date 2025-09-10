@@ -43,11 +43,14 @@ public class PlayerData
     public float xp;
     public float gold;
     public float ruby;
+    public float cash;
 
     public int key;
 
     public int life;
     public int health;
+
+    
     
     // Constructor for new player
     public PlayerData(string email, string displayName, string userId)
@@ -86,9 +89,11 @@ public class PlayerData
         this.xp = 0;
         this.gold = 100;
         this.ruby = 100;
+        this.cash = 10000;
         this.life = 5;
         this.health = 1000;
         this.key = 5;
+       
     }
     
     private string GenerateRandomPlayerName()

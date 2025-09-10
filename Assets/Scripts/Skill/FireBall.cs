@@ -7,7 +7,7 @@ public class FireBall : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private float _explosionRadius = 3f;
-    [SerializeField] private int _explosionDamage = 600;
+    [SerializeField] private int _explosionDamage = 500;
 
     private Vector3 _direction;
     private float _speed;

@@ -504,6 +504,11 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData.key;
     }
 
+    public float GetCurrentUserCash()
+    {
+        return currentPlayerData.cash;
+    }
+
     public async Task<bool> BuyGold(int ruby, int gold)
     {
         currentPlayerData.ruby -= ruby;
@@ -515,6 +520,31 @@ public class FirebaseDataManager : MonoBehaviour
     {
         currentPlayerData.ruby -= ruby;
         currentPlayerData.key += key;
+        return await SavePlayerData(currentPlayerData);
+    }
+
+    public async Task<bool> BuyRuby(float cash, int ruby)
+    {
+        currentPlayerData.cash -= cash;
+        currentPlayerData.ruby += ruby;
+        return await SavePlayerData(currentPlayerData);
+    }
+
+    public async Task<bool> Upgrade(int gold, UpgradeType upgradeType, int upgradeAmount)
+    {
+        currentPlayerData.gold -= gold;
+        switch (upgradeType)
+        {
+            case UpgradeType.Health:
+                currentPlayerData.health += upgradeAmount;
+                break;
+            case UpgradeType.Damage:
+                currentPlayerData.damage += upgradeAmount;
+                break;
+            case UpgradeType.Ammor:
+                currentPlayerData.ammor += upgradeAmount;
+                break;
+        }
         return await SavePlayerData(currentPlayerData);
     }
 

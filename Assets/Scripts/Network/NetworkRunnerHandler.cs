@@ -17,9 +17,18 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     private NetworkRunner _runner;
     private bool _sceneReady = false;
+    private bool _isLeavingLobby = false; // Flag to track if player is leaving lobby voluntarily
 
     public bool IsRunning => _runner != null && _runner.IsRunning;
     public NetworkRunner Runner => _runner;
+    
+    /// <summary>
+    /// Call this when player voluntarily leaves lobby to avoid showing disconnect popup
+    /// </summary>
+    public void SetLeavingLobby(bool isLeaving)
+    {
+        _isLeavingLobby = isLeaving;
+    }
 
     private List<string> _existingRoomNames = new List<string>();
     private TaskCompletionSource<List<SessionInfo>> _sessionListTcs;
@@ -208,19 +217,90 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
     }
 
+    /// <summary>
+    /// Called when the NetworkRunner is shutting down
+    /// Handles returning players to menu if they're in lobby when shutdown occurs
+    /// </summary>
+    /// <param name="runner">The NetworkRunner instance</param>
+    /// <param name="shutdownReason">Reason for the shutdown</param>
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        if(GameManager.Instance.GameState != GameState.Ended)
-            UIManager.Instance.ShowDisconnectPopup(true);
+        if(GameManager.Instance != null && GameManager.Instance.GameState != GameState.Ended)
+        {
+            // If in lobby when server shuts down, return to menu
+            if (GameManager.Instance.GameState == GameState.Lobby)
+            {
+                Debug.Log("Server shutdown during lobby, returning to menu");
+                
+                // Only show popup if not voluntarily leaving lobby
+                if (!_isLeavingLobby)
+                {
+                    // Only show popup for clients, not for host
+                    if (!runner.IsServer)
+                    {
+                        UIManager.Instance.ShowNoticePopup("Host left the lobby, returning to menu!");
+                    }
+                }
+                
+                _isLeavingLobby = false;
+                UIManager.Instance.BackToMenu();
+            }
+            else
+            {
+                // Show disconnect popup for other game states
+                UIManager.Instance.ShowDisconnectPopup(true);
+            }
+        }
     }
+    
+    /// <summary>
+    /// Called when disconnected from server (without specific reason)
+    /// Handles returning players to menu if they're in lobby when disconnect occurs
+    /// </summary>
+    /// <param name="runner">The NetworkRunner instance</param>
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        if(GameManager.Instance.GameState != GameState.Ended)
-            UIManager.Instance.ShowDisconnectPopup(true);
+        if(GameManager.Instance != null && GameManager.Instance.GameState != GameState.Ended)
+        {
+            // If in lobby when disconnected, return to menu
+            if (GameManager.Instance.GameState == GameState.Lobby)
+            {
+                Debug.Log("Disconnected from server during lobby. Return to menu!");
+                UIManager.Instance.BackToMenu();
+                UIManager.Instance.ShowNoticePopup("Disconnected from server during lobby. Return to menu!");
+            }
+            else
+            {
+                // Show disconnect popup for other game states
+                UIManager.Instance.ShowDisconnectPopup(true);
+            }
+        }
     }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-    public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
+    /// <summary>
+    /// Called when disconnected from server with specific reason
+    /// Handles returning players to menu if they're in lobby when disconnect occurs
+    /// </summary>
+    /// <param name="runner">The NetworkRunner instance</param>
+    /// <param name="reason">Specific reason for the disconnect</param>
+    public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) 
+    {
+        if(GameManager.Instance != null && GameManager.Instance.GameState != GameState.Ended)
+        {
+            // If in lobby when disconnected, return to menu
+            if (GameManager.Instance.GameState == GameState.Lobby)
+            {
+                Debug.Log($"Disconnected from server during lobby (reason: {reason}), returning to menu");
+                UIManager.Instance.BackToMenu();
+            }
+            else
+            {
+                // Show disconnect popup for other game states
+                UIManager.Instance.ShowDisconnectPopup(true);
+            }
+        }
+    }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }

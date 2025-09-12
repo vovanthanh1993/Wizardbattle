@@ -134,10 +134,6 @@ public class UIManager : MonoBehaviour
     {
         ResetLevel();
         SceneManager.LoadScene(GameConstants.HOME_SCENE);
-        if(NetworkRunnerHandler.Instance.Runner != null)
-        {
-            Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);
-        }
         ShowMenu();
     }
 
@@ -162,6 +158,10 @@ public class UIManager : MonoBehaviour
         _topRightPanel.InitData();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        if (NetworkRunnerHandler.Instance.Runner != null)
+        {
+            Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);
+        }
     }
     
     public void ShowLobby()

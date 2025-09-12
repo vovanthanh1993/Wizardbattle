@@ -75,6 +75,15 @@ public class CharacterSelectionUI : MonoBehaviour
         // Save to Firebase
         UIManager.Instance.ShowLoadingPanel(true);
         await FirebaseDataManager.Instance.SavePlayerData(FirebaseDataManager.Instance.GetCurrentPlayerData());
+        bool success = await FirebaseDataManager.Instance.SavePlayerData(FirebaseDataManager.Instance.GetCurrentPlayerData());
+        if (success)
+        {
+            UIManager.Instance.ShowNoticePopup("Change character success!");
+        }
+        else
+        {
+            Debug.Log("Change character failed!");
+        }
         UIManager.Instance.ShowLoadingPanel(false);
     }
 

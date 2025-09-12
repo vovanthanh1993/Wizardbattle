@@ -80,8 +80,9 @@ public class LobbyPanel : MonoBehaviour
     {
         if (NetworkRunnerHandler.Instance?.Runner != null)
         {
+            // Set flag to indicate player is voluntarily leaving lobby
+            NetworkRunnerHandler.Instance.SetLeavingLobby(true);
             NetworkRunnerHandler.Instance.Runner.Shutdown();
         }
-        UIManager.Instance.BackToMenu();
     }
 }

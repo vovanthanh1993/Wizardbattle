@@ -33344,10 +33344,10 @@ RectTransform:
   - {fileID: 962585865}
   - {fileID: 534508884}
   - {fileID: 410169886}
-  - {fileID: 1300140942}
   - {fileID: 830143505}
   - {fileID: 2106953692}
   - {fileID: 153778023}
+  - {fileID: 1300140942}
   m_Father: {fileID: 807125976}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

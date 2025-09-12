@@ -160,7 +160,6 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
             //UIManager.Instance.SetStatus($"{playerName} has left the game");
             Runner.Despawn(Runner.GetPlayerObject(player));
             
-            // Cập nhật lobby UI - chỉ khi GameManager đã được spawn
             if (GameState == GameState.Lobby)
             {
                 RpcUpdateLobbyUI();
@@ -180,10 +179,7 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         
         if (GameState == GameState.Lobby)
         {
-            // Cập nhật UI lobby
             RpcUpdateLobbyUI();
-            
-            // Kiểm tra xem có đủ players để start game không
             RpcCheckIfReadyToStart();
         }
         else if (GameState == GameState.Waiting)

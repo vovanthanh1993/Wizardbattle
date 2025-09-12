@@ -11,7 +11,8 @@ public static class GameConstants
 {
     // Scenes
     public const string HOME_SCENE = "HomeScene";
-    public const int GAMEPLAY_SCENE_INDEX = 2;
+    public const int LOBBY_SCENE_INDEX = 2;
+    public const int GAMEPLAY_SCENE_INDEX = 3;
 
     // UI Messages
     public const string CONNECTING = "Connecting...";

@@ -66,6 +66,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private NoticePopup _noticePopup;
 
     [SerializeField] public MultiplayerManager multiplayerManager;
+    
+    [Header("Lobby UI")]
+    [SerializeField] private GameObject _lobbyPanel;
+
+    public LobbyPanel LobbyPanel => _lobbyPanel?.GetComponent<LobbyPanel>();
 
     private void Awake()
     {
@@ -152,8 +157,20 @@ public class UIManager : MonoBehaviour
         _gameplayPanel.SetActive(false);
         _inGameButtonsPanel.SetActive(false);
         _disconnectPopup.SetActive(false);
+        _lobbyPanel.SetActive(false);
         _topLeftPanel.InitData();
         _topRightPanel.InitData();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    
+    public void ShowLobby()
+    {
+        _menuPanel.SetActive(false);
+        _gameplayPanel.SetActive(false);
+        _inGameButtonsPanel.SetActive(false);
+        _disconnectPopup.SetActive(false);
+        _lobbyPanel.SetActive(true);
     }
 
     public void ShowGameplay()
@@ -162,6 +179,9 @@ public class UIManager : MonoBehaviour
         _menuPanel.SetActive(false);
         _gameplayPanel.SetActive(true);
         multiplayerManager.ShowJoinPanel(false);
+        _lobbyPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         //SetStatus(GameConstants.CONNECTED_STATUS);
 
         /*if (_roomNameText != null && NetworkRunnerHandler.Instance != null)

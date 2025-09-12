@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Item
+  - CharacterSelectorRoot
   layers:
   - Default
   - TransparentFX

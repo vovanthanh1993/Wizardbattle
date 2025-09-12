@@ -48,6 +48,8 @@ public class PlayerData
     public int food;
     public int health;
 
+    public string playerPrefabName;
+
     
     
     // Constructor for new player
@@ -90,7 +92,7 @@ public class PlayerData
         this.cash = 10000;
         this.health = 1000;
         this.food = 5;
-       
+        this.playerPrefabName = "Player_Mage";
     }
     
     private string GenerateRandomPlayerName()

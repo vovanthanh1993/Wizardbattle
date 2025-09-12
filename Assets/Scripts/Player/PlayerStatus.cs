@@ -61,6 +61,9 @@ public class PlayerStatus : NetworkBehaviour
         if(Object.HasInputAuthority) {
             _playerNameText.gameObject.SetActive(false);
             _pivotHealthBar.gameObject.SetActive(false);
+        } else {
+            _playerNameText.gameObject.SetActive(true);
+            _pivotHealthBar.gameObject.SetActive(true);
         }
         if (_playerNameText != null)
         {

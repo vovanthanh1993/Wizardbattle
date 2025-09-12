@@ -105,13 +105,13 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             {
                 GameMode = GameMode.Client,
                 SessionName = randomRoom.Name,
-                Scene = SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX),
+                Scene = SceneRef.FromIndex(GameConstants.LOBBY_SCENE_INDEX),
                 SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>()
             });
 
             if (result.Ok)
             {
-                UIManager.Instance.ShowGameplay();
+                UIManager.Instance.ShowLobby();
             }
             else
             {
@@ -126,14 +126,14 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             {
                 GameMode = GameMode.Host,
                 SessionName = roomName,
-                Scene = SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX),
+                Scene = SceneRef.FromIndex(GameConstants.LOBBY_SCENE_INDEX),
                 SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
                 IsVisible = true
             });
 
             if (result.Ok)
             {
-                UIManager.Instance.ShowGameplay();
+                UIManager.Instance.ShowLobby();
             }
             else
             {
@@ -167,7 +167,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = mode,
             SessionName = finalRoomName,
-            Scene = SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX),
+            Scene = SceneRef.FromIndex(GameConstants.LOBBY_SCENE_INDEX),
             SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
             IsVisible = true,
         };
@@ -175,7 +175,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         var result = await _runner.StartGame(args);
         if (result.Ok)
         {
-            UIManager.Instance.ShowGameplay();
+            UIManager.Instance.ShowLobby();
         }
         else
         {

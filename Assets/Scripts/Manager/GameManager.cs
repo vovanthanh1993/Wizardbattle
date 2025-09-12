@@ -2,10 +2,12 @@
 using Fusion.Addons.KCC;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum GameState
 {
+    Lobby,
     Waiting,
     Playing,
     Ended
@@ -25,12 +27,16 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     [Header("Spawn Points")]
     [SerializeField] private Transform[] _spawnPoints;
 
+    [Header("Lobby Settings")]
+    [SerializeField] private int _minPlayersToStart = 1;
+    [SerializeField] private int _maxPlayers = 8;
+
     private List<int> _availableSpawnIndices;
     private int _currentPrefabIndex = 0;
 
     private NetworkRunner Runner => NetworkRunnerHandler.Instance.Runner;
 
-    [Networked] public GameState GameState { get; set; } = GameState.Waiting;
+    [Networked] public GameState GameState { get; set; } = GameState.Lobby;
 
     private void Awake()
     {
@@ -45,7 +51,6 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
 
     private void Start()
     {
-        UIManager.Instance.UpdateTargetText(_killsToWin);
         _availableSpawnIndices = new List<int>();
         for (int i = 0; i < _spawnPoints.Length; i++)
         {
@@ -70,6 +75,22 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         _availableSpawnIndices.RemoveAt(randomIndex);
 
         return spawnPoint;
+    }
+
+    private NetworkPrefabRef GetPlayerPrefabByName(string characterName)
+    {
+        // Tìm NetworkPrefabRef theo tên character
+        for (int i = 0; i < _playerPrefabRefs.Length; i++)
+        {
+            if (_playerPrefabRefs[i].ToString().Contains(characterName))
+            {
+                return _playerPrefabRefs[i];
+            }
+        }
+        
+        // Fallback về prefab đầu tiên nếu không tìm thấy
+        Debug.LogWarning($"Character '{characterName}' not found, using default prefab");
+        return _playerPrefabRefs[0];
     }
 
     public void EndGame()
@@ -138,6 +159,13 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
 
             //UIManager.Instance.SetStatus($"{playerName} has left the game");
             Runner.Despawn(Runner.GetPlayerObject(player));
+            
+            // Cập nhật lobby UI - chỉ khi GameManager đã được spawn
+            if (GameState == GameState.Lobby)
+            {
+                RpcUpdateLobbyUI();
+                RpcCheckIfReadyToStart();
+            }
         }
 
         UIManager.Instance.UpdateAllLeaderboards();
@@ -147,13 +175,120 @@ public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
         if (!Runner.IsServer)
             return;
+            
+        Debug.Log($"Player {player} joined");
+        
+        if (GameState == GameState.Lobby)
+        {
+            // Cập nhật UI lobby
+            RpcUpdateLobbyUI();
+            
+            // Kiểm tra xem có đủ players để start game không
+            RpcCheckIfReadyToStart();
+        }
+        else if (GameState == GameState.Waiting)
+        {
+            // Spawn player khi đang chuyển sang gameplay
+            //SpawnPlayer(player);
+        }
+    }
+    
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcUpdateLobbyUI()
+    {
+        // Cập nhật UI để hiển thị danh sách players trong lobby
+        UIManager.Instance.LobbyPanel.UpdateLobbyUI(Runner.ActivePlayers.Count(), _minPlayersToStart, _maxPlayers);
+    }
+    
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcStartGame()
+    {
+        GameState = GameState.Waiting;
+        Debug.Log("Game starting...");
+        
+        // UI updates cho tất cả clients
+        UIManager.Instance.ShowLoadingPanel(true);
+        UIManager.Instance.ShowGameplay();
+        
+        // Chỉ Server mới load scene
+        if (Runner.IsServer)
+        {
+            Runner.LoadScene(SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX));
+        }
+    }
+    
+    private IEnumerator StartGameplayAfterDelay()
+    {
+        yield return new WaitForSeconds(2f);
+        GameState = GameState.Playing;
+        Debug.Log("Game is now playing!");
+    }
+    
+    private void SpawnPlayer(PlayerRef player)
+    {
         Transform spawnPoint = GetSpawnPoint();
+        string selectedCharacterName = "Player_Mage"; // Default
 
-        NetworkPrefabRef selectedPrefab = _playerPrefabRefs[_currentPrefabIndex];
+        if (HasInputAuthority)
+        {
+            selectedCharacterName = FirebaseDataManager.Instance.GetCurrentPlayerData()?.playerPrefabName ?? "Player_Mage";
+        }
+        
+        NetworkPrefabRef selectedPrefab = GetPlayerPrefabByName(selectedCharacterName);
+        
         var playerObject = Runner.Spawn(selectedPrefab, spawnPoint.position, spawnPoint.rotation, player);
         Runner.SetPlayerObject(player, playerObject);
         
-        _currentPrefabIndex = (_currentPrefabIndex + 1) % _playerPrefabRefs.Length;
+        Debug.Log($"Spawned player {player} with character: {selectedCharacterName}");
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcCheckIfReadyToStart()
+    {
+        if(GameState != GameState.Lobby) return;
+        
+        int playerCount = Runner.ActivePlayers.Count();
+        if (playerCount >= _minPlayersToStart && playerCount <= _maxPlayers)
+        {
+            // Chỉ hiển thị nút Start Game cho Host (player đầu tiên)
+            if (Runner.IsServer && Runner.LocalPlayer == Runner.ActivePlayers.First())
+            {
+                Debug.Log("Show Start Game Button");
+                UIManager.Instance.LobbyPanel.ShowStartGameButton(true);
+            }
+            else
+            {
+                Debug.Log("Hide Start Game Button");
+                UIManager.Instance.LobbyPanel.ShowStartGameButton(false);
+            }
+        }
+        else
+        {
+            UIManager.Instance.LobbyPanel.ShowStartGameButton(false);
+        }
+    }
+    
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RpcRequestStartGame()
+    {
+        if (!Runner.IsServer) return;
+        
+        // Chỉ cho phép Host/Server start game
+        if (Runner.LocalPlayer != Runner.ActivePlayers.First())
+        {
+            Debug.Log("Only the host can start the game");
+            return;
+        }
+        
+        int playerCount = Runner.ActivePlayers.Count();
+        if (playerCount >= _minPlayersToStart && playerCount <= _maxPlayers)
+        {
+            RpcStartGame();
+        }
+        else
+        {
+            Debug.Log($"Cannot start game. Players: {playerCount}, Required: {_minPlayersToStart}-{_maxPlayers}");
+        }
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]

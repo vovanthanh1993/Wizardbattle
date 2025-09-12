@@ -45,9 +45,7 @@ public class PlayerData
     public float ruby;
     public float cash;
 
-    public int key;
-
-    public int life;
+    public int food;
     public int health;
 
     
@@ -90,9 +88,8 @@ public class PlayerData
         this.gold = 100;
         this.ruby = 100;
         this.cash = 10000;
-        this.life = 5;
         this.health = 1000;
-        this.key = 5;
+        this.food = 5;
        
     }
     

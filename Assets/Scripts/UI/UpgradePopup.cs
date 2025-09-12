@@ -25,7 +25,7 @@ public class UpgradePopup : MonoBehaviour
         if (_numberText != null) _numberText.text = FirebaseDataManager.Instance.GetCurrentUserGold().ToString();
     }
     
-    private void Start()
+    private void OnEnable()
     {
         UpdateNumber();
     }

@@ -17,7 +17,6 @@ public class UIManager : MonoBehaviour
     public GamePlayPanel GamePlayPanel => _gameplayPanel?.GetComponent<GamePlayPanel>();
 
     [Header("Room UI")]
-    [SerializeField] private TMP_InputField _roomInput;
     [SerializeField] private Button _refreshButton;
     [SerializeField] private Button _backToMenuButton;
     [SerializeField] private Button _resumeButton;
@@ -410,4 +409,28 @@ public class UIManager : MonoBehaviour
     public void ResetLevel() {
         GamePlayPanel.ResetLevel();
     }
+
+    //-------Cheat code -------//
+    private void Update() {
+        CheatCode();
+    }
+    private async void CheatCode() {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            bool success = await FirebaseDataManager.Instance.ResetToDefault();
+            if (success)
+            {
+                Debug.Log("Cheat Code F1: Reset to default values successful!");
+                ShowNoticePopup("Reset to default values successful!");
+                _topLeftPanel.InitData();
+                _topRightPanel.InitData();
+            }
+            else
+            {
+                Debug.Log("Cheat Code F1: Reset failed!");
+                ShowNoticePopup("Reset failed!");
+            }
+        }
+    }
+    //-------Cheat code -------//
 }

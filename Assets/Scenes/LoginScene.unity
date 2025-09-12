@@ -1893,6 +1893,22 @@ PrefabInstance:
       propertyPath: SortKey
       value: 2549024286
       objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: 8c1c29706792e91449354884bd0298c1, type: 3}
+      propertyPath: 'StateHashes.Array.data[1]'
+      value: 2081823275
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: 8c1c29706792e91449354884bd0298c1, type: 3}
+      propertyPath: 'StateHashes.Array.data[2]'
+      value: 1432961145
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: 8c1c29706792e91449354884bd0298c1, type: 3}
+      propertyPath: 'StateHashes.Array.data[5]'
+      value: 765711723
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: 8c1c29706792e91449354884bd0298c1, type: 3}
+      propertyPath: 'StateHashes.Array.data[6]'
+      value: 81563449
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

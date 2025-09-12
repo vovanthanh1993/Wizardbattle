@@ -116,27 +116,27 @@ public class PvpResultPopup : MonoBehaviour
                 Debug.Log($"XP: {currentData.xp}");
                 Debug.Log($"Gold: {currentData.gold}");
                 Debug.Log($"Ruby: {currentData.ruby}");
-                Debug.Log($"Life: {currentData.life}");
+                Debug.Log($"Life: {currentData.food}");
                 Debug.Log("==========================");
 
                 float newXP = currentData.xp;
                 float newGold = currentData.gold;
                 float newRuby = currentData.ruby;
-                int newLife = currentData.life;
+                int newFood = currentData.food;
 
                 if (isWin)
                 {
-                    newXP += 100f;          // Increase XP
-                    newGold += 10f;        // Increase gold
-                    newRuby += 100f;      // Increase ruby
-                    newLife -= 1;
+                    newXP += 200f;          // Increase XP
+                    newGold += 100f;        // Increase gold
+                    newRuby += 2f;      // Increase ruby
+                    newFood -= 1;
                 }
                 else
                 {
-                    newXP += 50f;           // Small XP increase
-                    newGold += 2f;         // Small gold increase
-                    newRuby += 10f;
-                    newLife -= 1;
+                    newXP += 100f;           // Small XP increase
+                    newGold += 20f;         // Small gold increase
+                    newRuby += 0f;
+                    newFood -= 1;
                 }
                 
                 // Check and update level
@@ -147,7 +147,7 @@ public class PvpResultPopup : MonoBehaviour
                 currentData.xp = newXP;
                 currentData.gold = newGold;
                 currentData.ruby = newRuby;
-                currentData.life = newLife;
+                currentData.food = newFood;
                 
                 // Update PlayerData
                 bool attributesUpdated = await FirebaseDataManager.Instance.SavePlayerData(currentData);

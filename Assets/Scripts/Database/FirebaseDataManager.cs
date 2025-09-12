@@ -398,7 +398,7 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
-    public async Task<bool> UpdatePlayerAttributes(float damage, float ammor, int level, float xp, float gold, float ruby, int life)
+    public async Task<bool> UpdatePlayerAttributes(float damage, float ammor, int level, float xp, float gold, float ruby, int food)
     {
         PlayerData currentData = await LoadPlayerData();
         if (currentData == null)
@@ -412,7 +412,7 @@ public class FirebaseDataManager : MonoBehaviour
         currentData.xp = xp;
         currentData.gold = gold;
         currentData.ruby = ruby;
-        currentData.life = life;
+        currentData.food = food;
 
         return await SavePlayerData(currentData);
     }
@@ -499,9 +499,9 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData.ruby;
     }
 
-    public int GetCurrentUserKey()
+    public int GetCurrentUserFood()
     {
-        return currentPlayerData.key;
+        return currentPlayerData.food;
     }
 
     public float GetCurrentUserCash()
@@ -516,10 +516,10 @@ public class FirebaseDataManager : MonoBehaviour
         return await SavePlayerData(currentPlayerData);
     }
 
-    public async Task<bool> BuyKey(int ruby, int key)
+    public async Task<bool> BuyFood(int ruby, int food)
     {
         currentPlayerData.ruby -= ruby;
-        currentPlayerData.key += key;
+        currentPlayerData.food += food;
         return await SavePlayerData(currentPlayerData);
     }
 
@@ -527,6 +527,20 @@ public class FirebaseDataManager : MonoBehaviour
     {
         currentPlayerData.cash -= cash;
         currentPlayerData.ruby += ruby;
+        return await SavePlayerData(currentPlayerData);
+    }
+
+    public async Task<bool> ResetToDefault()
+    {
+        currentPlayerData.damage = 200;
+        currentPlayerData.ammor = 0;
+        currentPlayerData.level = 1;
+        currentPlayerData.xp = 0;
+        currentPlayerData.gold = 100;
+        currentPlayerData.ruby = 100;
+        currentPlayerData.cash = 10000;
+        currentPlayerData.health = 1000;
+        currentPlayerData.food = 0;
         return await SavePlayerData(currentPlayerData);
     }
 
@@ -546,11 +560,6 @@ public class FirebaseDataManager : MonoBehaviour
                 break;
         }
         return await SavePlayerData(currentPlayerData);
-    }
-
-    public int GetCurrentUserLife()
-    {
-        return currentPlayerData.life;
     }
 
     public void SignOut()

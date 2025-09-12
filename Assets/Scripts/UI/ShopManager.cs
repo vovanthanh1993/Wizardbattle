@@ -5,7 +5,7 @@ public enum ShopItemType
 {
     Ruby,
     Gold,
-    Key
+    Food
 }
 public class ShopManager : MonoBehaviour
 {
@@ -24,15 +24,15 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private int _goldRubyCost3 = 200;
     [SerializeField] private int _goldAmount3 = 1000;
     
-    [Header("Key Shop - 3 Levels")]
-    [SerializeField] private int _keyRubyCost1 = 50;
-    [SerializeField] private int _keyAmount1 = 5;
+    [Header("Food Shop - 3 Levels")]
+    [SerializeField] private int _foodRubyCost1 = 50;
+    [SerializeField] private int _foodAmount1 = 5;
     
-    [SerializeField] private int _keyRubyCost2 = 140;
-    [SerializeField] private int _keyAmount2 = 15;
+    [SerializeField] private int _foodRubyCost2 = 140;
+    [SerializeField] private int _foodAmount2 = 15;
     
-    [SerializeField] private int _keyRubyCost3 = 250;
-    [SerializeField] private int _keyAmount3 = 30;
+    [SerializeField] private int _foodRubyCost3 = 250;
+    [SerializeField] private int _foodAmount3 = 30;
 
     [Header("Ruby Shop - 3 Levels")]
     [SerializeField] private float _cashCost1 = 0.99f;
@@ -67,25 +67,25 @@ public class ShopManager : MonoBehaviour
         } else UIManager.Instance.ShowNoticePopup("You don't have enough ruby!");
     }
 
-    public async void BuyKey(int ruby, int key)
+    public async void BuyFood(int ruby, int food)
     {
         if (FirebaseDataManager.Instance.GetCurrentUserRuby() >= ruby)
         {
             UIManager.Instance.ShowLoadingPanel(true);
-            bool isSuccess = await FirebaseDataManager.Instance.BuyKey(ruby, key);
+            bool isSuccess = await FirebaseDataManager.Instance.BuyFood(ruby, food);
             if (isSuccess)
             {
                 UIManager.Instance.TopRightPanel.InitData();
                 UpdateNumber();
-                Debug.Log("Buy Key Success");
-                UIManager.Instance.ShowNoticePopup($"Buy {key} Key Success!");
+                Debug.Log("Buy Food Success");
+                UIManager.Instance.ShowNoticePopup($"Buy {food} Food Success!");
                 UIManager.Instance.ShowLoadingPanel(false);
             }
             else
             {
-                Debug.Log("Buy Key Failed");
+                Debug.Log("Buy Food Failed");
                 UIManager.Instance.ShowLoadingPanel(false);
-                UIManager.Instance.ShowNoticePopup("Buy Key Failed! Please try again.");
+                UIManager.Instance.ShowNoticePopup("Buy Food Failed! Please try again.");
             }
         }
         else UIManager.Instance.ShowNoticePopup("You don't have enough ruby!");
@@ -133,20 +133,20 @@ public class ShopManager : MonoBehaviour
         BuyGold(_goldRubyCost3, _goldAmount3);
     }
 
-    // Key Shop - 3 Levels
-    public void BuyKeyLevel1()
+    // Food Shop - 3 Levels
+    public void BuyFoodLevel1()
     {
-        BuyKey(_keyRubyCost1, _keyAmount1);
+        BuyFood(_foodRubyCost1, _foodAmount1);
     }
     
-    public void BuyKeyLevel2()
+    public void BuyFoodLevel2()
     {
-        BuyKey(_keyRubyCost2, _keyAmount2);
+        BuyFood(_foodRubyCost2, _foodAmount2);
     }
     
-    public void BuyKeyLevel3()
+    public void BuyFoodLevel3()
     {
-        BuyKey(_keyRubyCost3, _keyAmount3);
+        BuyFood(_foodRubyCost3, _foodAmount3);
     }
 
     public void BuyRubyLevel1()
@@ -174,13 +174,12 @@ public class ShopManager : MonoBehaviour
             case ShopItemType.Gold:
                 if (_numberText != null) _numberText.text = FirebaseDataManager.Instance.GetCurrentUserGold().ToString();
                 break;
-            case ShopItemType.Key:
-                if (_numberText != null) _numberText.text = FirebaseDataManager.Instance.GetCurrentUserKey().ToString();
+            case ShopItemType.Food:
+                if (_numberText != null) _numberText.text = FirebaseDataManager.Instance.GetCurrentUserFood().ToString();
                 break;
         }
     }
-    
-    private void Start()
+    private void OnEnable()
     {
         UpdateNumber();
     }

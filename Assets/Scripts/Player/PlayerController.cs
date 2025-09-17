@@ -387,7 +387,7 @@ public class PlayerController : NetworkBehaviour
 
     private void CompleteRespawn()
     {
-        Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
+        Transform spawnPoint = PlayerSpawnManager.Instance.GetSpawnPoint();
         _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
         _playerStatus?.ResetPlayer();
         UIManager.Instance.ShowReSpawnTime("");

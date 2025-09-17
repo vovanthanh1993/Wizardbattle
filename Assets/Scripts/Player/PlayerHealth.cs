@@ -57,13 +57,13 @@ public class PlayerHealth : NetworkBehaviour
                 if (shooterStatus != null && shooterStatus != playerStatus)
                 {
                     shooterStatus.AddKill();
-                    GameManager.Instance.RpcShowKillFeed(shooterStatus.PlayerName.ToString(), playerStatus.PlayerName.ToString());
+                    LobbyManager.Instance.RpcShowKillFeed(shooterStatus.PlayerName.ToString(), playerStatus.PlayerName.ToString());
                 }
 
-                if (shooterStatus != null && shooterStatus.Kills >= GameManager.Instance.KillsToWin)
+                if (shooterStatus != null && shooterStatus.Kills >= LobbyManager.Instance.KillsToWin)
                 {
                     shooterStatus.IsWin = true;
-                    GameManager.Instance.EndGame();
+                    LobbyManager.Instance.EndGame();
                     return;
                 }
             }

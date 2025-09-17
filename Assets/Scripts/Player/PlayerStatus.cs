@@ -86,7 +86,7 @@ public class PlayerStatus : NetworkBehaviour
     private IEnumerator RunDelayedLeaderboardUpdate()
     {
         yield return new WaitForFixedUpdate();
-        GameManager.Instance.RpcUpdateLeaderboard();
+        //GameManager.Instance.RpcUpdateLeaderboard();
     }
     
     #endregion

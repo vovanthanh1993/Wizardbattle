@@ -1,6 +1,7 @@
 using UnityEngine;
 using Fusion;
 using System.Linq;
+using System.Collections;
 
 public enum GameState
 {
@@ -24,6 +25,9 @@ public class LobbyManager : NetworkBehaviour
     [SerializeField] private int _maxPlayers = 8;
 
     [Networked] public GameState GameState { get; set; } = GameState.Lobby;
+
+    [SerializeField] private int _killsToWin = 5;
+    public int KillsToWin => _killsToWin;
 
     public override void Spawned()
     {
@@ -229,6 +233,80 @@ public class LobbyManager : NetworkBehaviour
         if (Runner.IsServer)
         {
             Runner.LoadScene(SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX));
+            StartCoroutine(WaitForPlayerSpawnManager(Runner));
         }
+        UIManager.Instance.ShowLoadingPanel(false);
+    }
+
+    private IEnumerator WaitForPlayerSpawnManager(NetworkRunner runner)
+    {
+        while (PlayerSpawnManager.Instance == null)
+        {
+            yield return null;
+        }
+        foreach(PlayerRef player in Runner.ActivePlayers)
+        {   Debug.Log("Spawning player: " + player);
+            PlayerSpawnManager.Instance.SpawnPlayer(player);
+        }
+    }
+
+    public void EndGame()
+    {
+        foreach (var player in Runner.ActivePlayers)
+        {
+            var playerObject = Runner.GetPlayerObject(player);
+            if (playerObject == null) continue;
+
+            var playerController = playerObject.GetComponent<PlayerController>();
+            var playerStatus = playerObject.GetComponent<PlayerStatus>();
+            
+            if (playerController != null)
+            {
+                playerController.SetIdleAnimation();
+                playerController.SetDisable(true);
+            }
+        }
+
+        RpcShowResultForAllPlayers();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcShowResultForAllPlayers()
+    {
+        GameState = GameState.Ended;
+        Camera mainCamera = Camera.main;
+        mainCamera.GetComponent<CameraController>().SetTarget(null);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        PvpResultPopup.Instance.ShowResultPopupForPlayer();
+
+        if(NetworkRunnerHandler.Instance.Runner != null)
+        {
+            StartCoroutine(DestroyNetworkRunnerAfterFrame());
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcUpdateLeaderboard()
+    {
+        UIManager.Instance.UpdateAllLeaderboards();
+    }
+
+    private IEnumerator DestroyNetworkRunnerAfterFrame()
+    {
+        // Wait for one frame
+        yield return null;
+        
+        // Now destroy the NetworkRunner
+        if(NetworkRunnerHandler.Instance.Runner != null)
+        {
+            Destroy(NetworkRunnerHandler.Instance.Runner.gameObject);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcShowKillFeed(string killer, string victim)
+    {
+        UIManager.Instance?.ShowKillFeed(killer, victim);
     }
 }

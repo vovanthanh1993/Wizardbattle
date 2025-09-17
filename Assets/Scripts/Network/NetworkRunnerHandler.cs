@@ -297,7 +297,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             _isLeavingLobby = false;
             UIManager.Instance.BackToMenu();
         }
-        else
+        else if (LobbyManager.Instance.GameState != GameState.Ended)
         {
             // Show disconnect popup for other game states
             UIManager.Instance.ShowDisconnectPopup(true);
@@ -318,7 +318,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             UIManager.Instance.BackToMenu();
             UIManager.Instance.ShowNoticePopup("Disconnected from server during lobby. Return to menu!");
         }
-        else
+        else if (LobbyManager.Instance.GameState != GameState.Ended)
         {
             // Show disconnect popup for other game states
             UIManager.Instance.ShowDisconnectPopup(true);
@@ -340,7 +340,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log($"Disconnected from server during lobby (reason: {reason}), returning to menu");
             UIManager.Instance.BackToMenu();
         }
-        else
+        else if (LobbyManager.Instance.GameState != GameState.Ended)
         {
             // Show disconnect popup for other game states
             UIManager.Instance.ShowDisconnectPopup(true);

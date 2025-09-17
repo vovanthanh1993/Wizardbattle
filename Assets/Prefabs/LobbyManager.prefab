@@ -64,8 +64,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc5cb9655183a6418367cd423d3e3ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minPlayersToStart: 2
+  _minPlayersToStart: 1
   _maxPlayers: 8
   _PlayerNames:
     _items: []
+  _PrefabNames:
+    _items: []
   _GameState: 0
+  _killsToWin: 3

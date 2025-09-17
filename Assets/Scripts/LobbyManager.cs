@@ -232,6 +232,10 @@ public class LobbyManager : NetworkBehaviour
         // Chỉ Server mới load scene
         if (Runner.IsServer)
         {
+            // Ẩn phòng khỏi danh sách public
+            Runner.SessionInfo.IsVisible = false;
+            Debug.Log("Room hidden from public list");
+            
             Runner.LoadScene(SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX));
             StartCoroutine(WaitForPlayerSpawnManager(Runner));
         }

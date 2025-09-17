@@ -5,13 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum GameState
-{
-    Lobby,
-    Waiting,
-    Playing,
-    Ended
-}
 
 public class GameManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
 {

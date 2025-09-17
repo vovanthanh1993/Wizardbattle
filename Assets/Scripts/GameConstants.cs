@@ -67,6 +67,6 @@ public static class GameConstants
     public const string STATUS_FAILED_JOIN_ROOM = "Failed to join room!";
     public const string STATUS_FAILED_CREATE_ROOM = "Failed to create room!";
     public const string STATUS_ROOM_NOT_FOUND = "Room not found!";
-    public const string STATUS_FAILED_CONNECT = "Failed to connect. Reason: ";
+    public const string STATUS_FAILED_CONNECT = "Failed to connect. Please try again!";
     public const string STATUS_SERVER_DISCONNECTED = "Server disconnected!";
 }

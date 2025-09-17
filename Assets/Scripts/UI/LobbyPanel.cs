@@ -8,7 +8,9 @@ using System.Linq;
 public class LobbyPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Text _lobbyPlayerCountText;
-    [SerializeField] private TMP_Text _lobbyPlayerListText;
+
+    [SerializeField] private GameObject _content;
+    [SerializeField] private GameObject _contentPrefab;
     [SerializeField] private Button _startGameButton;
     [SerializeField] private Button _leaveLobbyButton;
     public void UpdateLobbyUI(int currentPlayers, int minPlayers, int maxPlayers)
@@ -30,25 +32,23 @@ public class LobbyPanel : MonoBehaviour
     
     private void UpdateLobbyPlayerList()
     {
-        if (_lobbyPlayerListText == null || NetworkRunnerHandler.Instance?.Runner == null)
-            return;
-            
-        var runner = NetworkRunnerHandler.Instance.Runner;
-        var players = new List<string>();
-        
-        foreach (PlayerRef player in runner.ActivePlayers)
+        if (LobbyManager.Instance != null)
         {
-            var obj = runner.GetPlayerObject(player);
-            if (obj == null) continue;
+            var players = LobbyManager.Instance.GetAllPlayerNames();
             
-            var controller = obj.GetComponent<PlayerController>();
-            if (controller != null)
+            // Xóa tất cả children hiện tại
+            foreach (Transform child in _content.transform)
             {
-                players.Add(controller.PlayerName.ToString());
+                Destroy(child.gameObject);
+            }
+            
+            // Tạo UI cho mỗi player
+            foreach (var player in players)
+            {
+                var obj = Instantiate(_contentPrefab, _content.transform);
+                obj.GetComponent<PlayerLobbyInfo>().SetData(player);
             }
         }
-        
-        _lobbyPlayerListText.text = "Players in lobby:\n" + string.Join("\n", players);
     }
     
     public void ShowStartGameButton(bool show)
@@ -61,18 +61,15 @@ public class LobbyPanel : MonoBehaviour
     
     public void HandleStartGameClicked()
     {
-        if (GameManager.Instance != null && NetworkRunnerHandler.Instance?.Runner != null)
+        // Chỉ cho phép Host start game
+        var runner = NetworkRunnerHandler.Instance.Runner;
+        if (runner.IsServer && runner.LocalPlayer == runner.ActivePlayers.First())
         {
-            // Chỉ cho phép Host start game
-            var runner = NetworkRunnerHandler.Instance.Runner;
-            if (runner.IsServer && runner.LocalPlayer == runner.ActivePlayers.First())
-            {
-                GameManager.Instance.RpcRequestStartGame();
-            }
-            else
-            {
-                Debug.Log("Only the host can start the game");
-            }
+            LobbyManager.Instance.RpcRequestStartGame();
+        }
+        else
+        {
+            Debug.Log("Only the host can start the game");
         }
     }
     

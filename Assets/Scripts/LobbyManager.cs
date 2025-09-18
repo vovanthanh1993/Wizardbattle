@@ -236,7 +236,7 @@ public class LobbyManager : NetworkBehaviour
             Runner.SessionInfo.IsVisible = false;
             Debug.Log("Room hidden from public list");
             
-            Runner.LoadScene(SceneRef.FromIndex(GameConstants.GAMEPLAY_SCENE_INDEX));
+            Runner.LoadScene(SceneRef.FromIndex(GameConstants.SCENE_PVP_FOREST_INDEX));
             StartCoroutine(WaitForPlayerSpawnManager(Runner));
         }
         UIManager.Instance.ShowLoadingPanel(false);

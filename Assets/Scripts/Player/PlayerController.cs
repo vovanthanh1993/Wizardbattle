@@ -41,6 +41,17 @@ public class PlayerController : NetworkBehaviour
     
     [Networked] private NetworkButtons _previousButtons { get; set; }
     
+    
+    #endregion
+
+    #region Properties
+    
+    public bool IsDead => _playerStatus?.IsDead ?? false;
+    public bool IsDisable => _playerStatus?.IsDisable ?? false;
+    public string PlayerName => _playerStatus?.PlayerName.ToString() ?? "";
+    public int Kills => _playerStatus?.Kills ?? 0;
+    public int Deaths => _playerStatus?.Deaths ?? 0;
+    
     #endregion
 
     #region Private Fields
@@ -408,16 +419,6 @@ public class PlayerController : NetworkBehaviour
     {
         _camTarget.localRotation = Quaternion.Euler(_kcc.GetLookRotation().x, 0f, 0f);
     }
-    
-    #endregion
-
-    #region Properties
-    
-    public bool IsDead => _playerStatus?.IsDead ?? false;
-    public bool IsDisable => _playerStatus?.IsDisable ?? false;
-    public string PlayerName => _playerStatus?.PlayerName.ToString() ?? "";
-    public int Kills => _playerStatus?.Kills ?? 0;
-    public int Deaths => _playerStatus?.Deaths ?? 0;
     
     #endregion
 

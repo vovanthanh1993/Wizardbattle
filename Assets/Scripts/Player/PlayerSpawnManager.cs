@@ -1,6 +1,7 @@
 using UnityEngine;
 using Fusion;
 using System.Collections.Generic;
+using System.Collections;
 
 public class PlayerSpawnManager : MonoBehaviour
 {
@@ -27,9 +28,7 @@ public class PlayerSpawnManager : MonoBehaviour
         }
 
         Instance = this;
-    }
-    private void Start()
-    {
+
         _availableSpawnIndices = new List<int>();
         for (int i = 0; i < _spawnPoints.Length; i++)
         {
@@ -42,6 +41,13 @@ public class PlayerSpawnManager : MonoBehaviour
         {
             _prefabDictionary[_prefabNames[i]] = _prefabRefs[i];
             Debug.Log($"Mapped: {_prefabNames[i]} -> {_prefabRefs[i]}");
+        }
+    }
+    private void Start()
+    {
+        if(NetworkRunnerHandler.Instance.GameType == GameType.PVE)
+        {
+            StartCoroutine(SpawnPlayerDelayed(Runner.LocalPlayer));
         }
     }
 
@@ -64,11 +70,24 @@ public class PlayerSpawnManager : MonoBehaviour
         return spawnPoint;
     }
 
+    private IEnumerator SpawnPlayerDelayed(PlayerRef player)
+    {
+        // Đợi một frame để đảm bảo mọi thứ đã được khởi tạo
+        yield return null;
+        
+        SpawnPlayer(player);
+        UIManager.Instance.ShowGameplay();
+    }
+
     public void SpawnPlayer(PlayerRef player)
     {
         Transform spawnPoint = GetSpawnPoint();
         
         string selectedCharacterName = LobbyManager.Instance.GetPlayerPrefabName(player);
+        if(NetworkRunnerHandler.Instance.GameType == GameType.PVE)
+        {
+            selectedCharacterName = FirebaseDataManager.Instance.GetCurrentPlayerData().playerPrefabName;
+        }
         Debug.Log("Selected character name: " + selectedCharacterName);
         NetworkPrefabRef selectedPrefab = GetPlayerPrefabByName(selectedCharacterName);
         Debug.Log("Selected prefab: " + selectedPrefab);

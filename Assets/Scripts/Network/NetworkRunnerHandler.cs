@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum GameType
+{
+    PVP,
+    PVE
+}
 public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 {
     public static NetworkRunnerHandler Instance { get; private set; }
@@ -23,6 +28,8 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public bool IsRunning => _runner != null && _runner.IsRunning;
     public NetworkRunner Runner => _runner;
+
+    public GameType GameType = GameType.PVP;
     
     /// <summary>
     /// Call this when player voluntarily leaves lobby to avoid showing disconnect popup
@@ -97,9 +104,37 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         UIManager.Instance.UpdateRoomListUI(sessionList);
     }
 
+    public async void CreatePVERoom()
+    {
+        GameType = GameType.PVE;
+        CreateRunner();
+        UIManager.Instance.ShowLoadingPanel(true);
+        await _runner.JoinSessionLobby(GameConstants.LOBBY);
 
+        string roomName = UnityEngine.Random.Range(GameConstants.RANDOM_ROOM_MIN, GameConstants.RANDOM_ROOM_MAX).ToString();
+        var result = await _runner.StartGame(new StartGameArgs
+        {
+            GameMode = GameMode.Host,
+            SessionName = roomName,
+            Scene = SceneRef.FromIndex(GameConstants.SCENE_PVE_FOREST_INDEX),
+            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            IsVisible = false
+        });
+
+        if (result.Ok)
+        {
+            //UIManager.Instance.ShowLobby();
+            Runner.Spawn(_lobbyManagerPrefab, Vector3.zero, Quaternion.identity, null);
+            //GameCommonUtils.LoadScene(GameConstants.SCENE_PVE_FOREST);
+        }
+        else
+        {
+            UIManager.Instance.ShowNoticePopup(GameConstants.STATUS_FAILED_CREATE_ROOM);
+        }
+    }
     public async void QuickJoinOrCreateRoom()
     {
+        GameType = GameType.PVP;
         CreateRunner();
 
         UIManager.Instance.ShowLoadingPanel(true);
@@ -154,9 +189,10 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         }
         UIManager.Instance.ShowLoadingPanel(false);
     }
-
+    
     public async void ConnectToSession(string roomName, GameMode mode)
     {
+        GameType = GameType.PVP;
         CreateRunner();
         UIManager.Instance.ShowLoadingPanel(true);
         await _runner.JoinSessionLobby(GameConstants.LOBBY);

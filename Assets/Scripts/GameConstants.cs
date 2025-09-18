@@ -12,7 +12,10 @@ public static class GameConstants
     // Scenes
     public const string HOME_SCENE = "HomeScene";
     public const int LOBBY_SCENE_INDEX = 2;
-    public const int GAMEPLAY_SCENE_INDEX = 3;
+    public const int SCENE_PVP_FOREST_INDEX = 3;
+
+    public const string SCENE_PVE_FOREST = "PVE-Forest";
+    public const int SCENE_PVE_FOREST_INDEX = 4;
 
     // UI Messages
     public const string CONNECTING = "Connecting...";

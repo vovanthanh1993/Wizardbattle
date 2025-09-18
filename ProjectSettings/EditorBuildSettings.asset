@@ -15,8 +15,11 @@ EditorBuildSettings:
     path: Assets/Scenes/LobbyScene.unity
     guid: 3c016d52e4aaed146948eebd39061c18
   - enabled: 1
-    path: Assets/Scenes/GamePlayScene.unity
+    path: Assets/Scenes/PVP-Forest.unity
     guid: 676032a82e3a9c640af615fbb6a5f59f
+  - enabled: 1
+    path: Assets/Scenes/PVE-Forest.unity
+    guid: 76bf58489d5a44249b130cb2691cfbd3
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

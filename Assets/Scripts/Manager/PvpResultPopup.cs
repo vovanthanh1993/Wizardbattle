@@ -122,21 +122,18 @@ public class PvpResultPopup : MonoBehaviour
                 float newXP = currentData.xp;
                 float newGold = currentData.gold;
                 float newRuby = currentData.ruby;
-                int newFood = currentData.food;
 
                 if (isWin)
                 {
                     newXP += 200f;          // Increase XP
                     newGold += 100f;        // Increase gold
                     newRuby += 2f;      // Increase ruby
-                    newFood -= 1;
                 }
                 else
                 {
                     newXP += 100f;           // Small XP increase
                     newGold += 20f;         // Small gold increase
                     newRuby += 0f;
-                    newFood -= 1;
                 }
                 
                 // Check and update level
@@ -147,7 +144,6 @@ public class PvpResultPopup : MonoBehaviour
                 currentData.xp = newXP;
                 currentData.gold = newGold;
                 currentData.ruby = newRuby;
-                currentData.food = newFood;
                 
                 // Update PlayerData
                 bool attributesUpdated = await FirebaseDataManager.Instance.SavePlayerData(currentData);

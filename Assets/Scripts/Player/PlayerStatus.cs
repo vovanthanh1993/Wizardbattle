@@ -41,6 +41,7 @@ public class PlayerStatus : NetworkBehaviour
         UpdatePlayerName();
         if (Object.HasInputAuthority) 
         {
+            FirebaseDataManager.Instance.BuyFood(0, -1);
             Damage = FirebaseDataManager.Instance.GetCurrentUserDamage();
             Ammor = FirebaseDataManager.Instance.GetCurrentUserAmmor();
         }

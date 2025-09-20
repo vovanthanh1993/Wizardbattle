@@ -5,35 +5,41 @@ using System.Collections;
 public class EnemyController : MonoBehaviour
 {
     [Header("Enemy Stats")]
-    [SerializeField] private float _moveSpeed = 4f;
-    [SerializeField] private float _attackDamage = 20f;
-    [SerializeField] private float _attackRange = 2f;
-    [SerializeField] private float _attackCooldown = 2f;
+    [SerializeField] protected float _moveSpeed = 4f;
+    [SerializeField] protected float _attackDamage = 20f;
+    [SerializeField] protected float _attackRange = 2f;
+    [SerializeField] protected float _attackCooldown = 2f;
     
     [Header("Components")]
-    [SerializeField] private NavMeshAgent _navAgent;
-    [SerializeField] private Animator _animator;
+    [SerializeField] protected NavMeshAgent _navAgent;
+    [SerializeField] protected Animator _animator;
 
-    [SerializeField] private EnemyHealth _enemyHealth;
+    [SerializeField] protected EnemyHealth _enemyHealth;
+
+    [SerializeField] protected float _xpDropChance = 0.9f;
+    [SerializeField] protected float _xpDropChanceRed = 0.2f;
+
+    [SerializeField] protected float _healthDropChance = 0.1f;
     
     // Private variables
-    private Transform _player;
-    private bool _isAttacking = false;
-    private bool _isDead = false;
-    private float _lastAttackTime;
+    protected Transform _player;
+    protected bool _isAttacking = false;
+    protected bool _isDead = false;
+    protected float _lastAttackTime;
     
     // Animation hashes
-    private int _isWalkingHash;
-    private int _isAttackingHash;
-    private int _isDeadHash;
+    protected int _isWalkingHash;
+    protected int _isAttackingHash;
+    protected int _isDeadHash;
 
-    private GameObject _playerObj;
+    protected GameObject _playerObj;
     
     private void Awake()
     {
         // Get components
         _navAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
+        _enemyHealth = GetComponent<EnemyHealth>();
         
         // Set up nav agent
         if (_navAgent != null)
@@ -46,6 +52,12 @@ public class EnemyController : MonoBehaviour
         _isWalkingHash = Animator.StringToHash("IsWalking");
         _isAttackingHash = Animator.StringToHash("IsAttacking");
         _isDeadHash = Animator.StringToHash("IsDead");
+    }
+    
+    private void OnEnable()
+    {
+        // Reset state when enabled (spawned from pool)
+        OnSpawn();
     }
     
     private void Update()
@@ -67,7 +79,7 @@ public class EnemyController : MonoBehaviour
         UpdateAnimations();
     }
     
-    private void MoveTowardsPlayer()
+    protected void MoveTowardsPlayer()
     {
         if (_player == null) return;
         
@@ -129,7 +141,7 @@ public class EnemyController : MonoBehaviour
     }
     
     
-    private void UpdateAnimations()
+    protected void UpdateAnimations()
     {
         if (_animator == null) return;
         
@@ -142,7 +154,10 @@ public class EnemyController : MonoBehaviour
         _isDead = true;
         
         // Stop movement
-        _navAgent.ResetPath();
+        if (_navAgent != null && _navAgent.isOnNavMesh)
+        {
+            _navAgent.ResetPath();
+        }
         _navAgent.enabled = false;
         
         // Play death animation
@@ -158,7 +173,102 @@ public class EnemyController : MonoBehaviour
             col.enabled = false;
         }
         
-        // Destroy after delay
-        Destroy(gameObject, 3f);
+        // Return to pool after delay
+        StartCoroutine(ReturnToPoolAfterDelay());
+    }
+    
+    private IEnumerator ReturnToPoolAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        SpawnXPItem();
+
+        // Return to pool
+        yield return new WaitForSeconds(1f);
+        if (EnemyPoolManager.Instance != null)
+        {
+            EnemyPoolManager.Instance.ReturnEnemy(this);
+        }
+        else
+        {
+            // Fallback: destroy if no pool manager
+            Destroy(gameObject);
+        }
+    }
+
+    private void SpawnXPItem()
+    {
+        // 70% chance to drop XP item
+        Vector3 spawnPosition = transform.position + Vector3.up * 1f;
+        float chance = Random.Range(0f, 1f);
+        if (chance <= _healthDropChance)
+        {
+            Health health = GamePoolManager.Instance.GetHealth();
+            if (health != null)
+            {
+                health.transform.position = spawnPosition;
+                health.gameObject.SetActive(true);
+            }
+            
+        } else if (chance <= _xpDropChanceRed){
+            XPItemE xpItem = GamePoolManager.Instance.GetXpItemRed();
+            if (xpItem != null)
+            {
+                xpItem.transform.position = spawnPosition;
+                xpItem.gameObject.SetActive(true);
+            }
+        } else if (chance <= _xpDropChance)
+        {
+            XPItemE xpItem = GamePoolManager.Instance.GetXpItem();
+            if (xpItem != null)
+            {
+                xpItem.transform.position = spawnPosition;
+                xpItem.gameObject.SetActive(true);
+            }
+        }
+    }
+    
+    // IPoolable implementation
+    public void OnSpawn()
+    {
+        // Reset state when spawned from pool
+        _isDead = false;
+        _isAttacking = false;
+        _lastAttackTime = 0f;
+        
+        // Reset health
+        if (_enemyHealth != null)
+        {
+            _enemyHealth.Init();
+        }
+        
+        // Reset NavMeshAgent
+        if (_navAgent != null)
+        {
+            _navAgent.enabled = true;
+            // Only reset path if agent is on NavMesh
+            if (_navAgent.isOnNavMesh)
+            {
+                _navAgent.ResetPath();
+            }
+        }
+        
+        // Reset collider
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = true;
+        }
+    }
+    
+    public void OnReturn()
+    {
+        // Clean up when returned to pool
+        StopAllCoroutines();
+    }
+    
+    public void ResetState()
+    {
+        // Reset state method for ObjectPool
+        OnSpawn();
     }
 }

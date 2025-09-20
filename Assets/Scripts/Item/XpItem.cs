@@ -31,6 +31,7 @@ public class XpItem : NetworkBehaviour
         {
             _isPickedUp = true;
             playerStatus.AddXP(_actualXpAmount);
+
             RpcHideItem();
             ItemSpawner.Instance.OnXpItemPickedUp(this);
         }

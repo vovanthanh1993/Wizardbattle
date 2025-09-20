@@ -111,11 +111,15 @@ public class FireBall : MonoBehaviour
                     damagedPlayers.Add(playerRoot);
                 }
             } else {
+                HashSet<EnemyHealth> damagedEnemies = new HashSet<EnemyHealth>();
                 var enemyHealth = hitCollider.GetComponent<EnemyHealth>();
-                if (enemyHealth != null) {
+                if (enemyHealth != null && !damagedEnemies.Contains(enemyHealth)) {
                     float distance = Vector3.Distance(explosionPosition, enemyHealth.transform.position);
                     float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
-                    if(damage > 0) enemyHealth.TakeDamage(damage);
+                    if(damage > 0) {
+                        enemyHealth.TakeDamage(damage);
+                        damagedEnemies.Add(enemyHealth);
+                    }
                 }
             }
         }

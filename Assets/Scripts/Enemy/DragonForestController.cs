@@ -6,12 +6,16 @@ public class DragonForestController : EnemyController
     [Header("Fireball Settings")]
     [SerializeField] private float _fireballSpeed = 10f;
     [SerializeField] private float _fireballLifetime = 3f;
-    [SerializeField] private float _fireballDamage = 50f;
 
     [SerializeField] private GameObject _fireballPivot;
     
     protected new void Update()
     {
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            _enemyHealth.TakeDamage(_enemyHealth.GetMaxHealth());
+        }
+
         if (_isDead) return;
 
         if (_playerObj == null) _playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -64,7 +68,7 @@ public class DragonForestController : EnemyController
         if (_player == null) return;
         
         // Lấy fireball từ pool
-        FireBall fireball = GamePoolManager.Instance?.GetFireBall();
+        DragonForestFireBall fireball = GamePoolManager.Instance?.GetDragonForestFireball();
         if (fireball == null) return;
         
         // Tính toán hướng bắn
@@ -75,12 +79,35 @@ public class DragonForestController : EnemyController
         
         // Khởi tạo fireball
         fireball.transform.position = spawnPosition;
-        fireball.Init(direction, _fireballSpeed, _fireballLifetime, null);
+        fireball.Init(direction, _fireballSpeed, _fireballLifetime);
         
         // Xoay fireball theo hướng bắn
         if (direction != Vector3.zero)
         {
             fireball.transform.rotation = Quaternion.LookRotation(direction);
+            fireball.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
         }
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        GameStatusManager.Instance.SetGameStatus(GameStatus.ENDGAME);
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            var playerStatus = playerObj.GetComponent<PlayerStatus>();
+            if (playerStatus != null)
+            {
+                playerStatus.SetDisable(true);
+            }
+        }
+        // Stop spawning enemies
+        Destroy(EnemySpawner.Instance.gameObject);
+        // Kill all enemies when DragonForest dies  
+        EnemyPoolManager.Instance.KillAllEnemies();
+        // Show victory popup after 2 seconds
+        PvpResultPopup.Instance.ShowVictoryPopup(2f);
     }
 }

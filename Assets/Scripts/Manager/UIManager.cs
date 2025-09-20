@@ -133,7 +133,7 @@ public class UIManager : MonoBehaviour
     public void OnBackToMenuClicked()
     {
         ResetLevel();
-        SceneManager.LoadScene(GameConstants.HOME_SCENE);
+        GameCommonUtils.LoadScene(GameConstants.HOME_SCENE);
         ShowMenu();
     }
 

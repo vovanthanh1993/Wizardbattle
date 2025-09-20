@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static EnemySpawner Instance { get; private set; }
+
     [Header("Spawn Settings")]
     [SerializeField] private float initialSpawnInterval = 4f;
     [SerializeField] private float minSpawnInterval = 0.5f;
@@ -29,6 +31,14 @@ public class EnemySpawner : MonoBehaviour
     private float lastSpawnTime;
     private float lastIntervalDecreaseTime;
     
+    private void Awake() {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
     private void Start()
     {
         // Initialize spawn points if empty

@@ -78,4 +78,24 @@ public class ObjectPool<T> where T : Component
             }
         }
     }
+    
+    // Get all active objects in the pool
+    public List<T> GetActiveObjects()
+    {
+        List<T> activeObjects = new List<T>();
+        for (int i = 0; i < _pool.Count; i++)
+        {
+            if (_pool[i] != null && _pool[i].gameObject.activeInHierarchy)
+            {
+                activeObjects.Add(_pool[i]);
+            }
+        }
+        return activeObjects;
+    }
+    
+    // Get all objects in the pool (active and inactive)
+    public List<T> GetAllObjects()
+    {
+        return new List<T>(_pool);
+    }
 }

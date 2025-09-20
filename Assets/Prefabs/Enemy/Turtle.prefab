@@ -429,7 +429,7 @@ GameObject:
   - component: {fileID: 3435870457573324561}
   m_Layer: 0
   m_Name: Turtle
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -565,6 +565,9 @@ MonoBehaviour:
   _navAgent: {fileID: 2654641659202407227}
   _animator: {fileID: 6453668415179216380}
   _enemyHealth: {fileID: 3435870457573324561}
+  _xpDropChance: 0.9
+  _xpDropChanceRed: 0.2
+  _healthDropChance: 0.1
 --- !u!114 &3435870457573324561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,6 +587,7 @@ MonoBehaviour:
   _pivotHealthBar: {fileID: 3083786294956970431}
   damageTextDuration: 1
   damageTextFadeSpeed: 2
+  healthBarHideDelay: 5
   _enemyController: {fileID: 4937501611662348021}
 --- !u!1 &1703726706120204778
 GameObject:

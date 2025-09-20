@@ -81,7 +81,7 @@ public class EnemyHealth : MonoBehaviour
         damageText.gameObject.SetActive(false);
     }
 
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         _currentHealth -= damage;
         _currentHealth = Mathf.Max(0, _currentHealth);

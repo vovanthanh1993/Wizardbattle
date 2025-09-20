@@ -409,15 +409,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fireBallPrefab: {fileID: 8965056113716486154, guid: 6c5d7fb0689ca1d40a445a15ed3743f8, type: 3}
-  _fireBallPoolSize: 10
+  _fireBallPoolSize: 5
   _explosionPrefab: {fileID: 6074257751357940630, guid: 7cc752446ae3c5d43bffb8ccc77d8460, type: 3}
-  _explosionPoolSize: 10
+  _explosionPoolSize: 5
   _xpItemPrefab: {fileID: 6484256260061122135, guid: 11456ceaf530f5a4e86d771806377c3c, type: 3}
   _xpItemPoolSize: 20
   _xpItemRedPrefab: {fileID: 6484256260061122135, guid: da4fa7868fee3ff4e94cc64ac812e203, type: 3}
-  _xpItemRedPoolSize: 10
+  _xpItemRedPoolSize: 20
   _healthPrefab: {fileID: 6484256260061122135, guid: 6aa3dcedb9f51554a8365f980aeba395, type: 3}
   _healthPoolSize: 10
+  _dragonForestFireBallPrefab: {fileID: 8965056113716486154, guid: fadc922c7e193b641a3700161b3976c5, type: 3}
+  _dragonForestFireballPoolSize: 10
   _poolParent: {fileID: 1094208067}
 --- !u!4 &1094208067
 Transform:

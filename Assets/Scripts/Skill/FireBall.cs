@@ -62,20 +62,7 @@ public class FireBall : MonoBehaviour
         Vector3 explosionPosition = transform.position;
         
         // Spawn explosion effect from pool
-        Explosion explosion = null;
-        if (GamePoolManager.Instance != null)
-        {
-            explosion = GamePoolManager.Instance.GetExplosion();
-        }
-        else
-        {
-            // Fallback if pool manager is not available
-            if (_explosionPrefab != null)
-            {
-                var explosionObj = Instantiate(_explosionPrefab, explosionPosition, Quaternion.identity);
-                explosion = explosionObj.GetComponent<Explosion>();
-            }
-        }
+        Explosion explosion = GamePoolManager.Instance.GetExplosion();
         
         if (explosion != null)
         {

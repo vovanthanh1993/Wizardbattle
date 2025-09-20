@@ -301,9 +301,37 @@ public class EnemyPoolManager : MonoBehaviour
         return _spawnablePrefabs.ToArray();
     }
 
-    // Clear pool (for cleanup)
+    // Clear pool (for cleanup) - Kill all enemies before clearing
     public void ClearPool()
     {
+        // Kill all enemies first
+        KillAllEnemies();
+        
+        // Then return all to pool
         ReturnAllEnemies();
+    }
+    
+    // Kill all active enemies
+    public void KillAllEnemies()
+    {
+        foreach (var pool in _enemyPools.Values)
+        {
+            foreach (var enemy in pool.GetActiveObjects())
+            {
+                if (enemy != null && enemy.gameObject.activeInHierarchy)
+                {
+                    var enemyHealth = enemy.GetComponent<EnemyHealth>();
+                    if (enemyHealth != null && !enemyHealth.IsDead())
+                    {
+                        // Kill enemy by setting health to 0
+                        enemyHealth.TakeDamage(enemyHealth.GetMaxHealth());
+                        
+                        Debug.Log($"Killed enemy: {enemy.name}");
+                    }
+                }
+            }
+        }
+        
+        Debug.Log("All enemies have been killed!");
     }
 }

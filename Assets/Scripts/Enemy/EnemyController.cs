@@ -23,6 +23,7 @@ public class EnemyController : MonoBehaviour
     
     // Private variables
     protected Transform _player;
+    protected PlayerStatus _playerStatus;
     protected bool _isAttacking = false;
     protected bool _isDead = false;
     protected float _lastAttackTime;
@@ -65,8 +66,8 @@ public class EnemyController : MonoBehaviour
         if (_isDead) return;
 
         if (_playerObj == null) _playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (_playerObj != null)
-        {
+        if (_playerObj != null) {
+            _playerStatus = _playerObj.GetComponent<PlayerStatus>();
             _player = _playerObj.transform;  
         }
         
@@ -149,7 +150,7 @@ public class EnemyController : MonoBehaviour
         _animator.SetBool(_isWalkingHash, isWalking);
     }
     
-    public void Die()
+    public virtual void Die()
     {
         _isDead = true;
         
@@ -270,5 +271,5 @@ public class EnemyController : MonoBehaviour
     {
         // Reset state method for ObjectPool
         OnSpawn();
-    }
+    } 
 }

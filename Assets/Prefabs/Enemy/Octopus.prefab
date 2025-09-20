@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 12122845819970571}
   m_Layer: 0
   m_Name: Octopus
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -255,6 +255,9 @@ MonoBehaviour:
   _navAgent: {fileID: 8127448032910690185}
   _animator: {fileID: 5701082268550065219}
   _enemyHealth: {fileID: 12122845819970571}
+  _xpDropChance: 0.9
+  _xpDropChanceRed: 0.2
+  _healthDropChance: 0.1
 --- !u!114 &12122845819970571
 MonoBehaviour:
   m_ObjectHideFlags: 0

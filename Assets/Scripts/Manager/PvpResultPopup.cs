@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PvpResultPopup : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class PvpResultPopup : MonoBehaviour
     }
 
     public void ShowResultPopup(bool isWin) {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         _background.SetActive(true);
         _winPanel.SetActive(isWin);
         _losePanel.SetActive(!isWin);
@@ -220,5 +223,23 @@ public class PvpResultPopup : MonoBehaviour
             }
         }
         return 0;
+    }
+
+    public void ShowVictoryPopup(float delay)
+    {
+        StartCoroutine(ShowVictoryPopupAfterDelay(delay));
+    }
+
+    public IEnumerator ShowVictoryPopupAfterDelay(float delay)
+    {
+        // Wait for specified delay
+        yield return new WaitForSeconds(delay);
+        
+        // Show victory popup
+        if (PvpResultPopup.Instance != null)
+        {
+            Debug.Log("Showing victory popup after delay...");
+            PvpResultPopup.Instance.ShowResultPopup(true);
+        }
     }
 }

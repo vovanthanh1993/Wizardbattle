@@ -914,11 +914,11 @@ GameObject:
   - component: {fileID: 6179244631868114426}
   - component: {fileID: 5080765875093921177}
   - component: {fileID: 5158927817124305133}
-  - component: {fileID: 7768271589082526639}
   - component: {fileID: 4042371559516969679}
+  - component: {fileID: 4401743003645496974}
   m_Layer: 0
   m_Name: DragonForest
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -996,9 +996,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c535df8422b8f134789bf5c774d9aac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 4
+  _moveSpeed: 10
   _attackDamage: 20
-  _attackRange: 15
+  _attackRange: 20
   _attackCooldown: 2
   _navAgent: {fileID: 0}
   _animator: {fileID: 0}
@@ -1008,29 +1008,7 @@ MonoBehaviour:
   _healthDropChance: 0.1
   _fireballSpeed: 10
   _fireballLifetime: 3
-  _fireballDamage: 50
   _fireballPivot: {fileID: 6386093670073627804}
---- !u!114 &7768271589082526639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2738259454128635612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3097c5e9dcc5fc9458dda82b662ed9dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 1000
-  _currentHealth: 0
-  damageText: {fileID: 4966843477084502131}
-  _healthBarImage: {fileID: 8645350533780515444}
-  _pivotHealthBar: {fileID: 3365170780046784052}
-  damageTextDuration: 1
-  damageTextFadeSpeed: 2
-  healthBarHideDelay: 5
-  _enemyController: {fileID: 0}
 --- !u!195 &4042371559516969679
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1053,6 +1031,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4401743003645496974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738259454128635612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de8860d105c7b0a43b44bb1da9fc31c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 1000
+  _currentHealth: 0
+  damageText: {fileID: 4966843477084502131}
+  _healthBarImage: {fileID: 8645350533780515444}
+  _pivotHealthBar: {fileID: 3365170780046784052}
+  damageTextDuration: 1
+  damageTextFadeSpeed: 2
+  healthBarHideDelay: 5
+  _enemyController: {fileID: 0}
 --- !u!1 &2854723783094521935
 GameObject:
   m_ObjectHideFlags: 0

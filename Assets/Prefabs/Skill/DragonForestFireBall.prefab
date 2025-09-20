@@ -14642,7 +14642,7 @@ GameObject:
   - component: {fileID: 2859370020899027643}
   - component: {fileID: 7737229579212414479}
   - component: {fileID: 3983662216405637073}
-  - component: {fileID: 8185874006213917305}
+  - component: {fileID: 210580986134503400}
   m_Layer: 0
   m_Name: DragonForestFireBall
   m_TagString: Untagged
@@ -14769,7 +14769,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &8185874006213917305
+--- !u!114 &210580986134503400
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14778,12 +14778,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8965056113716486154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da2339effc634949a8a61d3937b28f2, type: 3}
+  m_Script: {fileID: 11500000, guid: c33770b68636c0b49886d335c9cc570c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosionPrefab: {fileID: 8965056113716486154}
+  _explosionPrefab: {fileID: 6074257751357940630, guid: 7cc752446ae3c5d43bffb8ccc77d8460, type: 3}
   _explosionRadius: 3
-  _explosionDamage: 400
+  _explosionDamage: 500
 --- !u!1001 &5429585234580106743
 PrefabInstance:
   m_ObjectHideFlags: 0

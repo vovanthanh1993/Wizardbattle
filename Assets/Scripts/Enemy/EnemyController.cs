@@ -5,8 +5,6 @@ using System.Collections;
 public class EnemyController : MonoBehaviour
 {
     [Header("Enemy Stats")]
-    [SerializeField] private float _maxHealth = 100f;
-    [SerializeField] private float _currentHealth;
     [SerializeField] private float _moveSpeed = 4f;
     [SerializeField] private float _attackDamage = 20f;
     [SerializeField] private float _attackRange = 2f;
@@ -15,6 +13,8 @@ public class EnemyController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private NavMeshAgent _navAgent;
     [SerializeField] private Animator _animator;
+
+    [SerializeField] private EnemyHealth _enemyHealth;
     
     // Private variables
     private Transform _player;
@@ -46,11 +46,6 @@ public class EnemyController : MonoBehaviour
         _isWalkingHash = Animator.StringToHash("IsWalking");
         _isAttackingHash = Animator.StringToHash("IsAttacking");
         _isDeadHash = Animator.StringToHash("IsDead");
-    }
-    
-    private void Start()
-    {
-        _currentHealth = _maxHealth;
     }
     
     private void Update()
@@ -142,19 +137,7 @@ public class EnemyController : MonoBehaviour
         _animator.SetBool(_isWalkingHash, isWalking);
     }
     
-    public void TakeDamage(float damage)
-    {
-        if (_isDead) return;
-        
-        _currentHealth -= damage;
-        
-        if (_currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-    
-    private void Die()
+    public void Die()
     {
         _isDead = true;
         

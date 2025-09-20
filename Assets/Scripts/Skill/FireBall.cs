@@ -93,20 +93,30 @@ public class FireBall : MonoBehaviour
 
         foreach (var hitCollider in hitColliders)
         {
-            var playerRoot = hitCollider.GetComponentInParent<NetworkObject>();
-            
-            if (playerRoot == null || playerRoot == _shooter) continue;
-            
-            var playerController = playerRoot.GetComponent<PlayerController>();
-            if (playerController != null && !damagedPlayers.Contains(playerRoot))
+            if (NetworkRunnerHandler.Instance.GameType == GameType.PVP)
             {
-                // Calculate damage based on distance
-                float distance = Vector3.Distance(explosionPosition, playerRoot.transform.position);
-                float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
-                Debug.Log("Damage: " + damage);
-                // Send RPC to deal damage
-                RpcRequestDamage(playerRoot, Mathf.RoundToInt(damage), _shooter);
-                damagedPlayers.Add(playerRoot);
+                var playerRoot = hitCollider.GetComponentInParent<NetworkObject>();
+            
+                if (playerRoot == null || playerRoot == _shooter) continue;
+            
+                var playerController = playerRoot.GetComponent<PlayerController>();
+                if (playerController != null && !damagedPlayers.Contains(playerRoot))
+                {
+                    // Calculate damage based on distance
+                    float distance = Vector3.Distance(explosionPosition, playerRoot.transform.position);
+                    float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
+                    Debug.Log("Damage: " + damage);
+                    // Send RPC to deal damage
+                    if(damage > 0) RpcRequestDamage(playerRoot, Mathf.RoundToInt(damage), _shooter);
+                    damagedPlayers.Add(playerRoot);
+                }
+            } else {
+                var enemyHealth = hitCollider.GetComponent<EnemyHealth>();
+                if (enemyHealth != null) {
+                    float distance = Vector3.Distance(explosionPosition, enemyHealth.transform.position);
+                    float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
+                    if(damage > 0) enemyHealth.TakeDamage(damage);
+                }
             }
         }
     }

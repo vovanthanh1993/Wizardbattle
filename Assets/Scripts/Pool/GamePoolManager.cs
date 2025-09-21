@@ -30,6 +30,10 @@ public class GamePoolManager : MonoBehaviour
     [SerializeField] private GameObject _dragonForestFireBallPrefab;
     [SerializeField] private int _dragonForestFireballPoolSize = 10;
 
+    [Header("Dragon Forest Explosion Pool Settings")]
+    [SerializeField] private GameObject _dragonForestExplosionPrefab;
+    [SerializeField] private int _dragonForestExplosionPoolSize = 10;
+
     [Header("Pool Parent")]
     [SerializeField] private Transform _poolParent;
 
@@ -39,6 +43,7 @@ public class GamePoolManager : MonoBehaviour
     private ObjectPool<XPItemE> _xpItemRedPool;
     private ObjectPool<Health> _healthPool;
     private ObjectPool<DragonForestFireBall> _dragonForestFireBallPool;
+    private ObjectPool<Explosion> _dragonForestExplosionPool; 
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -116,6 +121,16 @@ public class GamePoolManager : MonoBehaviour
                 _dragonForestFireBallPool = new ObjectPool<DragonForestFireBall>(dragonForestFireBall, _dragonForestFireballPoolSize, _poolParent);
             }
         }
+
+        // Initialize Dragon Forest Explosion Pool
+        if (_dragonForestExplosionPrefab != null)
+        {
+            var dragonForestExplosion = _dragonForestExplosionPrefab.GetComponent<Explosion>();
+            if (dragonForestExplosion != null)
+            {
+                _dragonForestExplosionPool = new ObjectPool<Explosion>(dragonForestExplosion, _dragonForestExplosionPoolSize, _poolParent);
+            }
+        }
     }
 
     public void ReturnXpItem(XPItemE xpItem)
@@ -184,6 +199,24 @@ public class GamePoolManager : MonoBehaviour
         if (_dragonForestFireBallPool != null && dragonForestFireBall != null)
         {
             _dragonForestFireBallPool.Return(dragonForestFireBall);
+        }
+    }
+
+    // Dragon Forest Explosion Pool Methods
+    public Explosion GetDragonForestExplosion()
+    {
+        if (_dragonForestExplosionPool == null)
+        {
+            return null;
+        }
+        return _dragonForestExplosionPool.Get();
+    }
+
+    public void ReturnDragonForestExplosion(Explosion dragonForestExplosion)
+    {
+        if (_dragonForestExplosionPool != null && dragonForestExplosion != null)
+        {
+            _dragonForestExplosionPool.Return(dragonForestExplosion);
         }
     }
 
@@ -273,6 +306,14 @@ public class GamePoolManager : MonoBehaviour
         }
     }
 
+    public void ReturnAllDragonForestExplosions()
+    {
+        if (_dragonForestExplosionPool != null)
+        {
+            _dragonForestExplosionPool.ReturnAll();
+        }
+    }
+
     public void ReturnAll()
     {
         ReturnAllFireBalls();
@@ -281,5 +322,6 @@ public class GamePoolManager : MonoBehaviour
         ReturnAllXpItemRed();
         ReturnAllHealth();
         ReturnAllDragonForestFireBalls();
+        ReturnAllDragonForestExplosions();
     }
 } 

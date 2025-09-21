@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using System.Collections;
 public class GamePlayPanel : MonoBehaviour
 {
     [SerializeField] private Image _xpBarImage;
@@ -22,6 +22,17 @@ public class GamePlayPanel : MonoBehaviour
     public bool IsEnableSkill1 { get; private set; }
     public bool IsEnableSkill2 { get; private set; }
     public bool IsEnableSkill3 { get; private set; }
+
+    [Header("Boss Health UI")]
+    [SerializeField] private Image _bossHealthBarImage;
+    [SerializeField] private TMP_Text _bossHealthText;
+    [SerializeField] private GameObject _bossHealthBar;
+
+    [Header("Countdown UI")]
+    [SerializeField] private TMP_Text _timeText;
+     [SerializeField] private TMP_Text _statusText;
+    [SerializeField] private float _statusTextDuration = 3f;
+    [SerializeField] private float _statusTextFadeSpeed = 2f;
     public void UpdateXpBar(long xp, long xpToNextLevel)
     {
         if (_xpBarImage != null)
@@ -103,8 +114,65 @@ public class GamePlayPanel : MonoBehaviour
         }    
     }
 
+    public void UpdateBossHealth(float current, float maxHealth)
+    {
+        float fill = Mathf.Clamp01(current / maxHealth);
+        if (_bossHealthBarImage != null) {
+            _bossHealthBarImage.fillAmount = fill;
+            _bossHealthText.text = $"{current}/{maxHealth}";
+        }
+    }
+
+    public void ShowBossHealthBar(bool isShow)
+    {
+        _bossHealthBar.gameObject.SetActive(isShow);
+    }
+
     public void ResetLevel() {
         UpdateLevelUI(1);
         UpdateXpBar(0, _baseXP);
+    }
+
+    public void SetTimeText(string time)
+    {
+        if (_timeText != null) {
+            _timeText.text = time;
+        }
+    }
+
+    public void SetStatusText(string status)
+    {
+        if (_statusText != null) {
+            _statusText.text = status;
+            StartCoroutine(ShowAndHideStatusText());
+        }
+    }
+
+    private IEnumerator ShowAndHideStatusText()
+    {
+        if (_statusText == null) yield break;
+        
+        // Show status text
+        _statusText.gameObject.SetActive(true);
+        _statusText.color = new Color(_statusText.color.r, _statusText.color.g, _statusText.color.b, 1f);
+        
+        // Wait for duration
+        yield return new WaitForSeconds(_statusTextDuration);
+        
+        // Fade out status text
+        float fadeTime = 1f / _statusTextFadeSpeed;
+        float elapsedTime = 0f;
+        Color startColor = _statusText.color;
+        
+        while (elapsedTime < fadeTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(startColor.a, 0f, elapsedTime / fadeTime);
+            _statusText.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+            yield return null;
+        }
+        
+        // Hide status text
+        _statusText.gameObject.SetActive(false);
     }
 }

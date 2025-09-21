@@ -1,8 +1,15 @@
 using UnityEngine;
 
+public enum ExplosionType
+{
+    Player,
+    DragonForest
+}
+
 public class Explosion : MonoBehaviour
 {
-    [SerializeField] private float _lifetime = 2f;
+    [SerializeField] private ExplosionType _explosionType;
+    [SerializeField] private float _lifetime = 1f;
     private float _timer;
     private bool _isActive = false;
 
@@ -35,7 +42,14 @@ public class Explosion : MonoBehaviour
         
         if (GamePoolManager.Instance != null)
         {
-            GamePoolManager.Instance.ReturnExplosion(this);
+            if (_explosionType == ExplosionType.Player)
+            {
+                GamePoolManager.Instance.ReturnExplosion(this);
+            }
+            else if (_explosionType == ExplosionType.DragonForest)
+            {
+                GamePoolManager.Instance.ReturnDragonForestExplosion(this);
+            }
         }
         else
         {

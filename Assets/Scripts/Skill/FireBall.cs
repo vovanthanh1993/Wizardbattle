@@ -7,19 +7,18 @@ public class FireBall : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private float _explosionRadius = 3f;
-    [SerializeField] private float _explosionDamage = 400f;
+    [SerializeField] private float _explosionDamage = 200f;
+
+    [SerializeField] private float _fireballSpeed = 25f;
+    [SerializeField] private float _fireballLifetime = 3f;
 
     private Vector3 _direction;
-    private float _speed;
-    private float _lifetime;
     private float _timer;
     private NetworkObject _shooter;
 
-    public void Init(Vector3 direction, float speed, float lifetime, NetworkObject shooter = null)
+    public void Init(Vector3 direction, NetworkObject shooter = null)
     {
         _direction = direction;
-        _speed = speed;
-        _lifetime = lifetime;
         _timer = 0f;
         _shooter = shooter;
         gameObject.SetActive(true);
@@ -28,9 +27,9 @@ public class FireBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += _direction * _speed * Time.deltaTime;
+        transform.position += _direction * _fireballSpeed * Time.deltaTime;
         _timer += Time.deltaTime;
-        if (_timer > _lifetime)
+        if (_timer > _fireballLifetime)
         {
             ReturnToPool();
         }
@@ -77,6 +76,7 @@ public class FireBall : MonoBehaviour
         // Find all players within explosion radius
         Collider[] hitColliders = Physics.OverlapSphere(explosionPosition, _explosionRadius);
         HashSet<NetworkObject> damagedPlayers = new HashSet<NetworkObject>();
+        HashSet<EnemyHealth> damagedEnemies = new HashSet<EnemyHealth>();
 
         foreach (var hitCollider in hitColliders)
         {
@@ -89,20 +89,20 @@ public class FireBall : MonoBehaviour
                 var playerController = playerRoot.GetComponent<PlayerController>();
                 if (playerController != null && !damagedPlayers.Contains(playerRoot))
                 {
-                    // Calculate damage based on distance
-                    float distance = Vector3.Distance(explosionPosition, playerRoot.transform.position);
-                    float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
+                    // Calculate damage based on distance to closest point of collider
+                    float damage = CalculateDamageByDistance(explosionPosition, hitCollider, _shooter.GetComponent<PlayerStatus>().Damage);
                     Debug.Log("Damage: " + damage);
                     // Send RPC to deal damage
                     if(damage > 0) RpcRequestDamage(playerRoot, Mathf.RoundToInt(damage), _shooter);
                     damagedPlayers.Add(playerRoot);
                 }
             } else {
-                HashSet<EnemyHealth> damagedEnemies = new HashSet<EnemyHealth>();
                 var enemyHealth = hitCollider.GetComponent<EnemyHealth>();
+                Debug.Log("Thanh Enemy Health: " + enemyHealth);
                 if (enemyHealth != null && !damagedEnemies.Contains(enemyHealth)) {
-                    float distance = Vector3.Distance(explosionPosition, enemyHealth.transform.position);
-                    float damage = CalculateDamageByDistance(distance, _shooter.GetComponent<PlayerStatus>().Damage);
+                    // Calculate damage based on distance to closest point of collider
+                    float damage = CalculateDamageByDistance(explosionPosition, hitCollider, _shooter.GetComponent<PlayerStatus>().Damage);
+                    Debug.Log("Thanh Damage: " + damage);
                     if(damage > 0) {
                         enemyHealth.TakeDamage(damage);
                         damagedEnemies.Add(enemyHealth);
@@ -112,13 +112,16 @@ public class FireBall : MonoBehaviour
         }
     }
 
-    private float CalculateDamageByDistance(float distance, float shooterDamage)
+    private float CalculateDamageByDistance(Vector3 explosionPos, Collider hitCollider, float shooterDamage)
     {
         Debug.Log("Shooter Damage: " + _explosionDamage + shooterDamage);
+        // Tính khoảng cách từ explosion đến điểm gần nhất của collider
+        Vector3 closestPoint = hitCollider.ClosestPoint(explosionPos);
+        float distance = Vector3.Distance(explosionPos, closestPoint);
+        
         if (distance <= 0) return _explosionDamage + shooterDamage;
         if (distance >= _explosionRadius) return 0;
         
-        // Damage decreases with distance (linear falloff)
         float damageMultiplier = 1f - (distance / _explosionRadius);
         return Mathf.RoundToInt((_explosionDamage + shooterDamage) * damageMultiplier);
     }

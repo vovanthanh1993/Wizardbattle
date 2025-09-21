@@ -3,12 +3,9 @@ using System.Collections;
 
 public class DragonForestController : EnemyController
 {
-    [Header("Fireball Settings")]
-    [SerializeField] private float _fireballSpeed = 10f;
-    [SerializeField] private float _fireballLifetime = 3f;
+    [Header("Dragon Forest Settings")]
 
     [SerializeField] private GameObject _fireballPivot;
-    
     protected new void Update()
     {
         if(Input.GetKeyDown(KeyCode.P))
@@ -79,7 +76,7 @@ public class DragonForestController : EnemyController
         
         // Khởi tạo fireball
         fireball.transform.position = spawnPosition;
-        fireball.Init(direction, _fireballSpeed, _fireballLifetime);
+        fireball.Init(direction);
         
         // Xoay fireball theo hướng bắn
         if (direction != Vector3.zero)
@@ -93,6 +90,7 @@ public class DragonForestController : EnemyController
     {
         base.Die();
         GameStatusManager.Instance.SetGameStatus(GameStatus.ENDGAME);
+        UIManager.Instance.GamePlayPanel.ShowBossHealthBar(false);
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)

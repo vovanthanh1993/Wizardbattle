@@ -6,18 +6,17 @@ public class DragonForestFireBall : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private float _explosionRadius = 3f;
-    [SerializeField] private float _explosionDamage = 400f;
+    [SerializeField] private float _explosionDamage = 100f;
+
+    [SerializeField] private float _fireballSpeed = 25f;
+    [SerializeField] private float _fireballLifetime = 3f;
 
     private Vector3 _direction;
-    private float _speed;
-    private float _lifetime;
     private float _timer;
 
-    public void Init(Vector3 direction, float speed, float lifetime)
+    public void Init(Vector3 direction)
     {
         _direction = direction;
-        _speed = speed;
-        _lifetime = lifetime;
         _timer = 0f;
         gameObject.SetActive(true);
     }
@@ -25,9 +24,9 @@ public class DragonForestFireBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += _direction * _speed * Time.deltaTime;
+        transform.position += _direction * _fireballSpeed * Time.deltaTime;
         _timer += Time.deltaTime;
-        if (_timer > _lifetime)
+        if (_timer > _fireballLifetime)
         {
             ReturnToPool();
         }
@@ -50,7 +49,7 @@ public class DragonForestFireBall : MonoBehaviour
         Vector3 explosionPosition = transform.position;
         
         // Spawn explosion effect from pool
-        Explosion explosion = GamePoolManager.Instance.GetExplosion();
+        Explosion explosion = GamePoolManager.Instance.GetDragonForestExplosion();
         
         if (explosion != null)
         {
@@ -68,14 +67,13 @@ public class DragonForestFireBall : MonoBehaviour
 
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.CompareTag("Player"))
+            if (hitCollider.GetComponentInParent<PlayerHealth>() != null)
             {
-                var playerHealth = hitCollider.GetComponent<PlayerHealth>();
+                var playerHealth = hitCollider.GetComponentInParent<PlayerHealth>();
                 if (playerHealth != null && !damagedPlayers.Contains(playerHealth))
                 {
-                    // Calculate damage based on distance
-                    float distance = Vector3.Distance(explosionPosition, hitCollider.transform.position);
-                    float damage = CalculateDamageByDistance(distance, _explosionDamage);
+                    // Calculate damage based on distance to closest point of collider
+                    float damage = CalculateDamageByDistance(explosionPosition, hitCollider, _explosionDamage);
                     Debug.Log("DragonForestFireball Damage: " + damage);
                     
                     // Deal damage directly (offline mode)
@@ -89,8 +87,12 @@ public class DragonForestFireBall : MonoBehaviour
         }
     }
 
-    private float CalculateDamageByDistance(float distance, float baseDamage)
+    private float CalculateDamageByDistance(Vector3 explosionPos, Collider hitCollider, float baseDamage)
     {
+        // Tính khoảng cách từ explosion đến điểm gần nhất của collider
+        Vector3 closestPoint = hitCollider.ClosestPoint(explosionPos);
+        float distance = Vector3.Distance(explosionPos, closestPoint);
+        
         if (distance <= 0) return baseDamage;
         if (distance >= _explosionRadius) return 0;
         

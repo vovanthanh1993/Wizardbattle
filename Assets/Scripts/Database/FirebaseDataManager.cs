@@ -532,7 +532,7 @@ public class FirebaseDataManager : MonoBehaviour
 
     public async Task<bool> ResetToDefault()
     {
-        currentPlayerData.damage = 200;
+        currentPlayerData.damage = 100;
         currentPlayerData.ammor = 0;
         currentPlayerData.level = 1;
         currentPlayerData.xp = 0;

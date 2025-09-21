@@ -32,18 +32,23 @@ public class EnemyHealth : MonoBehaviour
     public void Init() {
         _currentHealth = _maxHealth;
         UpdateHealthBar(_currentHealth, _maxHealth);
-        
-        damageText.gameObject.SetActive(false);
-        _pivotHealthBar.SetActive(false);
         _enemyController = GetComponent<EnemyController>();
+        damageText.gameObject.SetActive(false);
+        if (_pivotHealthBar != null) {
+            _pivotHealthBar.SetActive(false);
+        } else {
+            UIManager.Instance.GamePlayPanel.ShowBossHealthBar(true);
+        }
     }
     
     public void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-        float fillAmount = Mathf.Clamp01(currentHealth / maxHealth);
         if (_healthBarImage != null)
         {
+            float fillAmount = Mathf.Clamp01(currentHealth / maxHealth);
             _healthBarImage.fillAmount = fillAmount;
+        } else {
+            UIManager.Instance.GamePlayPanel.UpdateBossHealth(currentHealth, maxHealth);
         }
     }
 
@@ -160,7 +165,11 @@ public class EnemyHealth : MonoBehaviour
 
     private void Die()
     {
-        _pivotHealthBar.SetActive(false);
         _enemyController.Die();
+        if (_pivotHealthBar != null) {
+            _pivotHealthBar.SetActive(false);
+        } else {
+            UIManager.Instance.GamePlayPanel.ShowBossHealthBar(false);
+        }
     }
 }

@@ -278,10 +278,8 @@ public class PlayerController : NetworkBehaviour
         Vector3 cameraDirection = GetCameraDirection();
         Vector3 start = GetFireballStartPosition();
         Vector3 direction = cameraDirection;
-        float speed = 25f;
-        float lifetime = 3f;
 
-        RpcSpawnFireBallLocal(start, direction, speed, lifetime);
+        RpcSpawnFireBallLocal(start, direction);
 
         _playerAnimation?.TriggerShoot();
         _nextFireTime = Runner.SimulationTime + _fireRate;
@@ -329,12 +327,12 @@ public class PlayerController : NetworkBehaviour
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcSpawnFireBallLocal(Vector3 position, Vector3 direction, float speed, float lifetime)
+    public void RpcSpawnFireBallLocal(Vector3 position, Vector3 direction)
     {
         FireBall fireball = GetFireBallFromPool(position, direction);
         if (fireball != null)
         {
-            fireball.Init(direction, speed, lifetime, Object);
+            fireball.Init(direction, Object);
             AudioManager.Instance.PlayFireballSoundAtPosition(_firePoint.position);
         }
     }

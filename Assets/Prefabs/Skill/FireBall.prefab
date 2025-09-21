@@ -14782,7 +14782,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _explosionPrefab: {fileID: 6074257751357940630, guid: 7cc752446ae3c5d43bffb8ccc77d8460, type: 3}
   _explosionRadius: 3
-  _explosionDamage: 400
+  _explosionDamage: 100
+  _fireballSpeed: 25
+  _fireballLifetime: 3
 --- !u!1001 &5429585234580106743
 PrefabInstance:
   m_ObjectHideFlags: 0

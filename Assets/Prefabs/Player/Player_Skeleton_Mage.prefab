@@ -3185,6 +3185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _kcc: {fileID: 3494031671269482807}
+  _model: {fileID: 4520708008154727696}
   _maxPitch: 85
   _minPitch: -30
   _lookSensitivity: 0.15
@@ -3247,9 +3248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea01561e46b2fe4daf541ac45aafdc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _modelParts: []
   _animator: {fileID: 6947929323905586463}
-  _model: {fileID: 4520708008154727696}
 --- !u!114 &1423462062286669416
 MonoBehaviour:
   m_ObjectHideFlags: 0

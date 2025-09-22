@@ -13,6 +13,7 @@ public class PlayerController : NetworkBehaviour
     
     [Header("Movement Settings")]
     [SerializeField] private KCC _kcc;
+    [SerializeField] private GameObject _model;
     [SerializeField] private float _maxPitch = 60f; // Giảm từ 85f xuống 60f
     [SerializeField] private float _minPitch = -25f; // Giới hạn nhìn xuống (25 độ)
     [SerializeField] private float _lookSensitivity = 0.15f;
@@ -46,6 +47,7 @@ public class PlayerController : NetworkBehaviour
 
     #region Properties
     
+    private MeshRenderer[] _modelParts;
     private bool _isDead;
     private bool _isDisable;
     public string PlayerName => _playerStatus?.PlayerName.ToString() ?? "";
@@ -73,6 +75,7 @@ public class PlayerController : NetworkBehaviour
     private Rigidbody _rb;
     public override void Spawned()
     {
+        
         InitializeComponents();
         SetupInputAuthority();
         Transform kccTransform = transform.Find("KCCCollider");
@@ -89,8 +92,6 @@ public class PlayerController : NetworkBehaviour
             _kcc.enabled = false;
             return;
         }
-
-        HandleRespawn();
 
         if (_isRespawning || _isDead) return;
 
@@ -251,9 +252,9 @@ public class PlayerController : NetworkBehaviour
 
     private IEnumerator StealthCoroutine()
     {
-        _playerAnimation.SetModelVisibility(false);
+       // _playerAnimation.SetModelVisibility(false);
         yield return new WaitForSeconds(_stealthDuration);
-        _playerAnimation.SetModelVisibility(true);
+       // _playerAnimation.SetModelVisibility(true);
     }
     private void HandleLookRotation(NetworkInputData input)
     {
@@ -376,56 +377,6 @@ public class PlayerController : NetworkBehaviour
         
         return fireball;
     }
-    
-    #endregion
-
-    #region Respawn System
-    
-    private void HandleRespawn()
-    {
-        if (_isDead && !_isRespawning && Object.HasInputAuthority && !_isDisable)
-        {
-            StartRespawn();
-        }
-    }
-
-    private void StartRespawn()
-    {
-        _isRespawning = true;
-        _timeRemaining = _respawnTime;
-        if (Object.HasInputAuthority)
-        {
-            StartCoroutine(HandleRespawnCountdown());
-        }
-    }
-
-    private IEnumerator HandleRespawnCountdown()
-    {
-        while (_timeRemaining > 0)
-        {
-            UIManager.Instance.ShowReSpawnTime(string.Format(GameConstants.RESPAWN_FORMAT, Mathf.Ceil(_timeRemaining).ToString()));
-            _timeRemaining -= Time.deltaTime;
-            yield return null;
-        }
-
-        CompleteRespawn();
-    }
-
-    private void CompleteRespawn()
-    {
-        Transform spawnPoint = PlayerSpawnManager.Instance.GetSpawnPoint();
-        _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
-        _playerStatus?.ResetPlayer();
-        UIManager.Instance.ShowReSpawnTime("");
-        StartCoroutine(FinishRespawn());
-    }
-
-    private IEnumerator FinishRespawn()
-    {
-        yield return new WaitForSeconds(1f);
-        _isRespawning = false;
-    }
-    
     #endregion
 
     #region Visual & Camera
@@ -497,7 +448,31 @@ public class PlayerController : NetworkBehaviour
     private IEnumerator HideModelAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        _playerAnimation.HandlePlayerDead();
+        HidePlayerModel();
+        float countdownTime = 3f;
+        while (countdownTime > 0)
+        {
+            if(Object.HasInputAuthority)
+                UIManager.Instance.ShowReSpawnTime(string.Format(GameConstants.RESPAWN_FORMAT, Mathf.Ceil(countdownTime).ToString()));
+            countdownTime -= Time.deltaTime;
+            yield return null;
+        }
+        UIManager.Instance.ShowReSpawnTime("");
+        
+        Respawn();
+        ShowPlayerModel();
+    }
+
+    private void Respawn()
+    {
+        Transform spawnPoint = PlayerSpawnManager.Instance.GetSpawnPoint();
+        if(Object.HasInputAuthority) _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcDie()
+    {
+        Die();
     }
 
     public bool IsDead() {
@@ -509,8 +484,31 @@ public class PlayerController : NetworkBehaviour
         _isDisable = false;
         _kcc.enabled = true;
         _kccCollider.SetActive(true);
-        CameraController.Instance.SetTarget(_camTarget);
-        _playerAnimation.ResetState();
+        _playerHealth.ResetHealth();
+        _playerAnimation.Reset();
     }
     #endregion
+
+    public void HidePlayerModel()
+    {
+        _model.SetActive(false);
+        _kccCollider.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
+         Reset();
+    }
+
+    public void ShowPlayerModel()
+    {
+        _model.SetActive(true);
+        _kccCollider.layer = LayerMask.NameToLayer("Default");
+    }
+
+    private void SetupModelRendering()
+    {
+        if (!Object.HasInputAuthority) return;
+        
+        foreach (MeshRenderer renderer in _modelParts)
+        {
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+        }
+    }
 }

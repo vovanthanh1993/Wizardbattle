@@ -64,7 +64,7 @@ public class PlayerHealth : NetworkBehaviour
         if (CurrentHealth <= 0 && !IsDead)
         {
             IsDead = true;
-            playerController.Die();
+            playerController.RpcDie();
             playerStatus.AddDeath();
 
             if (shooter != null)

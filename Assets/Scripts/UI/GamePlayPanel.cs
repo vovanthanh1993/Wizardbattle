@@ -33,6 +33,10 @@ public class GamePlayPanel : MonoBehaviour
      [SerializeField] private TMP_Text _statusText;
     [SerializeField] private float _statusTextDuration = 3f;
     [SerializeField] private float _statusTextFadeSpeed = 2f;
+
+    private void OnEnable() {
+        ShowBossHealthBar(false);
+    }
     public void UpdateXpBar(long xp, long xpToNextLevel)
     {
         if (_xpBarImage != null)

@@ -26,9 +26,12 @@ public class DragonForestController : EnemyController
         {
             MoveTowardsPlayer();
             CheckFireballAttack();
+            UpdateAnimations();
+        } else if (_player != null && _playerController.IsDead()) {
+            _animator.SetBool(_isWalkingHash, true);
         }
         
-        UpdateAnimations();
+        
     }
     
     private void CheckFireballAttack()

@@ -104,7 +104,7 @@ public class PlayerController : NetworkBehaviour
             UpdateCameraTarget();
         }
         _playerAnimation?.UpdateAnimations();
-        _playerAnimation?.HandlePlayerDead();
+        //_playerAnimation?.HandlePlayerDead();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasStateChanged)
@@ -461,7 +461,11 @@ public class PlayerController : NetworkBehaviour
             _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
         }
-        CameraController.Instance.SetTarget(null);
+        if (Object.HasInputAuthority)
+        {
+            CameraController.Instance.SetTarget(null);
+        }
+            
         SetIdleAnimation();
     }
 
@@ -481,12 +485,19 @@ public class PlayerController : NetworkBehaviour
             _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
         }
-        CameraController.Instance.SetTarget(null);
         _playerAnimation.Die();
 
         if (NetworkRunnerHandler.Instance.GameType == GameType.PVE) {
             PvpResultPopup.Instance.ShowLosePopup(2f);
+        } else {
+            StartCoroutine(HideModelAfterDelay(1f));
         }
+    }
+
+    private IEnumerator HideModelAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _playerAnimation.HandlePlayerDead();
     }
 
     public bool IsDead() {

@@ -2024,7 +2024,6 @@ MonoBehaviour:
     spawnWeight: 1
     enemyName: 
   _defaultPoolSize: 20
-  _spawnRadius: 10
   _minSpawnDistance: 5
   _maxSpawnDistance: 15
   _poolParent: {fileID: 273876047}
@@ -8944,7 +8943,7 @@ MonoBehaviour:
   _gameEndTime: 0
   _totalGameTime: 0
   _bossSpawnPoint: {fileID: 1230297009}
-  _bossSpawnTime: 300
+  _bossSpawnTime: 10
   _bossSpawned: 0
   _dragonForestPrefab: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
 --- !u!1001 &1600446019
@@ -12079,71 +12078,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4131062105692079671, guid: 53e1939cdeda3f04caaa240bfd830e5e, type: 3}
   m_PrefabInstance: {fileID: 2141969900}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &4291384856742109138
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_Name
-      value: DragonForest
-      objectReference: {fileID: 0}
-    - target: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158927817124305133, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: _attackRange
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 41.43
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.0302424
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 62.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.63439316
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.77301055
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757978520105710563, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
 --- !u!199 &9009634171967698690
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -51222,5 +51156,4 @@ SceneRoots:
   - {fileID: 273876047}
   - {fileID: 1188175145}
   - {fileID: 1598901854}
-  - {fileID: 4291384856742109138}
   - {fileID: 9206700283894925546}

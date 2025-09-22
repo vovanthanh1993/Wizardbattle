@@ -1894,6 +1894,14 @@ PrefabInstance:
       value: 2549024286
       objectReference: {fileID: 0}
     - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: StateHashes.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: TriggerHashes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
       propertyPath: 'StateHashes.Array.data[1]'
       value: 2081823275
       objectReference: {fileID: 0}
@@ -1908,6 +1916,18 @@ PrefabInstance:
     - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
       propertyPath: 'StateHashes.Array.data[6]'
       value: 81563449
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: 'StateHashes.Array.data[9]'
+      value: 646380074
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: 'StateHashes.Array.data[10]'
+      value: -1546996312
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: 'TriggerHashes.Array.data[3]'
+      value: 20298039
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8967,7 +8987,11 @@ PrefabInstance:
       objectReference: {fileID: 148306803}
     - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
       propertyPath: StateHashes.Array.size
-      value: 9
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
+      propertyPath: TriggerHashes.Array.size
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
       propertyPath: 'StateHashes.Array.data[7]'
@@ -8978,8 +9002,20 @@ PrefabInstance:
       value: -1996668047
       objectReference: {fileID: 0}
     - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
+      propertyPath: 'StateHashes.Array.data[9]'
+      value: 646380074
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
+      propertyPath: 'StateHashes.Array.data[10]'
+      value: -1546996312
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
       propertyPath: 'TriggerHashes.Array.data[2]'
       value: 1740614436
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
+      propertyPath: 'TriggerHashes.Array.data[3]'
+      value: 20298039
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

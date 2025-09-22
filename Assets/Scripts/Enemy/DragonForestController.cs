@@ -6,7 +6,7 @@ public class DragonForestController : EnemyController
     [Header("Dragon Forest Settings")]
 
     [SerializeField] private GameObject _fireballPivot;
-    protected new void Update()
+    protected void Update()
     {
         if(Input.GetKeyDown(KeyCode.P))
         {
@@ -18,10 +18,11 @@ public class DragonForestController : EnemyController
         if (_playerObj == null) _playerObj = GameObject.FindGameObjectWithTag("Player");
         if (_playerObj != null)
         {
-            _player = _playerObj.transform;  
+            _player = _playerObj.transform; 
+            _playerController = _playerObj.GetComponent<PlayerController>(); 
         }
         
-        if (_player != null)
+        if (_player != null && !_playerController.IsDead())
         {
             MoveTowardsPlayer();
             CheckFireballAttack();
@@ -91,16 +92,6 @@ public class DragonForestController : EnemyController
         base.Die();
         GameStatusManager.Instance.SetGameStatus(GameStatus.ENDGAME);
         UIManager.Instance.GamePlayPanel.ShowBossHealthBar(false);
-
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            var playerStatus = playerObj.GetComponent<PlayerStatus>();
-            if (playerStatus != null)
-            {
-                playerStatus.SetDisable(true);
-            }
-        }
         // Stop spawning enemies
         Destroy(EnemySpawner.Instance.gameObject);
         // Kill all enemies when DragonForest dies  

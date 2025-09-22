@@ -3,7 +3,6 @@
 public class CameraFollow : MonoBehaviour
 {
     public static CameraFollow Instance { get; private set; }
-    [SerializeField] private float smoothSpeed = 10f;
 
     private Transform _target;
 

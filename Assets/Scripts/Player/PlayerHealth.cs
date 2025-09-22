@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using Fusion;
 using UnityEngine;
-
+using TMPro;
+using UnityEngine.UI;
 public class PlayerHealth : NetworkBehaviour
 {
+    [Header("UI References")]
+    [SerializeField] private Image _healthBarImage;
+    [SerializeField] private GameObject _pivotHealthBar;
+    [SerializeField] private ParticleSystem _healthParticleSystem;
+
     [OnChangedRender(nameof(OnCurrentHealthChanged))]
     [Networked] public int CurrentHealth { get; set; }
 
@@ -19,11 +25,23 @@ public class PlayerHealth : NetworkBehaviour
         ResetHealth();
         if (Object.HasInputAuthority)
         {
+            _pivotHealthBar.gameObject.SetActive(false);
             UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
             _lastHealth = CurrentHealth;
-        } else GetComponent<PlayerController>()?.UpdateHealthBar(CurrentHealth, MaxHealth);
+        } else {
+            _pivotHealthBar.gameObject.SetActive(true);
+            UpdateHealthBar(CurrentHealth, MaxHealth);
+        }
     }
 
+    public void UpdateHealthBar(float currentHealth, float maxHealth)
+    {
+        float fillAmount = Mathf.Clamp01(currentHealth / maxHealth);
+        if (_healthBarImage != null)
+        {
+            _healthBarImage.fillAmount = fillAmount;
+        }
+    }
     public override void FixedUpdateNetwork()
     {
         /*if (Object.HasInputAuthority && CurrentHealth != _lastHealth)
@@ -43,11 +61,10 @@ public class PlayerHealth : NetworkBehaviour
         
         var playerController = GetComponent<PlayerController>();
         var playerStatus = GetComponent<PlayerStatus>();
-        
         if (CurrentHealth <= 0 && !IsDead)
         {
             IsDead = true;
-            playerStatus.SetDead(true);
+            playerController.Die();
             playerStatus.AddDeath();
 
             if (shooter != null)
@@ -74,10 +91,6 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
-    public void Heal(int health)
-    {
-        CurrentHealth = Mathf.Min(CurrentHealth + health, MaxHealth);
-    }
     private void OnCurrentHealthChanged()
     {
         if (Object.HasInputAuthority)
@@ -86,7 +99,7 @@ public class PlayerHealth : NetworkBehaviour
         }
         else
         {
-            GetComponent<PlayerController>()?.UpdateHealthBar(CurrentHealth, MaxHealth);
+            UpdateHealthBar(CurrentHealth, MaxHealth);
         }
     }
 
@@ -96,11 +109,35 @@ public class PlayerHealth : NetworkBehaviour
         {
             CurrentHealth = MaxHealth;
             IsDead = false;
-            var playerStatus = GetComponent<PlayerStatus>();
-            playerStatus?.SetDead(false);
+            GetComponent<PlayerController>()?.ResetState();
         }
     }
 
     public bool IsAlive => CurrentHealth > 0 && !IsDead;
     public float HealthPercentage => (float)CurrentHealth / MaxHealth;
+
+    public void UpdateHealthBarBillboard()
+    {
+        if (_pivotHealthBar != null)
+        {
+            _pivotHealthBar.transform.LookAt(Camera.main.transform);
+            _pivotHealthBar.transform.Rotate(0, 180, 0);
+        }
+    }
+
+    public void Heal(int healAmount)
+    {
+        CurrentHealth = Mathf.Min(CurrentHealth + healAmount, MaxHealth);
+        StartCoroutine(PlayHealthParticleEffect());
+    }
+
+    private IEnumerator PlayHealthParticleEffect()
+    {
+        _healthParticleSystem.gameObject.SetActive(true);
+        _healthParticleSystem.Play();
+        
+        yield return new WaitForSeconds(2);
+
+        _healthParticleSystem.gameObject.SetActive(false);
+    }
 }

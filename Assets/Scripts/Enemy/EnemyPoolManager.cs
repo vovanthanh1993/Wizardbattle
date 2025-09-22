@@ -19,7 +19,6 @@ public class EnemyPoolManager : MonoBehaviour
     [SerializeField] private int _defaultPoolSize = 20;
 
     [Header("Spawn Settings")]
-    [SerializeField] private float _spawnRadius = 10f;
     [SerializeField] private float _minSpawnDistance = 5f;
     [SerializeField] private float _maxSpawnDistance = 15f;
 

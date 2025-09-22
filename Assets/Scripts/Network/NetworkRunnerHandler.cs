@@ -23,7 +23,6 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _lobbyManagerPrefab;
 
     private NetworkRunner _runner;
-    private bool _sceneReady = false;
     private bool _isLeavingLobby = false; // Flag to track if player is leaving lobby voluntarily
 
     public bool IsRunning => _runner != null && _runner.IsRunning;
@@ -303,7 +302,6 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        _sceneReady = true;
         UIManager.Instance.ShowLoadingPanel(false);
     }
 

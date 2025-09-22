@@ -46,12 +46,12 @@ public class PlayerController : NetworkBehaviour
 
     #region Properties
     
-    public bool IsDead => _playerStatus?.IsDead ?? false;
-    public bool IsDisable => _playerStatus?.IsDisable ?? false;
+    private bool _isDead;
+    private bool _isDisable;
     public string PlayerName => _playerStatus?.PlayerName.ToString() ?? "";
     public int Kills => _playerStatus?.Kills ?? 0;
     public int Deaths => _playerStatus?.Deaths ?? 0;
-    
+
     #endregion
 
     #region Private Fields
@@ -63,34 +63,43 @@ public class PlayerController : NetworkBehaviour
     // Component References
     private PlayerStatus _playerStatus;
     private PlayerAnimation _playerAnimation;
-    
+    private PlayerHealth _playerHealth;
     private float _nextFireTime;
     private float _nextJumpTime;
     private float _nextHealTime;
     private float _nextStealthTime;
+
+    private GameObject _kccCollider;
+    private Rigidbody _rb;
     public override void Spawned()
     {
         InitializeComponents();
         SetupInputAuthority();
+        Transform kccTransform = transform.Find("KCCCollider");
+        if (kccTransform != null)
+        {
+            _kccCollider = kccTransform.gameObject;
+        }
+        _rb = GetComponent<Rigidbody>();
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (IsDisable) {
+        if (_isDisable) {
             _kcc.enabled = false;
             return;
         }
 
         HandleRespawn();
 
-        if (_isRespawning || IsDead) return;
+        if (_isRespawning || _isDead) return;
 
         HandleInput();
     }
 
     public override void Render()
     {
-        if (!IsDisable)
+        if (!_isDisable)
         {
             UpdateCameraTarget();
         }
@@ -105,7 +114,7 @@ public class PlayerController : NetworkBehaviour
 
     private void LateUpdate()
     {
-        if (!IsDisable)
+        if (!_isDisable)
         {
             // Only update UI every few frames to reduce AABB calculations
             if (Time.frameCount % 3 == 0) // Update every 3rd frame
@@ -124,6 +133,7 @@ public class PlayerController : NetworkBehaviour
         _kcc = GetComponent<KCC>();
         _playerStatus = GetComponent<PlayerStatus>();
         _playerAnimation = GetComponent<PlayerAnimation>();
+        _playerHealth = GetComponent<PlayerHealth>();
     }
 
     private void SetupInputAuthority()
@@ -132,14 +142,13 @@ public class PlayerController : NetworkBehaviour
         
         string playerName = UIManager.Instance.GetPlayerName();
         _playerStatus?.SetPlayerName(playerName);
-        _playerStatus.IsDisable = false;
 
         SetupCamera();
     }
 
     private void SetupCamera()
     {
-        if (IsDisable) return;
+        if (_isDisable) return;
         _camTarget.gameObject.SetActive(true);
         CameraController.Instance.SetTarget(_camTarget);
         _kcc.Settings.ForcePredictedLookRotation = true;
@@ -174,7 +183,8 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleJump(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && !IsDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill2)
+        if (_isDisable) return;
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && !_isDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill2)
         { 
             RpcJump();
         }
@@ -197,7 +207,8 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleShoot(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority && !IsDisable)
+        if (_isDisable) return;
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority && !_isDisable)
         {
             Shoot();
         }
@@ -205,7 +216,8 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleSkillHeal(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && !IsDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill1)
+        if (_isDisable) return;
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && !_isDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill1)
         {
             RpcHeal();
         }
@@ -213,7 +225,8 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleSkillStealth(NetworkInputData input)
     {
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && !IsDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
+        if (_isDisable) return;
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && !_isDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
         {
             RpcStealth();
         }
@@ -244,12 +257,15 @@ public class PlayerController : NetworkBehaviour
     }
     private void HandleLookRotation(NetworkInputData input)
     {
+        if (_isDisable) return;
+        
         _kcc.AddLookRotation(input.LookDelta * _lookSensitivity, _minPitch, _maxPitch);
         _baseLookRotation = _kcc.GetLookRotation();
     }
 
     private void HandleMovement(NetworkInputData input)
     {
+        if (_isDisable) return;
         Vector3 worldDirection = _kcc.FixedData.TransformRotation * input.Direction.X0Y();
         _kcc.SetInputDirection(worldDirection);
 
@@ -262,6 +278,7 @@ public class PlayerController : NetworkBehaviour
 
     private void UpdatePreviousInput(NetworkInputData input)
     {
+        if (_isDisable) return;
         _previousButtons = input.Buttons;
     }
     
@@ -289,7 +306,7 @@ public class PlayerController : NetworkBehaviour
     public void RpcHeal()
     {
         if (Runner.SimulationTime < _nextHealTime) return;
-        _playerStatus?.Heal(_healAmount);
+        _playerHealth.Heal(_healAmount);
         _nextHealTime = Runner.SimulationTime + _healRate;
         if (Object.HasInputAuthority) UIManager.Instance.StartHealingCooldown(_healRate);
         if (AudioManager.Instance != null)
@@ -366,7 +383,7 @@ public class PlayerController : NetworkBehaviour
     
     private void HandleRespawn()
     {
-        if (IsDead && !_isRespawning && Object.HasInputAuthority && !IsDisable)
+        if (_isDead && !_isRespawning && Object.HasInputAuthority && !_isDisable)
         {
             StartRespawn();
         }
@@ -434,21 +451,55 @@ public class PlayerController : NetworkBehaviour
         AudioManager.Instance.PlayPlayerHitSound();
     }
 
-    public void UpdateHealthBar(float currentHealth, float maxHealth)
-    {
-        _playerStatus?.UpdateHealthBar(currentHealth, maxHealth);
-    }
-
     public void SetDisable(bool isDisable)
     {
-        _playerStatus?.SetDisable(isDisable);
-        _kcc.enabled = false;
+        _isDisable = isDisable;
+        _kcc.enabled = !isDisable;
+        _kccCollider.SetActive(false);
+        if (_rb != null) {
+            _rb.isKinematic = true;
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+        CameraController.Instance.SetTarget(null);
+        SetIdleAnimation();
     }
 
     public void SetIdleAnimation()
     {
         _playerAnimation?.SetIdleAnimation();
     }
-    
+
+    public void Die() {
+        _isDead = true;
+        _isDisable = true;
+        _kcc.enabled = false;
+        _kccCollider.SetActive(false);
+
+        if (_rb != null) {
+            _rb.isKinematic = true;
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+        CameraController.Instance.SetTarget(null);
+        _playerAnimation.Die();
+
+        if (NetworkRunnerHandler.Instance.GameType == GameType.PVE) {
+            PvpResultPopup.Instance.ShowLosePopup(2f);
+        }
+    }
+
+    public bool IsDead() {
+        return _isDead;
+    }
+
+    public void Reset() {
+        _isDead = false;
+        _isDisable = false;
+        _kcc.enabled = true;
+        _kccCollider.SetActive(true);
+        CameraController.Instance.SetTarget(_camTarget);
+        _playerAnimation.ResetState();
+    }
     #endregion
 }

@@ -6173,7 +6173,7 @@ MonoBehaviour:
   minSpawnInterval: 0.5
   intervalDecreaseRate: 0.1
   intervalDecreaseInterval: 10
-  maxEnemies: 1
+  maxEnemies: 500
   useRandomEnemyTypes: 1
   enableDifficultyScaling: 1
   gameStartTime: 0
@@ -8944,7 +8944,7 @@ MonoBehaviour:
   _gameEndTime: 0
   _totalGameTime: 0
   _bossSpawnPoint: {fileID: 1230297009}
-  _bossSpawnTime: 20
+  _bossSpawnTime: 300
   _bossSpawned: 0
   _dragonForestPrefab: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
 --- !u!1001 &1600446019
@@ -12093,7 +12093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5158927817124305133, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
       propertyPath: _attackRange

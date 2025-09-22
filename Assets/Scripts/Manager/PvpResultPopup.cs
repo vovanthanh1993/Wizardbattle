@@ -227,10 +227,10 @@ public class PvpResultPopup : MonoBehaviour
 
     public void ShowVictoryPopup(float delay)
     {
-        StartCoroutine(ShowVictoryPopupAfterDelay(delay));
+        StartCoroutine(ShowPopupAfterDelay(delay, true));
     }
 
-    public IEnumerator ShowVictoryPopupAfterDelay(float delay)
+    public IEnumerator ShowPopupAfterDelay(float delay, bool isWin)
     {
         // Wait for specified delay
         yield return new WaitForSeconds(delay);
@@ -239,7 +239,12 @@ public class PvpResultPopup : MonoBehaviour
         if (PvpResultPopup.Instance != null)
         {
             Debug.Log("Showing victory popup after delay...");
-            PvpResultPopup.Instance.ShowResultPopup(true);
+            PvpResultPopup.Instance.ShowResultPopup(isWin);
         }
+    }
+
+    public void ShowLosePopup(float delay)
+    {
+        StartCoroutine(ShowPopupAfterDelay(delay, false));
     }
 }

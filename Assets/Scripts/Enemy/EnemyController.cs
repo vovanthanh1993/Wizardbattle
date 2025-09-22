@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
     
     // Private variables
     protected Transform _player;
-    protected PlayerStatus _playerStatus;
+    protected PlayerController _playerController;
     protected bool _isAttacking = false;
     protected bool _isDead = false;
     protected float _lastAttackTime;
@@ -67,11 +67,11 @@ public class EnemyController : MonoBehaviour
 
         if (_playerObj == null) _playerObj = GameObject.FindGameObjectWithTag("Player");
         if (_playerObj != null) {
-            _playerStatus = _playerObj.GetComponent<PlayerStatus>();
+            _playerController = _playerObj.GetComponent<PlayerController>();
             _player = _playerObj.transform;  
         }
         
-        if (_player != null)
+        if (_player != null && !_playerController.IsDead())
         {
             MoveTowardsPlayer();
             CheckAttack();

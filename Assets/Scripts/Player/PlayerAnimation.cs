@@ -13,6 +13,7 @@ public class PlayerAnimation : NetworkBehaviour
     [Networked] private float _moveSpeed { get; set; }
     [Networked] private bool _hurt { get; set; }
     [Networked] private bool _isStealth { get; set; }
+    [Networked] private bool _isDead { get; set; }
 
 
     private GameObject _cachedKCCCollider;
@@ -45,7 +46,7 @@ public class PlayerAnimation : NetworkBehaviour
 
     public void TriggerHurt()
     {
-        if (!IsDead)
+        if (!_isDead)
         {
             _hurt = true;
         }
@@ -68,6 +69,7 @@ public class PlayerAnimation : NetworkBehaviour
             _animator.SetFloat("MoveSpeed", 0f);
             _animator.ResetTrigger("Fire");
             _animator.ResetTrigger("Hurt");
+            _animator.ResetTrigger("Die");
         }
     }
     
@@ -80,6 +82,7 @@ public class PlayerAnimation : NetworkBehaviour
         HandleShootAnimation();
         HandleHurtAnimation();
         HandleMoveSpeedAnimation();
+        HandleDieAnimation();
     }
 
     private void HandleShootAnimation()
@@ -104,6 +107,15 @@ public class PlayerAnimation : NetworkBehaviour
     {
         _animator?.SetFloat("MoveSpeed", _moveSpeed);
     }
+
+    private void HandleDieAnimation()
+    {
+        if (_isDead)
+        {
+            _animator?.SetTrigger("Die");
+            _isDead = false;
+        }
+    }
     
     #endregion
 
@@ -114,7 +126,7 @@ public class PlayerAnimation : NetworkBehaviour
         if (_model != null)
         {
             // Chỉ hiện model khi không phải stealth mode và không chết
-            bool shouldShowModel = !IsDead && !_isStealth;
+            bool shouldShowModel = !_isDead && !_isStealth;
             _model.SetActive(shouldShowModel);
         }
         if (_cachedKCCCollider == null)
@@ -124,7 +136,7 @@ public class PlayerAnimation : NetworkBehaviour
         }
         if (_cachedKCCCollider != null)
         {
-            if (IsDead)
+            if (_isDead)
             {
                 _cachedKCCCollider.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
                 var rb = GetComponent<Rigidbody>();
@@ -149,9 +161,11 @@ public class PlayerAnimation : NetworkBehaviour
 
     #endregion
 
-    #region Properties
-    
-    public bool IsDead => GetComponent<PlayerStatus>()?.IsDead ?? false;
-    
-    #endregion
+    public void Die(){
+        _isDead = true;
+    }
+
+    public void Reset(){
+        _isDead = false;
+    }
 } 

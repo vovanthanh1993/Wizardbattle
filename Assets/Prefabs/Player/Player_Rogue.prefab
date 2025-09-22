@@ -198,6 +198,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112ae9337bf0eee47b9a4ad0ed107cfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _healthBarImage: {fileID: 1628796801101493049}
+  _pivotHealthBar: {fileID: 4611822088580830097}
+  _healthParticleSystem: {fileID: 7810813880529000602}
   _CurrentHealth: 10
   _IsDead: 0
   MaxHealth: 100
@@ -246,21 +249,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a767159b854bb34c89db84c83061f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNameText: {fileID: 4403771070639989944}
-  _healthBarImage: {fileID: 1628796801101493049}
-  _pivotHealthBar: {fileID: 4611822088580830097}
   _PlayerName:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   _Kills: 0
   _Deaths: 0
-  _IsDead: 0
-  _IsDisable: 0
   _IsWin: 0
   _XP: 0
   _Level: 1
-  _healthParticleSystem: {fileID: 7810813880529000602}
+  _playerNameText: {fileID: 4403771070639989944}
 --- !u!114 &1593952797027979787
 MonoBehaviour:
   m_ObjectHideFlags: 0

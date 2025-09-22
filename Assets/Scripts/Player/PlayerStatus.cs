@@ -6,10 +6,6 @@ using UnityEngine.UI;
 
 public class PlayerStatus : NetworkBehaviour
 {
-    [Header("UI References")]
-    [SerializeField] private TMP_Text _playerNameText;
-    [SerializeField] private Image _healthBarImage;
-    [SerializeField] private GameObject _pivotHealthBar;
 
     [Header("Networked Data")]
     [OnChangedRender(nameof(OnPlayerNameChanged))]
@@ -17,8 +13,6 @@ public class PlayerStatus : NetworkBehaviour
     
     [Networked] public int Kills { get; set; }
     [Networked] public int Deaths { get; set; }
-    [Networked] public bool IsDead { get; set; }
-    [Networked] public bool IsDisable { get; set; }
 
     [Networked] public bool IsWin { get; set; } = false;
 
@@ -29,15 +23,18 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerAnimation _playerAnimation;
 
+    private PlayerController _playerController;
+
     public float Damage { get; set; }
     public float Ammor { get; set; }
 
-    [SerializeField] private ParticleSystem _healthParticleSystem;
+    [SerializeField] private TMP_Text _playerNameText;
 
     public override void Spawned()
     {
         _playerHealth = GetComponent<PlayerHealth>();
         _playerAnimation = GetComponent<PlayerAnimation>();
+        _playerController = GetComponent<PlayerController>();
         UpdatePlayerName();
         if (Object.HasInputAuthority) 
         {
@@ -61,10 +58,8 @@ public class PlayerStatus : NetworkBehaviour
     {
         if(Object.HasInputAuthority) {
             _playerNameText.gameObject.SetActive(false);
-            _pivotHealthBar.gameObject.SetActive(false);
         } else {
             _playerNameText.gameObject.SetActive(true);
-            _pivotHealthBar.gameObject.SetActive(true);
         }
         if (_playerNameText != null)
         {
@@ -94,14 +89,7 @@ public class PlayerStatus : NetworkBehaviour
 
     #region Health Management
     
-    public void UpdateHealthBar(float currentHealth, float maxHealth)
-    {
-        float fillAmount = Mathf.Clamp01(currentHealth / maxHealth);
-        if (_healthBarImage != null)
-        {
-            _healthBarImage.fillAmount = fillAmount;
-        }
-    }
+    
 
     public void ResetPlayer()
     {
@@ -111,49 +99,13 @@ public class PlayerStatus : NetworkBehaviour
         }
     }
 
-    public void Heal(int healAmount)
-    {
-        _playerHealth?.Heal(healAmount);
-        StartCoroutine(PlayHealthParticleEffect());
-    }
-
-    private IEnumerator PlayHealthParticleEffect()
-    {
-        _healthParticleSystem.gameObject.SetActive(true);
-        _healthParticleSystem.Play();
-        
-        yield return new WaitForSeconds(2);
-
-        _healthParticleSystem.gameObject.SetActive(false);
-    }
-
     
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void ResetPlayerRpc()
     {
-        IsDead = false;
+        _playerController.ResetState();
         _playerHealth?.ResetHealth();
-    }
-    
-    #endregion
-
-    #region Game State Management
-    
-    public void SetDisable(bool isDisable)
-    {
-        if (Object.HasStateAuthority)
-        {
-            IsDisable = isDisable;
-        }
-    }
-
-    public void SetDead(bool isDead)
-    {
-        if (Object.HasStateAuthority)
-        {
-            IsDead = isDead;
-        }
     }
 
     public void AddKill()
@@ -188,7 +140,7 @@ public class PlayerStatus : NetworkBehaviour
     public void UpdateUIElements()
     {
         UpdatePlayerNameBillboard();
-        UpdateHealthBarBillboard();
+        _playerHealth.UpdateHealthBarBillboard();
     }
 
     private void UpdatePlayerNameBillboard()
@@ -197,15 +149,6 @@ public class PlayerStatus : NetworkBehaviour
         {
             _playerNameText.transform.LookAt(Camera.main.transform);
             _playerNameText.transform.Rotate(0, 180, 0);
-        }
-    }
-
-    private void UpdateHealthBarBillboard()
-    {
-        if (_pivotHealthBar != null)
-        {
-            _pivotHealthBar.transform.LookAt(Camera.main.transform);
-            _pivotHealthBar.transform.Rotate(0, 180, 0);
         }
     }
     

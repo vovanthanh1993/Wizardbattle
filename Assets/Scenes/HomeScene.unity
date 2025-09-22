@@ -5798,8 +5798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196d3807b25ac1b42a63fac5e38f7da2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellInterval: 0.20628577
-  scrollOffset: 0.20628577
+  cellInterval: 0.18119411
+  scrollOffset: 0.18119411
   loop: 0
   cellContainer: {fileID: 397942466}
   reuseCellMarginCount: 0
@@ -65397,6 +65397,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5352323073625063817, guid: 236febe04bff57c46923b388288fb9c2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368416697564293022, guid: 236febe04bff57c46923b388288fb9c2, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

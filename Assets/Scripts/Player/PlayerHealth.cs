@@ -15,22 +15,17 @@ public class PlayerHealth : NetworkBehaviour
 
     [Networked] public bool IsDead { get; set; }
 
-    public int MaxHealth = 1000;
-    private int _lastHealth;
+    [Networked] public int MaxHealth { get; set; }
 
     public override void Spawned()
     {
-        MaxHealth = FirebaseDataManager.Instance.GetCurrentPlayerData().health;
-        Debug.Log("MaxHealth: " + MaxHealth);
-        ResetHealth();
         if (Object.HasInputAuthority)
         {
             _pivotHealthBar.gameObject.SetActive(false);
+            RpcUpdateData(FirebaseDataManager.Instance.GetCurrentPlayerData().health);
             UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
-            _lastHealth = CurrentHealth;
         } else {
             _pivotHealthBar.gameObject.SetActive(true);
-            UpdateHealthBar(CurrentHealth, MaxHealth);
         }
     }
 
@@ -42,13 +37,13 @@ public class PlayerHealth : NetworkBehaviour
             _healthBarImage.fillAmount = fillAmount;
         }
     }
-    public override void FixedUpdateNetwork()
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RpcUpdateData(int maxHealth)
     {
-        /*if (Object.HasInputAuthority && CurrentHealth != _lastHealth)
-        {
-            UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
-            _lastHealth = CurrentHealth;
-        }*/
+        MaxHealth = maxHealth;
+        CurrentHealth = maxHealth;
+        UpdateHealthBar(CurrentHealth, maxHealth);
     }
 
     public void TakeDamage(int damage, NetworkObject shooter)
@@ -109,7 +104,6 @@ public class PlayerHealth : NetworkBehaviour
         {
             CurrentHealth = MaxHealth;
             IsDead = false;
-            GetComponent<PlayerController>()?.ResetState();
         }
     }
 

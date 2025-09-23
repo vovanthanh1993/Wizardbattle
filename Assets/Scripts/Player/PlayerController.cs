@@ -23,7 +23,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float _fireRate = 10f;
     [SerializeField] private float _jumpRate = 40f;
     [SerializeField] private float _healRate = 60f;
-    [SerializeField] private int _healAmount = 30;
+    [SerializeField] private int _healAmount = 300;
 
     [SerializeField] private int  _stealthRate = 30;
     [SerializeField] private int  _stealthDuration = 5;
@@ -50,9 +50,6 @@ public class PlayerController : NetworkBehaviour
     private MeshRenderer[] _modelParts;
     private bool _isDead;
     private bool _isDisable;
-    public string PlayerName => _playerStatus?.PlayerName.ToString() ?? "";
-    public int Kills => _playerStatus?.Kills ?? 0;
-    public int Deaths => _playerStatus?.Deaths ?? 0;
 
     #endregion
 
@@ -140,10 +137,6 @@ public class PlayerController : NetworkBehaviour
     private void SetupInputAuthority()
     {
         if (!Object.HasInputAuthority) return;
-        
-        string playerName = UIManager.Instance.GetPlayerName();
-        _playerStatus?.SetPlayerName(playerName);
-
         SetupCamera();
     }
 
@@ -202,7 +195,7 @@ public class PlayerController : NetworkBehaviour
         // Chỉ player có InputAuthority mới update UI
         if (Object.HasInputAuthority)
         {
-            UIManager.Instance.StartJumpCooldown(_jumpRate);
+            UIManager.Instance.GamePlayPanel.StartJumpCooldown(_jumpRate);
         }
     }
 
@@ -239,7 +232,7 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SimulationTime < _nextStealthTime) return;
         
         _nextStealthTime = Runner.SimulationTime + _stealthRate;
-        if (Object.HasInputAuthority) UIManager.Instance.StartStealthCooldown(_stealthRate);
+        if (Object.HasInputAuthority) UIManager.Instance.GamePlayPanel.StartStealthCooldown(_stealthRate);
         
         // Ẩn model trong 5 giây sử dụng PlayerAnimation
         StartCoroutine(StealthCoroutine());
@@ -291,7 +284,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (Runner.SimulationTime < _nextFireTime) return;
 
-        UIManager.Instance.StartFireballCooldown(_fireRate);
+        UIManager.Instance.GamePlayPanel.StartFireballCooldown(_fireRate);
         // Get camera direction and start position
         Vector3 cameraDirection = GetCameraDirection();
         Vector3 start = GetFireballStartPosition();
@@ -309,7 +302,7 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SimulationTime < _nextHealTime) return;
         _playerHealth.Heal(_healAmount);
         _nextHealTime = Runner.SimulationTime + _healRate;
-        if (Object.HasInputAuthority) UIManager.Instance.StartHealingCooldown(_healRate);
+        if (Object.HasInputAuthority) UIManager.Instance.GamePlayPanel.StartHealingCooldown(_healRate);
         if (AudioManager.Instance != null)
         {
             //AudioManager.Instance.PlayHealSound();
@@ -439,6 +432,7 @@ public class PlayerController : NetworkBehaviour
         _playerAnimation.Die();
 
         if (NetworkRunnerHandler.Instance.GameType == GameType.PVE) {
+            GameStatusManager.Instance.SetGameStatus(GameStatus.ENDGAME);
             PvpResultPopup.Instance.ShowLosePopup(2f);
         } else {
             StartCoroutine(HideModelAfterDelay(1f));

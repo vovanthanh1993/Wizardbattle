@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class LeaderboardItem : MonoBehaviour
+public class ScoreBoardItem : MonoBehaviour
 {
     [SerializeField] private TMP_Text _oderText;
     [SerializeField] private TMP_Text _nameText;

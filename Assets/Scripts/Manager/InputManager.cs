@@ -58,7 +58,7 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
             if (keyboard != null && keyboard.tabKey.wasPressedThisFrame && !IsVisibleMenuInGame)
             {
                 IsVisibleLeaderBoard = !IsVisibleLeaderBoard;
-                UIManager.Instance.ShowLeaderBoard(IsVisibleLeaderBoard);
+                UIManager.Instance.ShowScoreBoard(IsVisibleLeaderBoard);
                 UpdateCursorState();
 
             }

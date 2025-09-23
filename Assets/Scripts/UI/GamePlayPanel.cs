@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Fusion;
+
 public class GamePlayPanel : MonoBehaviour
 {
     [SerializeField] private Image _xpBarImage;
@@ -34,6 +38,23 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private float _statusTextDuration = 3f;
     [SerializeField] private float _statusTextFadeSpeed = 2f;
 
+    [Header("ScoreBoard UI")]
+    [SerializeField] private List<ScoreBoardItem> _scoreBoardItemList = new();
+    [SerializeField] private GameObject _scoreBoardPanel;
+    [SerializeField] private Transform _scoreBoardContent;
+    [SerializeField] private GameObject _scoreBoardLinePrefab;
+
+    [Header("Skill UI")]
+    [SerializeField] private Image _fireBallCoolDown;
+    [SerializeField] private TMP_Text _fireBallCoolDownText;
+        [SerializeField] private Image _healingCoolDown;
+    [SerializeField] private TMP_Text _healingCoolDownText;
+    [SerializeField] private Image _jumpCoolDown;
+    [SerializeField] private TMP_Text _jumpCoolDownText;
+
+    [SerializeField] private Image _stealthCoolDown;
+    [SerializeField] private TMP_Text _stealthCoolDownText;
+    
     private void OnEnable() {
         ShowBossHealthBar(false);
     }
@@ -57,8 +78,8 @@ public class GamePlayPanel : MonoBehaviour
     public void UpdateLevelUI(long xp)
     {
         int level = CalculateLevelFromXP(xp);
-        IsEnableSkill1 = level >= 5;
-        IsEnableSkill2 = level >= 8;
+        IsEnableSkill1 = level >= 2;
+        IsEnableSkill2 = level >= 5;
         IsEnableSkill3 = level >= 10;
         _skillUI1.SetActive(!IsEnableSkill1);
         _skillUI2.SetActive(!IsEnableSkill2);
@@ -178,5 +199,131 @@ public class GamePlayPanel : MonoBehaviour
         
         // Hide status text
         _statusText.gameObject.SetActive(false);
+    }
+
+    public void UpdateAllScoreBoard()
+    {
+        var runner = NetworkRunnerHandler.Instance.Runner;
+        if (runner == null) return;
+
+        List<PlayerStatus> players = new();
+
+        foreach (PlayerRef player in runner.ActivePlayers)
+        {
+            var obj = runner.GetPlayerObject(player);
+            if (obj == null) continue;
+
+            var status = obj.GetComponent<PlayerStatus>();
+            players.Add(status);
+        }
+        Debug.Log("players.Count: " + players.Count);
+        players = players.OrderByDescending(p => p.Kills).ToList();
+
+        for (int i = 0; i < _scoreBoardItemList.Count; i++)
+        {
+            if (i < players.Count)
+            {
+                var status = players[i];
+                _scoreBoardItemList[i].SetData(i + 1, status.PlayerName, status.Kills, status.Deaths);
+                _scoreBoardItemList[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                _scoreBoardItemList[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void AddPlayerToScoreBoard(string playerName, int kills, int deaths)
+    {
+        GameObject line = Instantiate(_scoreBoardLinePrefab, _scoreBoardContent);
+        TextMeshProUGUI[] texts = line.GetComponentsInChildren<TextMeshProUGUI>();
+
+        foreach (var text in texts)
+        {
+            switch (text.name)
+            {
+                case GameConstants.ORDER_TEXT_NAME:
+                    text.text = playerName;
+                    break;
+                case GameConstants.NAME_TEXT_NAME:
+                    text.text = playerName;
+                    break;
+                case GameConstants.KILL_TEXT_NAME:
+                    text.text = kills.ToString();
+                    break;
+                case GameConstants.DEATH_TEXT_NAME:
+                    text.text = deaths.ToString();
+                    break;
+            }
+        }
+    }
+
+    public void ShowScoreBoard(bool active)
+    {
+        _scoreBoardPanel.SetActive(active);
+    }
+
+    public void StartFireballCooldown(float duration)
+    {
+        StartCooldownRoutine("FireballCooldownRoutine", _fireBallCoolDown, _fireBallCoolDownText, duration);
+    }
+
+    public void StartJumpCooldown(float duration)
+    {
+        StartCooldownRoutine("JumpCooldownRoutine", _jumpCoolDown, _jumpCoolDownText, duration);
+    }
+
+    public void StartHealingCooldown(float duration)
+    {
+        StartCooldownRoutine("HealingCooldownRoutine", _healingCoolDown, _healingCoolDownText, duration);
+    }
+
+    public void StartStealthCooldown(float duration)
+    {
+        StartCooldownRoutine("StealthCooldownRoutine", _stealthCoolDown, _stealthCoolDownText, duration);
+    }
+
+    private void StartCooldownRoutine(string routineName, Image cooldownImage, TMP_Text cooldownText, float duration)
+    {
+        StopCoroutine(routineName);
+        StartCoroutine(CooldownRoutine(cooldownImage, cooldownText, duration));
+    }
+
+    private IEnumerator CooldownRoutine(Image cooldownImage, TMP_Text cooldownText, float duration)
+    {
+        if (cooldownImage == null) yield break;
+
+        // Setup cooldown UI
+        cooldownImage.fillAmount = 1f;
+        cooldownImage.gameObject.SetActive(true);
+        if (cooldownText != null)
+        {
+            cooldownText.gameObject.SetActive(true);
+        }
+
+        // Run cooldown timer
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            cooldownImage.fillAmount = 1f - (elapsed / duration);
+            
+            if (cooldownText != null)
+            {
+                float remaining = Mathf.Max(0f, duration - elapsed);
+                int seconds = Mathf.CeilToInt(remaining);
+                cooldownText.text = seconds.ToString();
+            }
+            yield return null;
+        }
+
+        // Hide cooldown UI
+        cooldownImage.fillAmount = 0f;
+        cooldownImage.gameObject.SetActive(false);
+        if (cooldownText != null)
+        {
+            cooldownText.gameObject.SetActive(false);
+        }
     }
 }

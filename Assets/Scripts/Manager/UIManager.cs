@@ -25,36 +25,21 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform _roomListParent;
     [SerializeField] private GameObject _roomEntryPrefab;
 
-    [SerializeField] private Transform _leaderBoardContent;
-    [SerializeField] private GameObject _linePrefab;
     [SerializeField] private TMP_Text _playerNameInput;
     [SerializeField] private TMP_Text _countdownText;
     [SerializeField] private GameObject _countdownPanel;
-    [SerializeField] private GameObject _leaderBoardPanel;
+    
     [SerializeField] private GameObject _inGameButtonsPanel;
-    [SerializeField] private List<LeaderboardItem> _leaderboardItemList = new();
+    
     [SerializeField] private RoomScrollView _roomScrollView;
 
     [Header("Kill Feed")]
     [SerializeField] private TMP_Text _killFeedText;
     [SerializeField] private GameObject _killFeedBackGround;
 
-    
-    [Header("Skill UI")]
-    [SerializeField] private Image _fireBallCoolDown;
-    [SerializeField] private TMP_Text _fireBallCoolDownText;
-    [SerializeField] private Image _jumpCoolDown;
-    [SerializeField] private TMP_Text _jumpCoolDownText;
-    [SerializeField] private Image _healingCoolDown;
-    [SerializeField] private TMP_Text _healingCoolDownText;
-
-    [SerializeField] private Image _stealthCoolDown;
-    [SerializeField] private TMP_Text _stealthCoolDownText;
-
     [SerializeField] private GameObject _disconnectPopup;
     
     private List<RoomData> _currentRoomList = new List<RoomData>();
-    [SerializeField] private TMP_Text _targetText;
 
     [SerializeField] private TopLeftPanel _topLeftPanel;
     [SerializeField] private TopRightPanel _topRightPanel;
@@ -137,9 +122,10 @@ public class UIManager : MonoBehaviour
         ShowMenu();
     }
 
-    public void ShowLeaderBoard(bool active)
+    public void ShowScoreBoard(bool active)
     {
-        _leaderBoardPanel.SetActive(active);
+        GamePlayPanel.ShowScoreBoard(active);
+        GamePlayPanel.UpdateAllScoreBoard();
     }
 
     private void HandleRefreshRoomClicked()
@@ -182,32 +168,6 @@ public class UIManager : MonoBehaviour
         _lobbyPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        //SetStatus(GameConstants.CONNECTED_STATUS);
-
-        /*if (_roomNameText != null && NetworkRunnerHandler.Instance != null)
-        {
-            string roomName = NetworkRunnerHandler.Instance.Runner?.SessionInfo?.Name;
-            _roomNameText.text = string.IsNullOrEmpty(roomName)
-                ? GameConstants.UNKNOWN_ROOM
-                : string.Format(GameConstants.ROOM_NAME_DISPLAY_FORMAT, roomName);
-        }
-    }
-
-    public void SetStatus(string message)
-    {
-        if (_statusText != null)
-        {
-            _statusText.gameObject.SetActive(true);
-            _statusText.text = message;
-            StartCoroutine(HideStatusAfterDelay(2f));
-        }
-    }
-
-    private IEnumerator HideStatusAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        _statusText.gameObject.SetActive(false);
-    }*/
     }
 
     public void UpdateHealth(float current, float maxHealth)
@@ -215,70 +175,10 @@ public class UIManager : MonoBehaviour
         GamePlayPanel.UpdateHealth(current, maxHealth);
     }
 
-    public void UpdateAllLeaderboards()
-    {
-        var runner = NetworkRunnerHandler.Instance.Runner;
-        if (runner == null) return;
-
-        List<PlayerController> players = new();
-
-        foreach (PlayerRef player in runner.ActivePlayers)
-        {
-            var obj = runner.GetPlayerObject(player);
-            if (obj == null) continue;
-
-            var controller = obj.GetComponent<PlayerController>();
-            if (controller == null) continue;
-
-            players.Add(controller);
-        }
-
-        players = players.OrderByDescending(p => p.Kills).ToList();
-
-        for (int i = 0; i < _leaderboardItemList.Count; i++)
-        {
-            if (i < players.Count)
-            {
-                var controller = players[i];
-                _leaderboardItemList[i].SetData(i + 1, controller.PlayerName.ToString(), controller.Kills, controller.Deaths);
-                _leaderboardItemList[i].gameObject.SetActive(true);
-            }
-            else
-            {
-                _leaderboardItemList[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
     public void ShowWinScreen(string winnerName)
     {
         _menuPanel.SetActive(false);
         PvpResultPopup.Instance.ShowResultPopup(true);
-    }
-
-    public void AddPlayerToLeaderboard(string playerName, int kills, int deaths)
-    {
-        GameObject line = Instantiate(_linePrefab, _leaderBoardContent);
-        TextMeshProUGUI[] texts = line.GetComponentsInChildren<TextMeshProUGUI>();
-
-        foreach (var text in texts)
-        {
-            switch (text.name)
-            {
-                case GameConstants.ORDER_TEXT_NAME:
-                    text.text = playerName;
-                    break;
-                case GameConstants.NAME_TEXT_NAME:
-                    text.text = playerName;
-                    break;
-                case GameConstants.KILL_TEXT_NAME:
-                    text.text = kills.ToString();
-                    break;
-                case GameConstants.DEATH_TEXT_NAME:
-                    text.text = deaths.ToString();
-                    break;
-            }
-        }
     }
 
     public bool IsPlayerNameValid()
@@ -348,68 +248,7 @@ public class UIManager : MonoBehaviour
         _killFeedBackGround.SetActive(false);
     }
 
-    public void StartFireballCooldown(float duration)
-    {
-        StartCooldownRoutine("FireballCooldownRoutine", _fireBallCoolDown, _fireBallCoolDownText, duration);
-    }
-
-    public void StartJumpCooldown(float duration)
-    {
-        StartCooldownRoutine("JumpCooldownRoutine", _jumpCoolDown, _jumpCoolDownText, duration);
-    }
-
-    public void StartHealingCooldown(float duration)
-    {
-        StartCooldownRoutine("HealingCooldownRoutine", _healingCoolDown, _healingCoolDownText, duration);
-    }
-
-    public void StartStealthCooldown(float duration)
-    {
-        StartCooldownRoutine("StealthCooldownRoutine", _stealthCoolDown, _stealthCoolDownText, duration);
-    }
-
-    private void StartCooldownRoutine(string routineName, Image cooldownImage, TMP_Text cooldownText, float duration)
-    {
-        StopCoroutine(routineName);
-        StartCoroutine(CooldownRoutine(cooldownImage, cooldownText, duration));
-    }
-
-    private IEnumerator CooldownRoutine(Image cooldownImage, TMP_Text cooldownText, float duration)
-    {
-        if (cooldownImage == null) yield break;
-
-        // Setup cooldown UI
-        cooldownImage.fillAmount = 1f;
-        cooldownImage.gameObject.SetActive(true);
-        if (cooldownText != null)
-        {
-            cooldownText.gameObject.SetActive(true);
-        }
-
-        // Run cooldown timer
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            cooldownImage.fillAmount = 1f - (elapsed / duration);
-            
-            if (cooldownText != null)
-            {
-                float remaining = Mathf.Max(0f, duration - elapsed);
-                int seconds = Mathf.CeilToInt(remaining);
-                cooldownText.text = seconds.ToString();
-            }
-            yield return null;
-        }
-
-        // Hide cooldown UI
-        cooldownImage.fillAmount = 0f;
-        cooldownImage.gameObject.SetActive(false);
-        if (cooldownText != null)
-        {
-            cooldownText.gameObject.SetActive(false);
-        }
-    }
+    
 
     public void ShowDisconnectPopup(bool isShow)
     {
@@ -419,11 +258,6 @@ public class UIManager : MonoBehaviour
     public void UpdateLevelUI(long amount)
     {
         _gameplayPanel.GetComponent<GamePlayPanel>().UpdateLevelUI(amount);
-    }
-
-    public void UpdateTargetText(int num)
-    {
-        _targetText.text = num.ToString();
     }
 
     public void ResetLevel() {

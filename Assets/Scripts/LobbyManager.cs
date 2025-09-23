@@ -291,9 +291,9 @@ public class LobbyManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RpcUpdateLeaderboard()
+    public void RpcUpdateScoreBoard()
     {
-        UIManager.Instance.UpdateAllLeaderboards();
+        UIManager.Instance.GamePlayPanel.UpdateAllScoreBoard();
     }
 
     private IEnumerator DestroyNetworkRunnerAfterFrame()

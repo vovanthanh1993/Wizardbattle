@@ -3193,7 +3193,7 @@ MonoBehaviour:
   _fireRate: 3
   _jumpRate: 30
   _healRate: 90
-  _healAmount: 30
+  _healAmount: 300
   _stealthRate: 60
   _stealthDuration: 5
   _fireBallPrefab: {fileID: 8965056113716486154, guid: 6c5d7fb0689ca1d40a445a15ed3743f8, type: 3}
@@ -3217,7 +3217,7 @@ MonoBehaviour:
   _healthParticleSystem: {fileID: 8598283843392216855}
   _CurrentHealth: 10
   _IsDead: 0
-  MaxHealth: 100
+  _MaxHealth: 0
 --- !u!114 &3674918421997679535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3261,15 +3261,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a767159b854bb34c89db84c83061f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PlayerName:
-    _length: 0
-    _data:
-      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _PlayerName: 
   _Kills: 0
   _Deaths: 0
   _IsWin: 0
   _XP: 0
   _Level: 1
+  _Damage: 0
+  _Ammor: 0
   _playerNameText: {fileID: 591895906552135643}
 --- !u!1 &8923569079451406144
 GameObject:

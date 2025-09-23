@@ -49,14 +49,30 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private TMP_Text _fireBallCoolDownText;
         [SerializeField] private Image _healingCoolDown;
     [SerializeField] private TMP_Text _healingCoolDownText;
-    [SerializeField] private Image _jumpCoolDown;
-    [SerializeField] private TMP_Text _jumpCoolDownText;
+    [SerializeField] private Image _runCoolDown;
+    [SerializeField] private TMP_Text _runCoolDownText;
 
     [SerializeField] private Image _stealthCoolDown;
     [SerializeField] private TMP_Text _stealthCoolDownText;
     
     private void OnEnable() {
         ShowBossHealthBar(false);
+        ShowScoreBoard(false);
+        ResetLevel();
+        ResetCooldowns();
+        UpdateLevelUI(0);
+    }
+
+    public void ResetCooldowns()
+    {
+        _runCoolDown.gameObject.SetActive(false);
+        _healingCoolDown.gameObject.SetActive(false);
+        _stealthCoolDown.gameObject.SetActive(false);
+        _fireBallCoolDown.gameObject.SetActive(false);
+        _fireBallCoolDownText.gameObject.SetActive(false);
+        _healingCoolDownText.gameObject.SetActive(false);
+        _runCoolDownText.gameObject.SetActive(false);
+        _stealthCoolDownText.gameObject.SetActive(false);
     }
     public void UpdateXpBar(long xp, long xpToNextLevel)
     {
@@ -78,9 +94,9 @@ public class GamePlayPanel : MonoBehaviour
     public void UpdateLevelUI(long xp)
     {
         int level = CalculateLevelFromXP(xp);
-        IsEnableSkill1 = level >= 2;
-        IsEnableSkill2 = level >= 5;
-        IsEnableSkill3 = level >= 10;
+        IsEnableSkill1 = level >= 2 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill2 = level >= 4 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill3 = level >= 6 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
         _skillUI1.SetActive(!IsEnableSkill1);
         _skillUI2.SetActive(!IsEnableSkill2);
         _skillUI3.SetActive(!IsEnableSkill3);
@@ -269,9 +285,9 @@ public class GamePlayPanel : MonoBehaviour
         StartCooldownRoutine("FireballCooldownRoutine", _fireBallCoolDown, _fireBallCoolDownText, duration);
     }
 
-    public void StartJumpCooldown(float duration)
+    public void StartRunCooldown(float duration)
     {
-        StartCooldownRoutine("JumpCooldownRoutine", _jumpCoolDown, _jumpCoolDownText, duration);
+        StartCooldownRoutine("RunCooldownRoutine", _runCoolDown, _runCoolDownText, duration);
     }
 
     public void StartHealingCooldown(float duration)

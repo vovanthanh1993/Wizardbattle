@@ -1,4 +1,5 @@
 using Fusion;
+using Fusion.Addons.KCC;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -25,7 +26,9 @@ public class PlayerStatus : NetworkBehaviour
     private PlayerController _playerController;
 
     [Networked] public float Damage { get; set; }
-    [Networked] public float Ammor { get; set; }
+    [Networked] public float Speed { get; set; }
+
+    
 
     [SerializeField] private TMP_Text _playerNameText;
 
@@ -37,21 +40,36 @@ public class PlayerStatus : NetworkBehaviour
         if (Object.HasInputAuthority) 
         {
             FirebaseDataManager.Instance.BuyFood(0, -1);
-            RpcUpdateData(FirebaseDataManager.Instance.GetCurrentUserDisplayName(), FirebaseDataManager.Instance.GetCurrentUserDamage(), FirebaseDataManager.Instance.GetCurrentUserAmmor());
+            RpcUpdateData(FirebaseDataManager.Instance.GetCurrentUserDisplayName(), FirebaseDataManager.Instance.GetCurrentUserDamage(), FirebaseDataManager.Instance.GetCurrentUserSpeed()/10);
         }
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcUpdateData(string playerName, float damage, float ammor)
+    public void RpcUpdateData(string playerName, float damage, float speed)
     {
         Damage = damage;
-        Ammor = ammor;
+        Speed = speed;
         PlayerName = playerName;
         if(Object.HasInputAuthority) {
             _playerNameText.gameObject.SetActive(false);
         } else {
              _playerNameText.gameObject.SetActive(true);
              _playerNameText.text = PlayerName;
+        }
+        UpdateMovementSpeed();
+    }
+
+    private void UpdateMovementSpeed()
+    {
+        var processors = _playerController.GetKCC().LocalProcessors;
+        foreach (var processor in processors)
+        {
+            if (processor is EnvironmentProcessor envProcessor)
+            {
+                envProcessor.KinematicSpeed = Speed;
+                Debug.Log("Speed updated: " + Speed);
+                break;
+            }
         }
     }
 

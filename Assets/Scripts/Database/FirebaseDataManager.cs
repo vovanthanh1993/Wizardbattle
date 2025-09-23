@@ -398,7 +398,7 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
-    public async Task<bool> UpdatePlayerAttributes(float damage, float ammor, int level, float xp, float gold, float ruby, int food)
+    public async Task<bool> UpdatePlayerAttributes(float damage, float speed, int level, float xp, float gold, float ruby, int food)
     {
         PlayerData currentData = await LoadPlayerData();
         if (currentData == null)
@@ -407,7 +407,7 @@ public class FirebaseDataManager : MonoBehaviour
         }
 
         currentData.damage = damage;
-        currentData.ammor = ammor;
+        currentData.speed = speed;          
         currentData.level = level;
         currentData.xp = xp;
         currentData.gold = gold;
@@ -426,7 +426,7 @@ public class FirebaseDataManager : MonoBehaviour
         }
 
         currentData.damage = playerData.damage;
-        currentData.ammor = playerData.ammor;
+        currentData.speed = playerData.speed;
         currentData.level = playerData.level;
         currentData.xp = playerData.xp;
         currentData.gold = playerData.gold;
@@ -474,9 +474,9 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData.damage;
     }
 
-    public float GetCurrentUserAmmor()
+    public float GetCurrentUserSpeed()
     {
-        return currentPlayerData.ammor;
+        return currentPlayerData.speed;
     }
 
     public int GetCurrentUserLevel()
@@ -533,7 +533,7 @@ public class FirebaseDataManager : MonoBehaviour
     public async Task<bool> ResetToDefault()
     {
         currentPlayerData.damage = 100;
-        currentPlayerData.ammor = 0;
+        currentPlayerData.speed = 50f;
         currentPlayerData.level = 1;
         currentPlayerData.xp = 0;
         currentPlayerData.gold = 100;
@@ -555,8 +555,8 @@ public class FirebaseDataManager : MonoBehaviour
             case UpgradeType.Damage:
                 currentPlayerData.damage += upgradeAmount;
                 break;
-            case UpgradeType.Ammor:
-                currentPlayerData.ammor += upgradeAmount;
+            case UpgradeType.Speed:
+                currentPlayerData.speed += upgradeAmount;
                 break;
         }
         return await SavePlayerData(currentPlayerData);

@@ -17,11 +17,11 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float _maxPitch = 60f; // Giảm từ 85f xuống 60f
     [SerializeField] private float _minPitch = -25f; // Giới hạn nhìn xuống (25 độ)
     [SerializeField] private float _lookSensitivity = 0.15f;
-    [SerializeField] private Vector3 _jumpImpulse = new(0f, 10f, 0f);
     
     [Header("Combat Settings")]
     [SerializeField] private float _fireRate = 10f;
-    [SerializeField] private float _jumpRate = 40f;
+    [SerializeField] private float _runRate = 40f;
+    [SerializeField] private float _runAmount = 5f;
     [SerializeField] private float _healRate = 60f;
     [SerializeField] private int _healAmount = 300;
 
@@ -64,10 +64,10 @@ public class PlayerController : NetworkBehaviour
     private PlayerAnimation _playerAnimation;
     private PlayerHealth _playerHealth;
     private float _nextFireTime;
-    private float _nextJumpTime;
+    private float _nextRunTime;
     private float _nextHealTime;
     private float _nextStealthTime;
-
+    private PlayerSkill _playerSkill;
     private GameObject _kccCollider;
     private Rigidbody _rb;
     public override void Spawned()
@@ -102,7 +102,6 @@ public class PlayerController : NetworkBehaviour
             UpdateCameraTarget();
         }
         _playerAnimation?.UpdateAnimations();
-        //_playerAnimation?.HandlePlayerDead();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasStateChanged)
@@ -132,6 +131,7 @@ public class PlayerController : NetworkBehaviour
         _playerStatus = GetComponent<PlayerStatus>();
         _playerAnimation = GetComponent<PlayerAnimation>();
         _playerHealth = GetComponent<PlayerHealth>();
+        _playerSkill = GetComponent<PlayerSkill>();
     }
 
     private void SetupInputAuthority()
@@ -166,7 +166,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (!GetInput(out NetworkInputData input)) return;
         
-        HandleJump(input);
+        HandleRun(input);
         HandleShoot(input);
         HandleSkillHeal(input);
         HandleSkillStealth(input);
@@ -175,34 +175,34 @@ public class PlayerController : NetworkBehaviour
         UpdatePreviousInput(input);
     }
 
-    private void HandleJump(NetworkInputData input)
+    private void HandleRun(NetworkInputData input)
     {
         if (_isDisable) return;
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Jump) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && !_isDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill2)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Run) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && UIManager.Instance.GamePlayPanel.IsEnableSkill2)
         { 
-            RpcJump();
+            RpcRun();
         }
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    private void RpcJump()
+    private void RpcRun()
     {
-        if (Runner.SimulationTime < _nextJumpTime) return;
+        if (Runner.SimulationTime < _nextRunTime) return;
         
-        _kcc.Jump(_jumpImpulse);
-        _nextJumpTime = Runner.SimulationTime + _jumpRate;
+        StartCoroutine(TemporarySpeedBoost());
+        _playerSkill.RpcPlayPowerUp(3);
+        _nextRunTime = Runner.SimulationTime + _runRate;
         
-        // Chỉ player có InputAuthority mới update UI
         if (Object.HasInputAuthority)
         {
-            UIManager.Instance.GamePlayPanel.StartJumpCooldown(_jumpRate);
+            UIManager.Instance.GamePlayPanel.StartRunCooldown(_runRate);
         }
     }
 
     private void HandleShoot(NetworkInputData input)
     {
         if (_isDisable) return;
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority && !_isDisable)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority)
         {
             Shoot();
         }
@@ -211,7 +211,7 @@ public class PlayerController : NetworkBehaviour
     private void HandleSkillHeal(NetworkInputData input)
     {
         if (_isDisable) return;
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && !_isDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill1)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && UIManager.Instance.GamePlayPanel.IsEnableSkill1)
         {
             RpcHeal();
         }
@@ -220,7 +220,7 @@ public class PlayerController : NetworkBehaviour
     private void HandleSkillStealth(NetworkInputData input)
     {
         if (_isDisable) return;
-        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && !_isDisable && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
         {
             RpcStealth();
         }
@@ -233,8 +233,6 @@ public class PlayerController : NetworkBehaviour
         
         _nextStealthTime = Runner.SimulationTime + _stealthRate;
         if (Object.HasInputAuthority) UIManager.Instance.GamePlayPanel.StartStealthCooldown(_stealthRate);
-        
-        // Ẩn model trong 5 giây sử dụng PlayerAnimation
         StartCoroutine(StealthCoroutine());
         
         if (AudioManager.Instance != null)
@@ -245,9 +243,9 @@ public class PlayerController : NetworkBehaviour
 
     private IEnumerator StealthCoroutine()
     {
-       // _playerAnimation.SetModelVisibility(false);
+        _model.SetActive(false);
         yield return new WaitForSeconds(_stealthDuration);
-       // _playerAnimation.SetModelVisibility(true);
+       _model.SetActive(true);
     }
     private void HandleLookRotation(NetworkInputData input)
     {
@@ -274,6 +272,28 @@ public class PlayerController : NetworkBehaviour
     {
         if (_isDisable) return;
         _previousButtons = input.Buttons;
+    }
+
+    private IEnumerator TemporarySpeedBoost()
+    {
+        var processors = _kcc.LocalProcessors;
+        foreach (var processor in processors)
+        {
+            if (processor is EnvironmentProcessor envProcessor)
+            {
+                envProcessor.KinematicSpeed = _playerStatus.Speed + _runAmount;
+                break;
+            }
+        }
+
+        yield return new WaitForSeconds(3f);
+        foreach (var processor in processors)
+        {
+            if (processor is EnvironmentProcessor envProcessor)
+            {
+                envProcessor.KinematicSpeed = _playerStatus.Speed;
+            }
+        }
     }
     
     #endregion
@@ -504,5 +524,10 @@ public class PlayerController : NetworkBehaviour
         {
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
         }
+    }
+
+    public KCC GetKCC()
+    {
+        return _kcc;
     }
 }

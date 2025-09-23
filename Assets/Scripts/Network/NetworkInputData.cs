@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum InputButtons
 {
-    Jump,
+    Run,
     Fire,
 
     Heal,

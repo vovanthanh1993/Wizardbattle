@@ -122,13 +122,12 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
-            //UIManager.Instance.ShowLobby();
             Runner.Spawn(_lobbyManagerPrefab, Vector3.zero, Quaternion.identity, null);
-            //GameCommonUtils.LoadScene(GameConstants.SCENE_PVE_FOREST);
         }
         else
         {
             UIManager.Instance.ShowNoticePopup(GameConstants.STATUS_FAILED_CREATE_ROOM);
+            UIManager.Instance.ShowLoadingPanel(false);
         }
     }
     public async void QuickJoinOrCreateRoom()

@@ -114,7 +114,7 @@ public class PvpResultPopup : MonoBehaviour
                 // Debug current data
                 Debug.Log("=== CURRENT PLAYER DATA ===");
                 Debug.Log($"Damage: {currentData.damage}");
-                Debug.Log($"Ammor: {currentData.ammor}");
+                Debug.Log($"Speed: {currentData.speed}");
                 Debug.Log($"Level: {currentData.level}");
                 Debug.Log($"XP: {currentData.xp}");
                 Debug.Log($"Gold: {currentData.gold}");

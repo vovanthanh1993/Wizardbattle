@@ -117,7 +117,6 @@ public class UIManager : MonoBehaviour
 
     public void OnBackToMenuClicked()
     {
-        ResetLevel();
         GameCommonUtils.LoadScene(GameConstants.HOME_SCENE);
         ShowMenu();
     }
@@ -259,11 +258,6 @@ public class UIManager : MonoBehaviour
     {
         _gameplayPanel.GetComponent<GamePlayPanel>().UpdateLevelUI(amount);
     }
-
-    public void ResetLevel() {
-        GamePlayPanel.ResetLevel();
-    }
-
     //-------Cheat code -------//
     private void Update() {
         CheatCode();

@@ -38,7 +38,7 @@ public class PlayerData
 
     // PlayerUpdate
     public float damage;
-    public float ammor;
+    public float speed;
     public int level;
     public float xp;
     public float gold;
@@ -84,7 +84,7 @@ public class PlayerData
         this.unlockedCosmetics = new string[0];
 
         this.damage = 200;
-        this.ammor = 0;
+        this.speed = 50f;
         this.level = 1;
         this.xp = 0;
         this.gold = 100;

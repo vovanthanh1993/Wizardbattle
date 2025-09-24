@@ -5564,8 +5564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196d3807b25ac1b42a63fac5e38f7da2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellInterval: 0.19622992
-  scrollOffset: 0.19622992
+  cellInterval: 0.23105086
+  scrollOffset: 0.23105086
   loop: 0
   cellContainer: {fileID: 397942466}
   reuseCellMarginCount: 0
@@ -10789,13 +10789,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 374978445}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 459613781}
-  m_Father: {fileID: 1172762126}
+  m_Father: {fileID: 1006811912}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -22533,13 +22533,8 @@ MonoBehaviour:
   _resumeButton: {fileID: 757751508}
   _roomListParent: {fileID: 397942466}
   _roomEntryPrefab: {fileID: 4572749713950144417, guid: 075fb883a9a7dbc4a8e426f93c2c412c, type: 3}
-  _playerNameInput: {fileID: 2001792473}
-  _countdownText: {fileID: 459613782}
-  _countdownPanel: {fileID: 374978445}
   _inGameButtonsPanel: {fileID: 1913451017}
   _roomScrollView: {fileID: 185838385}
-  _killFeedText: {fileID: 209696141}
-  _killFeedBackGround: {fileID: 1767268063}
   _disconnectPopup: {fileID: 1155648658}
   _topLeftPanel: {fileID: 1553370416}
   _topRightPanel: {fileID: 1559272356}
@@ -27788,11 +27783,12 @@ RectTransform:
   - {fileID: 465350837}
   - {fileID: 1767268064}
   - {fileID: 261896244}
-  - {fileID: 3702210}
   - {fileID: 1155648659}
   - {fileID: 178501869}
-  - {fileID: 1913451018}
   - {fileID: 197491625}
+  - {fileID: 374978446}
+  - {fileID: 1913451018}
+  - {fileID: 3702210}
   m_Father: {fileID: 1172762126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -27852,6 +27848,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _xpBarImage: {fileID: 745208795}
   _levelText: {fileID: 2005104725}
+  _xpBarObject: {fileID: 1910011340}
   _healthBarImage: {fileID: 466689401}
   _healthText: {fileID: 1556254637}
   _baseXP: 100
@@ -27886,6 +27883,10 @@ MonoBehaviour:
   _runCoolDownText: {fileID: 267424110}
   _stealthCoolDown: {fileID: 120009176}
   _stealthCoolDownText: {fileID: 120009175}
+  _killFeedText: {fileID: 209696141}
+  _killFeedBackGround: {fileID: 1767268063}
+  _respawnCountdownText: {fileID: 459613782}
+  _respawnCountdownPanel: {fileID: 374978445}
 --- !u!1001 &1018817969
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31711,7 +31712,6 @@ RectTransform:
   - {fileID: 1392185115}
   - {fileID: 1752586991}
   - {fileID: 1006811912}
-  - {fileID: 374978446}
   - {fileID: 1340198476}
   - {fileID: 2099829191}
   - {fileID: 1251655660}
@@ -56387,7 +56387,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 79.5, y: 46.58}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 159, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1985081577
 MonoBehaviour:
@@ -58038,7 +58038,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 192, y: -80}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 380, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2020710628
 MonoBehaviour:
@@ -58117,7 +58117,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 79.5, y: 223}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 159, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2022448590
 MonoBehaviour:
@@ -59699,7 +59699,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 99.5, y: -82.5}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 159, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2103746146
 MonoBehaviour:
@@ -60781,6 +60781,10 @@ PrefabInstance:
     - target: {fileID: 6216627240888122795, guid: 236febe04bff57c46923b388288fb9c2, type: 3}
       propertyPath: m_Name
       value: PvpResultPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216627240888122795, guid: 236febe04bff57c46923b388288fb9c2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6725292965119959987, guid: 236febe04bff57c46923b388288fb9c2, type: 3}
       propertyPath: m_SizeDelta.x

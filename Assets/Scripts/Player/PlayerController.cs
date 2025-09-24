@@ -1,6 +1,7 @@
 ﻿using Fusion;
 using Fusion.Addons.KCC;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Jobs;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [Header("Movement Settings")]
     [SerializeField] private KCC _kcc;
     [SerializeField] private GameObject _model;
-    [SerializeField] private float _maxPitch = 60f; // Giảm từ 85f xuống 60f
+    [SerializeField] private float _maxPitch = 85f; // Giảm từ 85f xuống 60f
     [SerializeField] private float _minPitch = -25f; // Giới hạn nhìn xuống (25 độ)
     [SerializeField] private float _lookSensitivity = 0.15f;
     
@@ -25,8 +26,6 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float _healRate = 60f;
     [SerializeField] private int _healAmount = 300;
 
-    [SerializeField] private int  _stealthRate = 30;
-    [SerializeField] private int  _stealthDuration = 5;
     [SerializeField] private GameObject _fireBallPrefab;
     [SerializeField] private Transform _firePoint;
     
@@ -46,10 +45,9 @@ public class PlayerController : NetworkBehaviour
     #endregion
 
     #region Properties
-    
-    private MeshRenderer[] _modelParts;
     private bool _isDead;
     private bool _isDisable;
+    
 
     #endregion
 
@@ -66,10 +64,11 @@ public class PlayerController : NetworkBehaviour
     private float _nextFireTime;
     private float _nextRunTime;
     private float _nextHealTime;
-    private float _nextStealthTime;
+    
     private PlayerSkill _playerSkill;
     private GameObject _kccCollider;
     private Rigidbody _rb;
+
     public override void Spawned()
     {
         
@@ -222,31 +221,11 @@ public class PlayerController : NetworkBehaviour
         if (_isDisable) return;
         if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
         {
-            RpcStealth();
+            _playerSkill.RpcStealth();
         }
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcStealth()
-    {
-        if (Runner.SimulationTime < _nextStealthTime) return;
-        
-        _nextStealthTime = Runner.SimulationTime + _stealthRate;
-        if (Object.HasInputAuthority) UIManager.Instance.GamePlayPanel.StartStealthCooldown(_stealthRate);
-        StartCoroutine(StealthCoroutine());
-        
-        if (AudioManager.Instance != null)
-        {
-            //AudioManager.Instance.PlayHealSound();
-        }
-    }
-
-    private IEnumerator StealthCoroutine()
-    {
-        _model.SetActive(false);
-        yield return new WaitForSeconds(_stealthDuration);
-       _model.SetActive(true);
-    }
+    
     private void HandleLookRotation(NetworkInputData input)
     {
         if (_isDisable) return;
@@ -467,11 +446,11 @@ public class PlayerController : NetworkBehaviour
         while (countdownTime > 0)
         {
             if(Object.HasInputAuthority)
-                UIManager.Instance.ShowReSpawnTime(string.Format(GameConstants.RESPAWN_FORMAT, Mathf.Ceil(countdownTime).ToString()));
+                UIManager.Instance.GamePlayPanel.ShowReSpawnTime(string.Format(GameConstants.RESPAWN_FORMAT, Mathf.Ceil(countdownTime).ToString()));
             countdownTime -= Time.deltaTime;
             yield return null;
         }
-        UIManager.Instance.ShowReSpawnTime("");
+        UIManager.Instance.GamePlayPanel.ShowReSpawnTime("");
         
         Respawn();
         ShowPlayerModel();
@@ -516,18 +495,13 @@ public class PlayerController : NetworkBehaviour
         _kccCollider.layer = LayerMask.NameToLayer("Default");
     }
 
-    private void SetupModelRendering()
-    {
-        if (!Object.HasInputAuthority) return;
-        
-        foreach (MeshRenderer renderer in _modelParts)
-        {
-            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-        }
-    }
-
     public KCC GetKCC()
     {
         return _kcc;
+    }
+
+    public GameObject GetModel()
+    {
+        return _model;
     }
 }

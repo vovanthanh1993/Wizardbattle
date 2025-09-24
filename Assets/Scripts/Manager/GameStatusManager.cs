@@ -40,7 +40,7 @@ public class GameStatusManager : MonoBehaviour
 
     private void Update() {
         if (_gameStatus == GameStatus.PLAYING) {
-            UIManager.Instance.GamePlayPanel.SetTimeText(GetGameTimeString());
+            UIManager.Instance.GamePlayPanel.SetTimeText(GameCommonUtils.GetGameTimeString(GetCurrentGameTime()));
             
             // Check boss spawn after 5 minutes
             CheckBossSpawn();
@@ -108,14 +108,7 @@ public class GameStatusManager : MonoBehaviour
         return _totalGameTime;
     }
     
-    // Get game time as string (mm:ss)
-    public string GetGameTimeString()
-    {
-        float time = GetCurrentGameTime();
-        int minutes = Mathf.FloorToInt(time / 60);
-        int seconds = Mathf.FloorToInt(time % 60);
-        return string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
+    
     
     // Reset game time
     public void ResetGameTime()

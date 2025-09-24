@@ -10,6 +10,7 @@ public class GamePlayPanel : MonoBehaviour
 {
     [SerializeField] private Image _xpBarImage;
     [SerializeField] private TMP_Text _levelText;
+    [SerializeField] private GameObject _xpBarObject;
 
     [Header("Health UI")]
     [SerializeField] private Image _healthBarImage;
@@ -55,15 +56,32 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private Image _stealthCoolDown;
     [SerializeField] private TMP_Text _stealthCoolDownText;
     
+    [Header("Kill Feed")]
+    [SerializeField] private TMP_Text _killFeedText;
+    [SerializeField] private GameObject _killFeedBackGround;
+
+    [Header("Respawn Countdown")]
+
+    [SerializeField] private TMP_Text _respawnCountdownText;
+    [SerializeField] private GameObject _respawnCountdownPanel;
     private void OnEnable() {
         ShowBossHealthBar(false);
         ShowScoreBoard(false);
         ResetLevel();
-        ResetCooldowns();
+        InitUI();
         UpdateLevelUI(0);
+        UpdateXpBar();
     }
 
-    public void ResetCooldowns()
+    public void UpdateXpBar()
+    {
+       if (NetworkRunnerHandler.Instance.GameType == GameType.PVP) {
+        _xpBarObject.SetActive(false);
+       } else {
+        _xpBarObject.SetActive(true);
+       }
+    }
+    public void InitUI()
     {
         _runCoolDown.gameObject.SetActive(false);
         _healingCoolDown.gameObject.SetActive(false);
@@ -73,6 +91,11 @@ public class GamePlayPanel : MonoBehaviour
         _healingCoolDownText.gameObject.SetActive(false);
         _runCoolDownText.gameObject.SetActive(false);
         _stealthCoolDownText.gameObject.SetActive(false);
+        _killFeedText.gameObject.SetActive(false);
+        _killFeedBackGround.SetActive(false);
+        _respawnCountdownPanel.SetActive(false);
+        _respawnCountdownText.text = "";
+        _statusText.text = "";
     }
     public void UpdateXpBar(long xp, long xpToNextLevel)
     {
@@ -341,5 +364,25 @@ public class GamePlayPanel : MonoBehaviour
         {
             cooldownText.gameObject.SetActive(false);
         }
+    }
+
+    public void ShowKillFeed(string killer, string victim)
+    {
+        _killFeedText.text = $"<color=#00FF00>{killer}</color> killed <color=#FF0000>{victim}</color>";
+        _killFeedBackGround.SetActive(true);
+        StopCoroutine(nameof(HideKillFeedAfterDelay));
+        StartCoroutine(HideKillFeedAfterDelay(2f));
+    }
+
+    private IEnumerator HideKillFeedAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _killFeedBackGround.SetActive(false);
+    }
+
+    public void ShowReSpawnTime(string respawnMess)
+    {
+        _respawnCountdownPanel.SetActive(!string.IsNullOrEmpty(respawnMess));
+        _respawnCountdownText.text = respawnMess;
     }
 }

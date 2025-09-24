@@ -53,7 +53,7 @@ public class ItemSpawner : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             SpawnHealthItem();
-            SpawnInitialXpItems();
+            //SpawnInitialXpItems();
         }
     }
 

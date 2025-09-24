@@ -66363,8 +66363,6 @@ MonoBehaviour:
   _runAmount: 5
   _healRate: 90
   _healAmount: 300
-  _stealthRate: 60
-  _stealthDuration: 5
   _fireBallPrefab: {fileID: 8965056113716486154, guid: 6c5d7fb0689ca1d40a445a15ed3743f8, type: 3}
   _firePoint: {fileID: 5094374653939346761}
   _camTarget: {fileID: 3340324775149446024}
@@ -66452,6 +66450,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerUpParticleSystem: {fileID: 5278967662147255107}
+  _hideMaterial: {fileID: 2100000, guid: 83677e3891a8f214dba7c05e7ebca95d, type: 2}
+  _stealthRate: 30
+  _stealthDuration: 5
 --- !u!1 &8842423880054777669
 GameObject:
   m_ObjectHideFlags: 0
@@ -71456,7 +71457,7 @@ Transform:
   m_GameObject: {fileID: 9219242460477656305}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.15}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

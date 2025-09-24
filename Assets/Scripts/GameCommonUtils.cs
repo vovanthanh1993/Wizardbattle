@@ -42,4 +42,12 @@ public static class GameCommonUtils
 
         UIManager.Instance.ShowLoadingPanel(false);
     }
+
+    // Get game time as string (mm:ss)
+    public static string GetGameTimeString(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
 }

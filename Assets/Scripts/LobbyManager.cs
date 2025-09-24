@@ -2,6 +2,7 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum GameState
 {
@@ -29,6 +30,8 @@ public class LobbyManager : NetworkBehaviour
     [SerializeField] private int _killsToWin = 5;
     public int KillsToWin => _killsToWin;
 
+    [SerializeField] private float _gameTotalTime = 20f;
+
     public override void Spawned()
     {
         if (Instance == null)
@@ -44,7 +47,20 @@ public class LobbyManager : NetworkBehaviour
         Debug.Log($"[LobbyManager] Spawned on {(Object.HasStateAuthority ? "Host" : "Client")}");
     }
 
-    
+    private void Update()
+    {
+        if (GameState == GameState.Playing && NetworkRunnerHandler.Instance.GameType == GameType.PVP) {
+            if(_gameTotalTime > 0) {
+                _gameTotalTime -= Time.deltaTime;
+                _gameTotalTime = Mathf.Max(0f, _gameTotalTime);
+                UIManager.Instance.GamePlayPanel.SetTimeText(GameCommonUtils.GetGameTimeString(_gameTotalTime));
+            }
+            else if(Runner.IsServer)
+            {
+                EndGame();
+            }
+        }
+    }
 
     /// <summary>
     /// Thêm player name vào danh sách (chỉ host mới có thể thực hiện)
@@ -252,10 +268,14 @@ public class LobbyManager : NetworkBehaviour
         {   Debug.Log("Spawning player: " + player);
             PlayerSpawnManager.Instance.SpawnPlayer(player);
         }
+        GameState = GameState.Playing;
     }
 
     public void EndGame()
     {
+        GameState = GameState.Ended;
+        DetermineWinner();
+        
         foreach (var player in Runner.ActivePlayers)
         {
             var playerObject = Runner.GetPlayerObject(player);
@@ -272,6 +292,42 @@ public class LobbyManager : NetworkBehaviour
         }
 
         RpcShowResultForAllPlayers();
+    }
+
+    private void DetermineWinner()
+    {
+        List<PlayerStatus> players = new List<PlayerStatus>();
+        
+        // Thu thập thông tin tất cả player
+        foreach (var player in Runner.ActivePlayers)
+        {
+            var playerObject = Runner.GetPlayerObject(player);
+            if (playerObject == null) continue;
+
+            var playerStatus = playerObject.GetComponent<PlayerStatus>();
+            if (playerStatus != null)
+            {
+                players.Add(playerStatus);
+            }
+        }
+
+        if (players.Count == 0) return;
+
+        // Sắp xếp theo số kill giảm dần
+        players = players.OrderByDescending(p => p.Kills).ThenBy(p => p.Deaths).ToList();
+
+        // Đặt người có số kill cao nhất là người thắng
+        if (players.Count > 0)
+        {
+            players[0].IsWin = true;
+            Debug.Log($"Winner: {players[0].PlayerName} with {players[0].Kills} kills");
+            
+            // Đặt tất cả player khác là thua
+            for (int i = 1; i < players.Count; i++)
+            {
+                players[i].IsWin = false;
+            }
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -311,6 +367,6 @@ public class LobbyManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RpcShowKillFeed(string killer, string victim)
     {
-        UIManager.Instance?.ShowKillFeed(killer, victim);
+        UIManager.Instance.GamePlayPanel.ShowKillFeed(killer, victim);
     }
 }

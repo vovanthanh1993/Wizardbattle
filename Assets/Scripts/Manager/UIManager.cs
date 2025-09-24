@@ -24,18 +24,10 @@ public class UIManager : MonoBehaviour
     [Header("Room List")]
     [SerializeField] private Transform _roomListParent;
     [SerializeField] private GameObject _roomEntryPrefab;
-
-    [SerializeField] private TMP_Text _playerNameInput;
-    [SerializeField] private TMP_Text _countdownText;
-    [SerializeField] private GameObject _countdownPanel;
     
     [SerializeField] private GameObject _inGameButtonsPanel;
     
     [SerializeField] private RoomScrollView _roomScrollView;
-
-    [Header("Kill Feed")]
-    [SerializeField] private TMP_Text _killFeedText;
-    [SerializeField] private GameObject _killFeedBackGround;
 
     [SerializeField] private GameObject _disconnectPopup;
     
@@ -76,12 +68,6 @@ public class UIManager : MonoBehaviour
 
     public void ShowNoticePopup(string text){
         _noticePopup.ShowNoticePopup(text);
-    }
-
-    public void ShowReSpawnTime(string respawnMess)
-    {
-        _countdownPanel.SetActive(!string.IsNullOrEmpty(respawnMess));
-        _countdownText.text = respawnMess;
     }
 
     public void ShowInGameMenu(bool isShow)
@@ -180,30 +166,6 @@ public class UIManager : MonoBehaviour
         PvpResultPopup.Instance.ShowResultPopup(true);
     }
 
-    public bool IsPlayerNameValid()
-    {
-        if (_playerNameInput == null) return false;
-
-        string name = _playerNameInput.text.Trim();
-        if (string.IsNullOrEmpty(name))
-        {
-            _noticePopup.ShowNoticePopup(GameConstants.PLAYER_NAME_REQUIRED);
-            return false;
-        }
-
-        PlayerPrefs.SetString(GameConstants.PLAYER_PREFS_NAME_KEY, name);
-        PlayerPrefs.Save();
-        return true;
-    }
-
-    public string GetPlayerName()
-    {
-        string name = _playerNameInput.text.Trim();
-        return string.IsNullOrEmpty(name)
-            ? GameConstants.DEFAULT_PLAYER_NAME_PREFIX + Random.Range(1000, 9999)
-            : name;
-    }
-
     public void QuitGame()
     {
 #if UNITY_EDITOR
@@ -232,22 +194,6 @@ public class UIManager : MonoBehaviour
         this._currentRoomList = roomDataList;
         _roomScrollView.UpdateData(roomDataList);
     }
-
-    public void ShowKillFeed(string killer, string victim)
-    {
-        _killFeedText.text = $"<color=#00FF00>{killer}</color> killed <color=#FF0000>{victim}</color>";
-        _killFeedBackGround.SetActive(true);
-        StopCoroutine(nameof(HideKillFeedAfterDelay));
-        StartCoroutine(HideKillFeedAfterDelay(2f));
-    }
-
-    private IEnumerator HideKillFeedAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        _killFeedBackGround.SetActive(false);
-    }
-
-    
 
     public void ShowDisconnectPopup(bool isShow)
     {

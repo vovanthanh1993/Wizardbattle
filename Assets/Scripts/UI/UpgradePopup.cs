@@ -28,6 +28,7 @@ public class UpgradePopup : MonoBehaviour
     private void OnEnable()
     {
         UpdateNumber();
+        AudioManager.Instance.PlayButtonPopupSound();
     }
 
     public void UpgradeHealth()
@@ -59,6 +60,7 @@ public class UpgradePopup : MonoBehaviour
                 UIManager.Instance.TopLeftPanel.InitData();
                 UpdateNumber();
                 UIManager.Instance.ShowLoadingPanel(false);
+                AudioManager.Instance.PlayBuySuccessSound();
             }
             else
             {
@@ -66,6 +68,9 @@ public class UpgradePopup : MonoBehaviour
                 UIManager.Instance.ShowLoadingPanel(false);
                 UIManager.Instance.ShowNoticePopup($"Upgrade {upgradeType} Failed! Please try again.");
             }
-        } else UIManager.Instance.ShowNoticePopup("You don't have enough gold!");
+        } else {
+            UIManager.Instance.ShowNoticePopup("You don't have enough gold!");
+            AudioManager.Instance.PlayNotEnoughSound();
+        }
     }
 }

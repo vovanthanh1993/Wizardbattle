@@ -10,8 +10,14 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource _sfxSource;
 
     [Header("Background Music")]
-    [SerializeField] private AudioClip _mainMenuMusic;
-    [SerializeField] private AudioClip _gameplayMusic;
+    [SerializeField] private AudioClip _loginMusic;
+    [SerializeField] private AudioClip _homeMusic;
+    [SerializeField] private AudioClip _lobbyMusic;
+    [SerializeField] private AudioClip _pvpMusic;
+    [SerializeField] private AudioClip _pveMusic;
+    [SerializeField] private AudioClip _bossMusic;
+    [SerializeField] private AudioClip _defeatMusic;
+    [SerializeField] private AudioClip _settingsMusic;
     [SerializeField] private AudioClip _victoryMusic;
 
     [Header("Sound Effects")]
@@ -20,6 +26,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _explosionSound;
     [SerializeField] private AudioClip _playerHitSound;
     [SerializeField] private AudioClip _buttonClickSound;
+    [SerializeField] private AudioClip _buttonCloseSound;
+    [SerializeField] private AudioClip _buttonPopupSound;
+    [SerializeField] private AudioClip _notEnoughSound;
+    [SerializeField] private AudioClip _buySuccessSound;
 
     [Header("Audio Settings")]
     [SerializeField] private float _musicVolume = 0.7f;
@@ -43,7 +53,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        PlayMainMenuMusic();
+        PlayLoginMusic();
     }
 
     private void InitializeAudioSources()
@@ -79,19 +89,44 @@ public class AudioManager : MonoBehaviour
     }
 
     #region Background Music
-    public void PlayMainMenuMusic()
+    public void PlayHomeMusic()
     {
-        PlayMusic(_mainMenuMusic);
+        PlayMusic(_homeMusic);
     }
 
-    public void PlayGameplayMusic()
+    public void PlayPVEMusic()
     {
-        PlayMusic(_gameplayMusic);
+        PlayMusic(_pveMusic);
     }
 
     public void PlayVictoryMusic()
     {
         PlayMusic(_victoryMusic);
+    }
+
+    public void PlayLoginMusic()
+    {
+        PlayMusic(_loginMusic);
+    }
+
+    public void PlayLobbyMusic()
+    {
+        PlayMusic(_lobbyMusic);
+    }
+
+    public void PlayPVPMusic()
+    {
+        PlayMusic(_pvpMusic);
+    }
+
+    public void PlayDefeatMusic()
+    {
+        PlayMusic(_defeatMusic);
+    }
+
+    public void PlaySettingsMusic()
+    {
+        PlayMusic(_settingsMusic);
     }
 
     private void PlayMusic(AudioClip musicClip)
@@ -101,6 +136,7 @@ public class AudioManager : MonoBehaviour
         if (_musicSource.clip != musicClip)
         {
             _musicSource.clip = musicClip;
+            _musicSource.loop = true;
             _musicSource.Play();
         }
     }
@@ -164,6 +200,26 @@ public class AudioManager : MonoBehaviour
     public void PlayButtonClickSound()
     {
         PlaySFX(_buttonClickSound);
+    }
+
+    public void PlayButtonCloseSound()
+    {
+        PlaySFX(_buttonCloseSound);
+    }
+
+    public void PlayButtonPopupSound()
+    {
+        PlaySFX(_buttonPopupSound);
+    }
+
+    public void PlayNotEnoughSound()
+    {
+        PlaySFX(_notEnoughSound);
+    }
+
+    public void PlayBuySuccessSound()
+    {
+        PlaySFX(_buySuccessSound);
     }
 
     private void PlaySFX(AudioClip sfxClip)
@@ -238,21 +294,34 @@ public class AudioManager : MonoBehaviour
         PlayMusicForScene(scene.name);
     }
 
-    private void PlayMusicForScene(string sceneName)
+    public void PlayMusicForScene(string sceneName)
     {
         switch (sceneName)
         {
-            case "MainMenu":
-                PlayMainMenuMusic();
+            // Login & Authentication Scenes
+            case GameConstants.SCENE_LOGIN:
+                PlayLoginMusic();
                 break;
-            case "GamePlay":
-                PlayGameplayMusic();
+            
+            // Main Menu & UI Scenes
+            case GameConstants.SCENE_HOME:
+                PlayHomeMusic();
                 break;
-            case "VictoryScene":
-                PlayVictoryMusic();
+            
+            // Lobby & Matchmaking
+            case GameConstants.SCENE_LOBBY:
+                PlayLobbyMusic();
                 break;
-            // Add other scenes if needed
+            
+            case GameConstants.SCENE_PVE_FOREST:
+                PlayPVEMusic();
+                break;
+            
+            case GameConstants.SCENE_PVP_FOREST:
+                PlayPVPMusic();
+                break;
             default:
+                Debug.LogWarning($"No music found for scene: {sceneName}");
                 StopMusic();
                 break;
         }

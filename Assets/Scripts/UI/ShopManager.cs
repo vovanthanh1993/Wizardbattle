@@ -57,6 +57,7 @@ public class ShopManager : MonoBehaviour
                 UIManager.Instance.TopRightPanel.InitData();
                 UpdateNumber();
                 UIManager.Instance.ShowLoadingPanel(false);
+                AudioManager.Instance.PlayBuySuccessSound();
             }
             else
             {
@@ -64,7 +65,10 @@ public class ShopManager : MonoBehaviour
                 UIManager.Instance.ShowLoadingPanel(false);
                 UIManager.Instance.ShowNoticePopup("Buy Gold Failed! Please try again.");
             }
-        } else UIManager.Instance.ShowNoticePopup("You don't have enough ruby!");
+        } else {
+            UIManager.Instance.ShowNoticePopup("You don't have enough ruby!");
+            AudioManager.Instance.PlayNotEnoughSound();
+        }
     }
 
     public async void BuyFood(int ruby, int food)
@@ -80,6 +84,7 @@ public class ShopManager : MonoBehaviour
                 Debug.Log("Buy Food Success");
                 UIManager.Instance.ShowNoticePopup($"Buy {food} Food Success!");
                 UIManager.Instance.ShowLoadingPanel(false);
+                AudioManager.Instance.PlayBuySuccessSound();
             }
             else
             {
@@ -88,7 +93,10 @@ public class ShopManager : MonoBehaviour
                 UIManager.Instance.ShowNoticePopup("Buy Food Failed! Please try again.");
             }
         }
-        else UIManager.Instance.ShowNoticePopup("You don't have enough ruby!");
+        else {
+            UIManager.Instance.ShowNoticePopup("You don't have enough ruby!");
+            AudioManager.Instance.PlayNotEnoughSound();
+        }
     }
 
 
@@ -105,6 +113,7 @@ public class ShopManager : MonoBehaviour
                 Debug.Log("Buy Ruby Success");
                 UIManager.Instance.ShowNoticePopup($"Buy {ruby} Ruby Success!");
                 UIManager.Instance.ShowLoadingPanel(false);
+                AudioManager.Instance.PlayBuySuccessSound();
             }
             else
             {
@@ -113,7 +122,10 @@ public class ShopManager : MonoBehaviour
                 UIManager.Instance.ShowNoticePopup("Buy Ruby Failed! Please try again.");
             }
         }
-        else UIManager.Instance.ShowNoticePopup("You don't have enough cash!");
+        else {
+            UIManager.Instance.ShowNoticePopup("You don't have enough cash!");
+            AudioManager.Instance.PlayNotEnoughSound();
+        }
     }
 
     // Methods for Unity OnClick events (no parameters)
@@ -182,5 +194,6 @@ public class ShopManager : MonoBehaviour
     private void OnEnable()
     {
         UpdateNumber();
+        AudioManager.Instance.PlayButtonPopupSound();
     }
 }

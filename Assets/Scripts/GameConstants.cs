@@ -17,6 +17,13 @@ public static class GameConstants
     public const string SCENE_PVE_FOREST = "PVE-Forest";
     public const int SCENE_PVE_FOREST_INDEX = 4;
 
+    public const string SCENE_LOGIN = "LoginScene";
+    public const string SCENE_HOME = "HomeScene";
+    public const string SCENE_PVP_FOREST = "PVP-Forest";
+    public const string SCENE_LOBBY = "LobbyScene";
+
+
+
     // UI Messages
     public const string CONNECTING = "Connecting...";
     public const string CREATING_ROOM = "Creating Room...";

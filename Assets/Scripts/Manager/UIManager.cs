@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -49,6 +50,11 @@ public class UIManager : MonoBehaviour
 
     public LobbyPanel LobbyPanel => _lobbyPanel?.GetComponent<LobbyPanel>();
 
+    [Header("Item UI")]
+    [SerializeField] public ItemInfo ItemInfo;
+    [SerializeField] public ItemInfo ItemToolTip;
+
+    [SerializeField] public InventoryPanel InventoryPanel;
     private void Awake()
     {
         if (Instance != null && Instance != this)

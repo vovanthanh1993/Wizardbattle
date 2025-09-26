@@ -48,9 +48,18 @@ public class PlayerData
     public int food;
     public int health;
 
+    public int baseHealth;
+    public int baseDamage;
+    public int baseSpeed;
+
     public string playerPrefabName;
+    public InventoryData inventoryData;
 
     
+    // Total equipment bonuses
+    public int totalDamageBonus = 0;
+    public int totalSpeedBonus = 0;
+    public int totalHealthBonus = 0;
     
     // Constructor for new player
     public PlayerData(string email, string displayName, string userId)
@@ -91,8 +100,12 @@ public class PlayerData
         this.ruby = 100;
         this.cash = 10000;
         this.health = 1000;
+        this.baseHealth = 1000;
         this.food = 5;
         this.playerPrefabName = "Player_Mage";
+        this.inventoryData = new InventoryData();
+        this.baseDamage = 200;
+        this.baseSpeed = 50;
     }
     
     private string GenerateRandomPlayerName()

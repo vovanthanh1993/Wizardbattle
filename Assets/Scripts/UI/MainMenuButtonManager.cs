@@ -7,6 +7,10 @@ public class MainMenuButtonManager : MonoBehaviour
 
     [SerializeField] private int _foodValue = 1;
 
+    private void OnEnable() {
+        UIManager.Instance.TopLeftPanel.InitData();
+    }
+
     public void ShowSinglePlayerMap()
     {
         if(FirebaseDataManager.Instance.GetCurrentUserFood() >= _foodValue)

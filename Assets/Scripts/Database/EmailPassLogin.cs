@@ -6,6 +6,7 @@ using Firebase.Auth;
 using Firebase;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+using System;
 
 public class EmailPassLogin : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class EmailPassLogin : MonoBehaviour
     void Start()
     {
         InitializeFirebase();
+        LoadSavedCredentials();
     }
 
     private void InitializeFirebase()
@@ -294,6 +296,9 @@ public class EmailPassLogin : MonoBehaviour
 
                 AuthResult result = task.Result;
                 Debug.Log($"User logged in successfully: {result.User.Email}");
+                
+                // Save credentials for next time
+                SaveCredentials(email, password);
                 
                 // Cập nhật thời gian đăng nhập cuối
                 await UpdateLastLoginTime(result.User.UserId);
@@ -582,6 +587,91 @@ public class EmailPassLogin : MonoBehaviour
             default:
                 return "Unspecified registration error.";
         }
+    }
+    #endregion
+
+    #region Credential Management
+    /// <summary>
+    /// Save email and password to PlayerPrefs
+    /// </summary>
+    private void SaveCredentials(string email, string password)
+    {
+        try
+        {
+            // Encrypt password before saving (simple base64 encoding)
+            string encodedPassword = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+            
+            PlayerPrefs.SetString("SavedEmail", email);
+            PlayerPrefs.SetString("SavedPassword", encodedPassword);
+            PlayerPrefs.SetInt("RememberCredentials", 1);
+            PlayerPrefs.Save();
+            
+            Debug.Log("Credentials saved successfully");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to save credentials: {e.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Load saved credentials from PlayerPrefs
+    /// </summary>
+    private void LoadSavedCredentials()
+    {
+        try
+        {
+            if (PlayerPrefs.GetInt("RememberCredentials", 0) == 1)
+            {
+                string savedEmail = PlayerPrefs.GetString("SavedEmail", "");
+                string savedPassword = PlayerPrefs.GetString("SavedPassword", "");
+                
+                if (!string.IsNullOrEmpty(savedEmail) && !string.IsNullOrEmpty(savedPassword))
+                {
+                    // Decrypt password
+                    string decodedPassword = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(savedPassword));
+                    
+                    // Set to input fields
+                    if (_loginEmail != null)
+                        _loginEmail.text = savedEmail;
+                    if (_loginPassword != null)
+                        _loginPassword.text = decodedPassword;
+                    
+                    Debug.Log("Credentials loaded successfully");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to load credentials: {e.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Clear saved credentials
+    /// </summary>
+    public void ClearSavedCredentials()
+    {
+        PlayerPrefs.DeleteKey("SavedEmail");
+        PlayerPrefs.DeleteKey("SavedPassword");
+        PlayerPrefs.DeleteKey("RememberCredentials");
+        PlayerPrefs.Save();
+        
+        // Clear input fields
+        if (_loginEmail != null)
+            _loginEmail.text = "";
+        if (_loginPassword != null)
+            _loginPassword.text = "";
+        
+        Debug.Log("Credentials cleared");
+    }
+    
+    /// <summary>
+    /// Check if credentials are saved
+    /// </summary>
+    public bool HasSavedCredentials()
+    {
+        return PlayerPrefs.GetInt("RememberCredentials", 0) == 1;
     }
     #endregion
 

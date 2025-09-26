@@ -50,4 +50,28 @@ public static class GameCommonUtils
         int seconds = Mathf.FloorToInt(time % 60);
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
+
+    public static Sprite GetItemTypeSprite(ItemType itemType)
+    {
+        string spritePath = $"ItemIcons/{itemType}";
+        Sprite sprite = Resources.Load<Sprite>(spritePath);
+        return sprite;
+    }
+
+    public static Color GetRarityColor(Rarity rarity)
+    {
+        switch (rarity)
+        {
+            case Rarity.Common:
+                return new Color(0.8f, 0.8f, 0.8f, 1f); // Màu xám nhạt
+            case Rarity.Rare:
+                return new Color(0.2f, 0.6f, 1f, 1f); // Màu xanh dương sáng
+            case Rarity.Epic:
+                return new Color(0.8f, 0.2f, 1f, 1f); // Màu tím sáng
+            case Rarity.Legendary:
+                return new Color(1f, 0.8f, 0.2f, 1f); // Màu vàng cam
+            default:
+                return Color.white;
+        }
+    }
 }

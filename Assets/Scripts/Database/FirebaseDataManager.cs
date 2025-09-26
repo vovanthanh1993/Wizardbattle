@@ -570,6 +570,72 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Save inventory data to Firebase (updates PlayerData)
+    /// </summary>
+    public async Task<bool> SaveInventory(InventoryData inventoryData)
+    {
+        if (!isInitialized)
+        {
+            OnError?.Invoke("Firebase not initialized");
+            return false;
+        }
+
+        try
+        {
+            // Update current player data with new inventory
+            if (currentPlayerData != null)
+            {
+                currentPlayerData.inventoryData = inventoryData;
+                // Save the entire PlayerData (which includes inventory)
+                return await SavePlayerData(currentPlayerData);
+            }
+            else
+            {
+                OnError?.Invoke("No current player data available");
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error saving inventory data: {e.Message}");
+            OnError?.Invoke($"Error saving inventory data: {e.Message}");
+            return false;
+        }
+    }
+
+
+    /// <summary>
+    /// Get current inventory data from memory
+    /// </summary>
+    public InventoryData GetCurrentInventoryData()
+    {
+        return currentPlayerData?.inventoryData ?? new InventoryData();
+    }
+
+    /// <summary>
+    /// Buy random item with random stats and save to database
+    /// </summary>
+    public async Task<bool> BuyRandomItem(int goldCost, InventoryItem randomItem)
+    {
+        try {
+            currentPlayerData.gold -= goldCost;
+            if (currentPlayerData.inventoryData == null)
+            {
+                currentPlayerData.inventoryData = new InventoryData();
+            }
+            currentPlayerData.inventoryData.AddRandomItem(randomItem, 1);
+            bool success = await SavePlayerData(currentPlayerData);
+            return success;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error buying random item: {e.Message}");
+            OnError?.Invoke($"Error buying random item: {e.Message}");
+            return false;
+        }
+    }
+
     private void HandleTaskFault(string context, AggregateException aggregate)
     {
         try

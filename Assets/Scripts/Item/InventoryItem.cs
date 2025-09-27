@@ -9,8 +9,17 @@ public enum ItemType
     Boots,
     Ring,
     Weapon,
-    Rune,
+    Amulet,
     Book
+
+}
+
+public enum MaterialTier {
+    Bronze,
+    Iron,
+    Silver,
+    Gold,
+    Mythril
 
 }
 
@@ -29,6 +38,7 @@ public class InventoryItem : ScriptableObject
     public string itemId;
     public Rarity rarity;
     public ItemType itemType;
+    public MaterialTier materialTier;
     public string itemName;
     public Sprite icon;
     public GameObject prefab;

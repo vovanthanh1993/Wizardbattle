@@ -9,7 +9,7 @@ public class EquipmentData
     public string equippedBoots = "";
     public string equippedRing = "";
     public string equippedWeapon = "";
-    public string equippedRune = "";
+    public string equippedAmulet = "";
     public string equippedBook = "";
     
     public int totalDamageBonus = 0;
@@ -21,3 +21,4 @@ public class EquipmentData
         // Initialize with empty values
     }
 }
+

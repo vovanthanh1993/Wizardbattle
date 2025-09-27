@@ -12,7 +12,8 @@ public class ItemCreator : ScriptableObject
     /// </summary>
     public InventoryItem CreateRandomItem(ItemType itemType)
     {
-        var itemName = GetRandomItemName(itemType);
+        var masterMaterialTier = GetRandomMaterialTier();
+        var itemName = itemType + " " + masterMaterialTier;//GetRandomItemName(itemType);
         var item = ScriptableObject.CreateInstance<InventoryItem>();
         item.itemType = itemType;
         item.itemId = itemName + UnityEngine.Random.Range(1, 1000000);
@@ -20,7 +21,7 @@ public class ItemCreator : ScriptableObject
         item.isStackable = false;
         item.maxStack = 1;
         item.rarity = GetRandomRarity();
-
+        item.materialTier = masterMaterialTier;
         // Generate random stats based on item type
         GenerateRandomStats(item, itemType);
 
@@ -30,49 +31,51 @@ public class ItemCreator : ScriptableObject
     private void GenerateRandomStats(InventoryItem item, ItemType itemType)
     {
         float rarityMultiplier = GetRarityMultiplier(item.rarity);
+        float materialTierMultiplier = GetMaterialTierMultiplier(item.materialTier);
+        float combinedMultiplier = rarityMultiplier * materialTierMultiplier;
         
         switch (itemType)
         {
             case ItemType.Weapon:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10f, 50f) * rarityMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10f, 50f) * combinedMultiplier);
                 break;
 
             case ItemType.Helmet:
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(20, 80) * rarityMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(20, 80) * combinedMultiplier);
                 break;
 
             case ItemType.Armor:
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(50, 150) * rarityMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(50, 150) * combinedMultiplier);
                 break;
 
             case ItemType.Gloves:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 25f) * rarityMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 8f) * rarityMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * rarityMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 25f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 8f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * combinedMultiplier);
                 break;
 
             case ItemType.Boots:
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 15f) * rarityMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * rarityMultiplier);
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 25f) * rarityMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 15f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 25f) * combinedMultiplier);
                 break;
 
             case ItemType.Ring:
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * rarityMultiplier);
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 15f) * rarityMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(1f, 5f) * rarityMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 15f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(1f, 5f) * combinedMultiplier);
                 break;
 
-            case ItemType.Rune:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(8f, 30f) * rarityMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 12f) * rarityMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(15, 60) * rarityMultiplier);
+            case ItemType.Amulet:
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(8f, 30f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 12f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(15, 60) * combinedMultiplier);
                 break;
 
             case ItemType.Book:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 20f) * rarityMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 8f) * rarityMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(20, 80) * rarityMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 20f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 8f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(20, 80) * combinedMultiplier);
                 break;
         }
     }
@@ -87,7 +90,7 @@ public class ItemCreator : ScriptableObject
             ItemType.Gloves => new string[] { "Iron Gauntlets", "Magic Gloves", "Divine Bracers", "Battle Grips", "Shadow Mitts" },
             ItemType.Boots => new string[] { "Iron Boots", "Magic Slippers", "Divine Greaves", "Battle Stompers", "Shadow Treads" },
             ItemType.Ring => new string[] { "Iron Ring", "Magic Band", "Divine Circle", "Battle Loop", "Shadow Band" },
-            ItemType.Rune => new string[] { "Fire Rune", "Ice Rune", "Lightning Rune", "Earth Rune", "Wind Rune" },
+            ItemType.Amulet => new string[] { "Protection Amulet", "Power Amulet", "Speed Amulet", "Health Amulet", "Magic Amulet" },
             ItemType.Book => new string[] { "Spellbook", "Ancient Tome", "Magic Scroll", "Mystic Map", "Library Codex" },
             _ => new string[] { "Mysterious Item" }
         };
@@ -131,5 +134,47 @@ public class ItemCreator : ScriptableObject
             default:
                 return 1.0f;
         }
+    }
+
+    /// <summary>
+    /// Get stat multiplier based on material tier
+    /// </summary>
+    private float GetMaterialTierMultiplier(MaterialTier materialTier)
+    {
+        switch (materialTier)
+        {
+            case MaterialTier.Bronze:
+                return 0.8f;  // 80% của base stats
+            case MaterialTier.Iron:
+                return 1.0f;  // 100% của base stats
+            case MaterialTier.Silver:
+                return 1.3f;  // 130% của base stats
+            case MaterialTier.Gold:
+                return 1.6f;  // 160% của base stats
+            case MaterialTier.Mythril:
+                return 2.0f;  // 200% của base stats - Tier cao nhất
+            default:
+                return 1.0f;
+        }
+    }
+
+    /// <summary>
+    /// Get random material tier with weighted probability
+    /// </summary>
+    private MaterialTier GetRandomMaterialTier()
+    {
+        float randomValue = UnityEngine.Random.Range(0f, 1f);
+        
+        // Weighted probability: Bronze 35%, Iron 30%, Silver 20%, Gold 10%, Mythril 5%
+        if (randomValue < 0.35f)
+            return MaterialTier.Bronze;
+        else if (randomValue < 0.65f)
+            return MaterialTier.Iron;
+        else if (randomValue < 0.85f)
+            return MaterialTier.Silver;
+        else if (randomValue < 0.95f)
+            return MaterialTier.Gold;
+        else
+            return MaterialTier.Mythril;
     }
 }

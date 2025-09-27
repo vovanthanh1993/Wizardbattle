@@ -12,7 +12,7 @@ public class EquipmentManager : MonoBehaviour
     public InventoryItem equippedBoots;
     public InventoryItem equippedRing;
     public InventoryItem equippedWeapon;
-    public InventoryItem equippedRune;
+    public InventoryItem equippedAmulet;
     public InventoryItem equippedBook;
 
     public static EquipmentManager Instance { get; private set; }
@@ -64,8 +64,8 @@ public class EquipmentManager : MonoBehaviour
             case ItemType.Weapon:
                 equippedWeapon = item;
                 break;
-            case ItemType.Rune:
-                equippedRune = item;
+            case ItemType.Amulet:
+                equippedAmulet = item;
                 break;
             case ItemType.Book:
                 equippedBook = item;
@@ -104,8 +104,8 @@ public class EquipmentManager : MonoBehaviour
             case ItemType.Weapon:
                 equippedWeapon = null;
                 break;
-            case ItemType.Rune:
-                equippedRune = null;
+            case ItemType.Amulet:
+                equippedAmulet = null;
                 break;
             case ItemType.Book:
                 equippedBook = null;
@@ -132,7 +132,7 @@ public class EquipmentManager : MonoBehaviour
             equippedBoots,
             equippedRing,
             equippedWeapon,
-            equippedRune,
+            equippedAmulet,
             equippedBook
         }.Where(item => item != null).ToList();
 
@@ -156,7 +156,7 @@ public class EquipmentManager : MonoBehaviour
             equippedBoots,
             equippedRing,
             equippedWeapon,
-            equippedRune,
+            equippedAmulet,
             equippedBook
         }.Where(item => item != null).ToList();
     }
@@ -180,8 +180,8 @@ public class EquipmentManager : MonoBehaviour
                 return equippedRing != null;
             case ItemType.Weapon:
                 return equippedWeapon != null;
-            case ItemType.Rune:
-                return equippedRune != null;
+            case ItemType.Amulet:
+                return equippedAmulet != null;
             case ItemType.Book:
                 return equippedBook != null;
             default:
@@ -208,7 +208,7 @@ public class EquipmentManager : MonoBehaviour
                     playerData.inventoryData.equippedBootsId = equippedBoots?.itemId ?? "";
                     playerData.inventoryData.equippedRingId = equippedRing?.itemId ?? "";
                     playerData.inventoryData.equippedWeaponId = equippedWeapon?.itemId ?? "";
-                    playerData.inventoryData.equippedRuneId = equippedRune?.itemId ?? "";
+                    playerData.inventoryData.equippedAmuletId = equippedAmulet?.itemId ?? "";
                     playerData.inventoryData.equippedBookId = equippedBook?.itemId ?? "";
                     
                     // Update total stats
@@ -245,7 +245,7 @@ public class EquipmentManager : MonoBehaviour
         equippedBoots = GetItemById(playerData.inventoryData.equippedBootsId);
         equippedRing = GetItemById(playerData.inventoryData.equippedRingId);
         equippedWeapon = GetItemById(playerData.inventoryData.equippedWeaponId);
-        equippedRune = GetItemById(playerData.inventoryData.equippedRuneId);
+        equippedAmulet = GetItemById(playerData.inventoryData.equippedAmuletId);
         equippedBook = GetItemById(playerData.inventoryData.equippedBookId);
         
         // Recalculate stats

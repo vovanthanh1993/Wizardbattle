@@ -18,7 +18,7 @@ public class InventoryData
     public string equippedBootsId;
     public string equippedRingId;
     public string equippedWeaponId;
-    public string equippedRuneId;
+    public string equippedAmuletId;
     public string equippedBookId;
 
     public InventoryData()
@@ -30,7 +30,7 @@ public class InventoryData
         equippedBootsId = "";
         equippedRingId = "";
         equippedWeaponId = "";
-        equippedRuneId = "";
+        equippedAmuletId = "";
         equippedBookId = "";
     }
 
@@ -104,8 +104,8 @@ public class InventoryData
             case ItemType.Weapon:
                 equippedWeaponId = itemId;
                 break;
-            case ItemType.Rune:
-                equippedRuneId = itemId;
+            case ItemType.Amulet:
+                equippedAmuletId = itemId;
                 break;
             case ItemType.Book:
                 equippedBookId = itemId;
@@ -135,8 +135,8 @@ public class InventoryData
             case ItemType.Weapon:
                 equippedWeaponId = "";
                 break;
-            case ItemType.Rune:
-                equippedRuneId = "";
+            case ItemType.Amulet:
+                equippedAmuletId = "";
                 break;
             case ItemType.Book:
                 equippedBookId = "";
@@ -160,8 +160,8 @@ public class InventoryData
                 return equippedRingId;
             case ItemType.Weapon:
                 return equippedWeaponId;
-            case ItemType.Rune:
-                return equippedRuneId;
+            case ItemType.Amulet:
+                return equippedAmuletId;
             case ItemType.Book:
                 return equippedBookId;
             default:
@@ -198,7 +198,7 @@ public class InventoryData
             equippedBootsId,
             equippedRingId,
             equippedWeaponId,
-            equippedRuneId,
+            equippedAmuletId,
             equippedBookId
         }.Where(id => !string.IsNullOrEmpty(id)).ToList();
     }
@@ -222,6 +222,7 @@ public class InventoryItemData
     public string itemName;
     public ItemType itemType;
     public Rarity rarity;
+    public MaterialTier materialTier;
     public int damageBonus;
     public int speedBonus;
     public int healthBonus;
@@ -243,6 +244,7 @@ public class InventoryItemData
         this.itemName = item.itemName;
         this.itemType = item.itemType;
         this.rarity = item.rarity;
+        this.materialTier = item.materialTier;
         this.damageBonus = item.damageBonus;
         this.speedBonus = item.speedBonus;
         this.healthBonus = item.healthBonus;
@@ -257,6 +259,7 @@ public class InventoryItemData
         item.itemName = itemName;
         item.itemType = itemType;
         item.rarity = rarity;
+        item.materialTier = materialTier;
         item.damageBonus = damageBonus;
         item.speedBonus = speedBonus;
         item.healthBonus = healthBonus;

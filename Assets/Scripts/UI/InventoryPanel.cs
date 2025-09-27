@@ -11,7 +11,7 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField] private EquipmentSlot _weaponSlot;
     [SerializeField] private EquipmentSlot _bookSlot;
     [SerializeField] private EquipmentSlot _ringSlot;
-    [SerializeField] private EquipmentSlot _runeSlot;
+    [SerializeField] private EquipmentSlot _amuletSlot;
     
     private void OnEnable() {
         InitData();
@@ -41,9 +41,9 @@ public class InventoryPanel : MonoBehaviour
         _itemPanel.ShowItemPanel(ItemType.Weapon);
     }
 
-    public void ShowAllRune() {
+    public void ShowAllAmulet() {
         _itemPanel.gameObject.SetActive(true);
-        _itemPanel.ShowItemPanel(ItemType.Rune);
+        _itemPanel.ShowItemPanel(ItemType.Amulet);
     }
 
     public void ShowAllBook() {
@@ -76,8 +76,8 @@ public class InventoryPanel : MonoBehaviour
             case ItemType.Weapon:
                 _weaponSlot.SetData(item);
                 break;
-            case ItemType.Rune:
-                _runeSlot.SetData(item);
+            case ItemType.Amulet:
+                _amuletSlot.SetData(item);
                 break;
             case ItemType.Book:
                 _bookSlot.SetData(item);
@@ -92,7 +92,7 @@ public class InventoryPanel : MonoBehaviour
         _bootsSlot.SetData(EquipmentManager.Instance.equippedBoots);
         _ringSlot.SetData(EquipmentManager.Instance.equippedRing);
         _weaponSlot.SetData(EquipmentManager.Instance.equippedWeapon);
-        _runeSlot.SetData(EquipmentManager.Instance.equippedRune);
+        _amuletSlot.SetData(EquipmentManager.Instance.equippedAmulet);
         _bookSlot.SetData(EquipmentManager.Instance.equippedBook);
         
     }

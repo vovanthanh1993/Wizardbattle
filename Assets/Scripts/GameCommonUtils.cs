@@ -51,9 +51,9 @@ public static class GameCommonUtils
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    public static Sprite GetItemTypeSprite(ItemType itemType)
+    public static Sprite GetItemTypeSprite(ItemType itemType, MaterialTier materialTier)
     {
-        string spritePath = $"ItemIcons/{itemType}";
+        string spritePath = $"ItemIcons/{itemType}/{itemType}_{materialTier}";
         Sprite sprite = Resources.Load<Sprite>(spritePath);
         return sprite;
     }

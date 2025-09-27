@@ -108,9 +108,9 @@ public class ItemShopPopup : MonoBehaviour
         BuyRandomItem(_goldCost, ItemType.Ring);
     }
 
-    public void BuyRandomRune()
+    public void BuyRandomAmulet()
     {
-        BuyRandomItem(_goldCost, ItemType.Rune);
+        BuyRandomItem(_goldCost, ItemType.Amulet);
     }
 
     public void BuyRandomBook()

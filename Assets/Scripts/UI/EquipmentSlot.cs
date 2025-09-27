@@ -20,7 +20,7 @@ public class EquipmentSlot : MonoBehaviour
             return;
         }
         _itemImage.gameObject.SetActive(true);
-        _itemImage.sprite = GameCommonUtils.GetItemTypeSprite(item.itemType);
+        _itemImage.sprite = GameCommonUtils.GetItemTypeSprite(item.itemType, item.materialTier);
         _equipmentSlotImage.color = GameCommonUtils.GetRarityColor(item.rarity);
         _item = item;
         _textEquip.SetActive(false);

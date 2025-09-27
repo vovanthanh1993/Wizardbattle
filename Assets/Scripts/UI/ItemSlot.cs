@@ -29,7 +29,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     public void SetData(InventoryItem item)
     {   
-        _itemImage.sprite = GameCommonUtils.GetItemTypeSprite(item.itemType);
+        _itemImage.sprite = GameCommonUtils.GetItemTypeSprite(item.itemType, item.materialTier);
         _slotBorder.SetActive(false);
         _itemSlotImage.color = GameCommonUtils.GetRarityColor(item.rarity);
         _item = item;

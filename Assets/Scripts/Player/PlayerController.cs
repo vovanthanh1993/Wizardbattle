@@ -20,7 +20,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float _lookSensitivity = 0.15f;
     
     [Header("Combat Settings")]
-    [SerializeField] private float _fireRate = 10f;
+    [SerializeField] private float _fireRate = 2f;
     [SerializeField] private float _runRate = 40f;
     [SerializeField] private float _runAmount = 5f;
     [SerializeField] private float _healRate = 60f;

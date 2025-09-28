@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 public class ItemPanel : MonoBehaviour
 {
     [SerializeField] private GameObject _itemContent;
     [SerializeField] private GameObject _itemSlotPrefab;
+    [SerializeField] private TMP_Text _titleText;
 
     private void OnEnable() {
         ClearItemContent();
@@ -18,7 +20,7 @@ public class ItemPanel : MonoBehaviour
     private IEnumerator ShowItemPanelCoroutine(ItemType itemType)
     {
         ClearItemContent();
-        
+        _titleText.text = itemType.ToString();
         // Wait for one frame to ensure clearing is complete
         yield return null;
         

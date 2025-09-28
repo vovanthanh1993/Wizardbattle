@@ -178,7 +178,7 @@ MonoBehaviour:
   _maxPitch: 85
   _minPitch: -30
   _lookSensitivity: 0.15
-  _fireRate: 3
+  _fireRate: 2
   _runRate: 40
   _runAmount: 5
   _healRate: 90

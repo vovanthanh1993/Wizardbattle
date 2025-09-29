@@ -45,8 +45,8 @@ public class PlayerController : NetworkBehaviour
     #endregion
 
     #region Properties
-    private bool _isDead;
-    private bool _isDisable;
+    [SerializeField] private bool _isDead;
+    [SerializeField] private bool _isDisable;
     
 
     #endregion
@@ -84,12 +84,8 @@ public class PlayerController : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (_isDisable) {
-            _kcc.enabled = false;
-            return;
-        }
 
-        if (_isRespawning || _isDead) return;
+        if (_isDisable || _isDead) return;
 
         HandleInput();
     }
@@ -486,13 +482,13 @@ public class PlayerController : NetworkBehaviour
     {
         _model.SetActive(false);
         _kccCollider.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
-         Reset();
     }
 
     public void ShowPlayerModel()
     {
         _model.SetActive(true);
         _kccCollider.layer = LayerMask.NameToLayer("Default");
+        Reset();
     }
 
     public KCC GetKCC()

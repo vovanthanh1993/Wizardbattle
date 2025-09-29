@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 1525740565885459540}
   - component: {fileID: -563316670505428142}
   - component: {fileID: 9162468619349017690}
+  - component: {fileID: 2125000329741731237}
   m_Layer: 0
   m_Name: Player_Rogue
   m_TagString: Player
@@ -160,6 +161,7 @@ MonoBehaviour:
   - {fileID: 1525740565885459540}
   - {fileID: -563316670505428142}
   - {fileID: 9162468619349017690}
+  - {fileID: 2125000329741731237}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &2038645551067788364
 MonoBehaviour:
@@ -273,6 +275,25 @@ MonoBehaviour:
   _hideMaterial: {fileID: 2100000, guid: 83677e3891a8f214dba7c05e7ebca95d, type: 2}
   _stealthRate: 30
   _stealthDuration: 5
+--- !u!114 &2125000329741731237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a461dfa9cf4c942a17df37d65c3ff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponHolder: {fileID: 123632329152880079}
+  _amuletHolder: {fileID: 0}
+  _ringHolder: {fileID: 0}
+  _glovesHolder: {fileID: 0}
+  _bootsHolder: {fileID: 0}
+  _helmetHolder: {fileID: 7044149235309275571}
+  _armorHolder: {fileID: 0}
 --- !u!1 &123632329152880079
 GameObject:
   m_ObjectHideFlags: 0

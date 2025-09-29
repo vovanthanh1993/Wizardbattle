@@ -74,4 +74,11 @@ public static class GameCommonUtils
                 return Color.white;
         }
     }
+
+    public static GameObject GetItemPrefab(ItemType itemType, string materialTier)
+    {
+        string prefabPath = $"ItemPrefabs/{itemType}/{itemType}_{materialTier}";
+        GameObject prefab = Resources.Load<GameObject>(prefabPath);
+        return prefab;
+    }
 }

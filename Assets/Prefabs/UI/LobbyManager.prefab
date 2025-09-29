@@ -72,4 +72,4 @@ MonoBehaviour:
     _items: []
   _GameState: 0
   _killsToWin: 3
-  _gameTotalTime: 20
+  _gameTotalTime: 300

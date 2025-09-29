@@ -14,6 +14,11 @@ public class EquipmentManager : MonoBehaviour
     public InventoryItem equippedWeapon;
     public InventoryItem equippedAmulet;
     public InventoryItem equippedBook;
+    
+    // Events for equipment changes
+    public static event Action<InventoryItem> OnItemEquipped;
+    public static event Action<ItemType> OnItemUnequipped;
+    public static event Action OnEquipmentChanged;
 
     public static EquipmentManager Instance { get; private set; }
     private void Awake()
@@ -35,6 +40,7 @@ public class EquipmentManager : MonoBehaviour
     private void Start()
     {   
         InitData();
+
     }
 
     /// <summary>
@@ -76,6 +82,11 @@ public class EquipmentManager : MonoBehaviour
 
         CalculateTotalStats();
         SaveEquipmentToFirebase();
+        
+        // Trigger events
+        OnItemEquipped?.Invoke(item);
+        OnEquipmentChanged?.Invoke();
+        
         return true;
     }
 
@@ -116,6 +127,11 @@ public class EquipmentManager : MonoBehaviour
 
         CalculateTotalStats();
         SaveEquipmentToFirebase();
+        
+        // Trigger events
+        OnItemUnequipped?.Invoke(itemType);
+        OnEquipmentChanged?.Invoke();
+        
         return true;
     }
 

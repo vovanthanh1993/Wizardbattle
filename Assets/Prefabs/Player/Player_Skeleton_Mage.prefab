@@ -66200,6 +66200,7 @@ GameObject:
   - component: {fileID: 8312541646135096183}
   - component: {fileID: 1423462062286669416}
   - component: {fileID: 4649444768444381984}
+  - component: {fileID: 1787964980426026268}
   m_Layer: 0
   m_Name: Player_Skeleton_Mage
   m_TagString: Player
@@ -66341,6 +66342,7 @@ MonoBehaviour:
   - {fileID: 8312541646135096183}
   - {fileID: 1423462062286669416}
   - {fileID: 4649444768444381984}
+  - {fileID: 1787964980426026268}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &8458164262425021143
 MonoBehaviour:
@@ -66454,6 +66456,25 @@ MonoBehaviour:
   _hideMaterial: {fileID: 2100000, guid: 83677e3891a8f214dba7c05e7ebca95d, type: 2}
   _stealthRate: 30
   _stealthDuration: 5
+--- !u!114 &1787964980426026268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801476742231527325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a461dfa9cf4c942a17df37d65c3ff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponHolder: {fileID: 4303658100939031857}
+  _amuletHolder: {fileID: 0}
+  _ringHolder: {fileID: 0}
+  _glovesHolder: {fileID: 0}
+  _bootsHolder: {fileID: 0}
+  _helmetHolder: {fileID: 7767473429337741687}
+  _armorHolder: {fileID: 0}
 --- !u!1 &8842423880054777669
 GameObject:
   m_ObjectHideFlags: 0

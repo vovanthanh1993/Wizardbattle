@@ -1905,6 +1905,14 @@ PrefabInstance:
       propertyPath: SortKey
       value: 2549024286
       objectReference: {fileID: 0}
+    - target: {fileID: 4113335213203063451, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4113335213203063451, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[7]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7996996577157155421, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
       propertyPath: StateHashes.Array.size
       value: 11
@@ -1941,7 +1949,8 @@ PrefabInstance:
       propertyPath: 'TriggerHashes.Array.data[3]'
       value: 20298039
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2125000329741731237, guid: a7b8600b0f71f394797ac114aef73d78, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -9033,6 +9042,14 @@ PrefabInstance:
       propertyPath: 'NestedObjects.Array.data[0]'
       value: 
       objectReference: {fileID: 148306803}
+    - target: {fileID: 4113335213203063451, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4113335213203063451, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[7]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7996996577157155421, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
       propertyPath: StateHashes.Array.size
       value: 11
@@ -9065,7 +9082,8 @@ PrefabInstance:
       propertyPath: 'TriggerHashes.Array.data[3]'
       value: 20298039
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8910279271428796070, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4463868907105534, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}

@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class CharacterSelectionUI : MonoBehaviour
 {
@@ -6,6 +7,10 @@ public class CharacterSelectionUI : MonoBehaviour
     [SerializeField] private GameObject[] _characterPrefabs;
 
     [SerializeField] private GameObject _content;
+
+    [SerializeField] private TMP_Text _characterNameText;
+
+    [SerializeField] private TMP_Text _characterDescriptionText;
 
     private GameObject currentCharacter;
     private string currentCharacterName;
@@ -30,6 +35,8 @@ public class CharacterSelectionUI : MonoBehaviour
             currentCharacter.transform.localPosition = Vector3.zero;
             currentCharacter.transform.localRotation = Quaternion.identity;
         }
+        _characterNameText.text = currentCharacter.GetComponent<PlayerDescription>().GetCharacterName();
+        _characterDescriptionText.text = currentCharacter.GetComponent<PlayerDescription>().GetCharacterDescription();
     }
     
     private GameObject GetCharacterPrefabByName(string characterName)

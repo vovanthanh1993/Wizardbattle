@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class InventoryPanel : MonoBehaviour
 {
@@ -12,46 +13,79 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField] private EquipmentSlot _bookSlot;
     [SerializeField] private EquipmentSlot _ringSlot;
     [SerializeField] private EquipmentSlot _amuletSlot;
+
+    [SerializeField] private GameObject _equipmentPanel;
+
+    [SerializeField] private TMP_Text _healthText;
+    [SerializeField] private TMP_Text _damageText;
+    [SerializeField] private TMP_Text _speedText;
     
     private void OnEnable() {
         InitData();
+        // Subscribe to equipment change events
+        EquipmentManager.OnEquipmentChanged += OnEquipmentChanged;
+    }
+    
+    private void OnDisable() {
+        // Unsubscribe from equipment change events
+        EquipmentManager.OnEquipmentChanged -= OnEquipmentChanged;
+    }
+    
+    private void OnEquipmentChanged() {
+        InitData();
     }
     public void ShowAllArmor() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Armor);
     }
 
     public void ShowAllGloves() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Gloves);
     }
 
     public void ShowAllBoots() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Boots);
     }
 
     public void ShowAllRing() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Ring);
     }
     
     public void ShowAllWeapon() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Weapon);
     }
 
     public void ShowAllAmulet() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Amulet);
     }
 
     public void ShowAllBook() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Book);
     }
     
     public void ShowAllHelmet() {
+        UIManager.Instance.ItemToolTip.HideItemInfo();
+        _equipmentPanel.SetActive(false);
         _itemPanel.gameObject.SetActive(true);
         _itemPanel.ShowItemPanel(ItemType.Helmet);
     }
@@ -94,6 +128,8 @@ public class InventoryPanel : MonoBehaviour
         _weaponSlot.SetData(EquipmentManager.Instance.equippedWeapon);
         _amuletSlot.SetData(EquipmentManager.Instance.equippedAmulet);
         _bookSlot.SetData(EquipmentManager.Instance.equippedBook);
-        
+        _healthText.text = FirebaseDataManager.Instance.GetCurrentUserHealth().ToString();
+        _damageText.text = FirebaseDataManager.Instance.GetCurrentUserDamage().ToString();
+        _speedText.text = FirebaseDataManager.Instance.GetCurrentUserSpeed().ToString();
     }
 }

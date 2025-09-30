@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
-public class EquipmentSlot : MonoBehaviour
+public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image _itemImage;
     [SerializeField] private Image _equipmentSlotImage;
@@ -24,5 +24,18 @@ public class EquipmentSlot : MonoBehaviour
         _equipmentSlotImage.color = GameCommonUtils.GetRarityColor(item.rarity);
         _item = item;
         _textEquip.SetActive(false);
+    }
+
+    // Hover events
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //_slotBorder.SetActive(true);
+        UIManager.Instance.ItemToolTip.ShowItemInfo(_item, GetComponent<RectTransform>());
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //_slotBorder.SetActive(false);
+        UIManager.Instance.ItemToolTip.HideItemInfo();
     }
 }

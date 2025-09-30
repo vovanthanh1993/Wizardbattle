@@ -13,7 +13,7 @@ public class ItemCreator : ScriptableObject
     public InventoryItem CreateRandomItem(ItemType itemType)
     {
         var masterMaterialTier = GetRandomMaterialTier();
-        var itemName = itemType + " " + masterMaterialTier;//GetRandomItemName(itemType);
+        var itemName = masterMaterialTier + " " + itemType;
         var item = ScriptableObject.CreateInstance<InventoryItem>();
         item.itemType = itemType;
         item.itemId = itemName + UnityEngine.Random.Range(1, 1000000);

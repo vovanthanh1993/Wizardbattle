@@ -499,6 +499,11 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData.ruby;
     }
 
+    public float GetCurrentUserHealth()
+    {
+        return currentPlayerData.health;
+    }
+
     public int GetCurrentUserFood()
     {
         return currentPlayerData.food;

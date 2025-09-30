@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: -563316670505428142}
   - component: {fileID: 6368898881625098835}
   - component: {fileID: 8910279271428796070}
+  - component: {fileID: 3952834094356957736}
   m_Layer: 0
   m_Name: Player_Mage
   m_TagString: Player
@@ -189,6 +190,8 @@ MonoBehaviour:
   _firePoint: {fileID: 2512815303255413150}
   _camTarget: {fileID: 6007721544089383532}
   _respawnTime: 3
+  _isDead: 0
+  _isDisable: 0
 --- !u!114 &1212827439093497715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,6 +297,29 @@ MonoBehaviour:
   _bootsHolder: {fileID: 0}
   _helmetHolder: {fileID: 6857686731737151559}
   _armorHolder: {fileID: 0}
+  _WeaponMaterialTier: 
+  _ArmorMaterialTier: 
+  _GlovesMaterialTier: 
+  _BootsMaterialTier: 
+  _HelmetMaterialTier: 
+  _RingMaterialTier: 
+  _AmuletMaterialTier: 
+--- !u!114 &3952834094356957736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 137596e6ca6f9bd479af958f2acc49dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterName: Mage
+  _characterDescription: The Mage is a master of elemental magic, specializing in
+    devastating ranged attacks. They can incinerate foes with fire, freeze the battlefield
+    with ice, or strike swiftly with lightning.
 --- !u!1 &131240427120893449
 GameObject:
   m_ObjectHideFlags: 0

@@ -66201,6 +66201,7 @@ GameObject:
   - component: {fileID: 1423462062286669416}
   - component: {fileID: 4649444768444381984}
   - component: {fileID: 1787964980426026268}
+  - component: {fileID: 8427265136558710428}
   m_Layer: 0
   m_Name: Player_Skeleton_Mage
   m_TagString: Player
@@ -66370,6 +66371,8 @@ MonoBehaviour:
   _firePoint: {fileID: 5094374653939346761}
   _camTarget: {fileID: 3340324775149446024}
   _respawnTime: 3
+  _isDead: 0
+  _isDisable: 0
 --- !u!114 &107082478096497940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66475,6 +66478,30 @@ MonoBehaviour:
   _bootsHolder: {fileID: 0}
   _helmetHolder: {fileID: 7767473429337741687}
   _armorHolder: {fileID: 0}
+  _WeaponMaterialTier: 
+  _ArmorMaterialTier: 
+  _GlovesMaterialTier: 
+  _BootsMaterialTier: 
+  _HelmetMaterialTier: 
+  _RingMaterialTier: 
+  _AmuletMaterialTier: 
+--- !u!114 &8427265136558710428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801476742231527325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 137596e6ca6f9bd479af958f2acc49dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterName: Skeleton Mage
+  _characterDescription: The Skeleton Mage is an undead spellcaster animated by dark
+    sorcery. Once mortal practitioners of magic, their bones now serve as vessels
+    for forbidden power. They summon fire, frost, or shadow energy to attack from
+    a distance, often overwhelming intruders with relentless barrages of spells.
 --- !u!1 &8842423880054777669
 GameObject:
   m_ObjectHideFlags: 0

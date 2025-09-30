@@ -42,7 +42,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         _slotBorder.SetActive(true);
-        UIManager.Instance.ItemToolTip.ShowItemInfo(_item);
+        UIManager.Instance.ItemToolTip.ShowItemInfo(_item, GetComponent<RectTransform>());
     }
 
     public void OnPointerExit(PointerEventData eventData)

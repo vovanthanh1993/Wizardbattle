@@ -25,6 +25,7 @@ public class XPItemE : MonoBehaviour
         {
             _isPickedUp = true;
             playerStatus.AddXP(_actualXpAmount);
+            AudioManager.Instance.PlayGetXpItemSound();
             GamePoolManager.Instance.ReturnXpItem(this);
         }
     }

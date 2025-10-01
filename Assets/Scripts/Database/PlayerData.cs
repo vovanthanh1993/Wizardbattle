@@ -37,8 +37,8 @@ public class PlayerData
     public string[] unlockedCosmetics;
 
     // PlayerUpdate
-    public float damage;
-    public float speed;
+    public int damage;
+    public int speed;
     public int level;
     public float xp;
     public float gold;
@@ -93,19 +93,19 @@ public class PlayerData
         this.unlockedCosmetics = new string[0];
 
         this.damage = 200;
-        this.speed = 50f;
+        this.speed = 500;
         this.level = 1;
         this.xp = 0;
         this.gold = 100;
         this.ruby = 100;
         this.cash = 10000;
         this.health = 1000;
-        this.baseHealth = 1000;
         this.food = 5;
         this.playerPrefabName = "Player_Mage";
         this.inventoryData = new InventoryData();
         this.baseDamage = 200;
-        this.baseSpeed = 50;
+        this.baseSpeed = 500;
+        this.baseHealth = 1000;
     }
     
     private string GenerateRandomPlayerName()

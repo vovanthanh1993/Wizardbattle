@@ -25,7 +25,7 @@ public class PlayerStatus : NetworkBehaviour
 
     private PlayerController _playerController;
 
-    [Networked] public float Damage { get; set; }
+    [Networked] public int Damage { get; set; }
     [Networked] public float Speed { get; set; }
 
     
@@ -40,12 +40,12 @@ public class PlayerStatus : NetworkBehaviour
         if (Object.HasInputAuthority) 
         {
             FirebaseDataManager.Instance.BuyFood(0, -1);
-            RpcUpdateData(FirebaseDataManager.Instance.GetCurrentUserDisplayName(), FirebaseDataManager.Instance.GetCurrentUserDamage(), FirebaseDataManager.Instance.GetCurrentUserSpeed()/10);
+            RpcUpdateData(FirebaseDataManager.Instance.GetCurrentUserDisplayName(), FirebaseDataManager.Instance.GetCurrentUserDamage(), FirebaseDataManager.Instance.GetCurrentUserSpeed()/100);
         }
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcUpdateData(string playerName, float damage, float speed)
+    public void RpcUpdateData(string playerName, int damage, int speed)
     {
         Damage = damage;
         Speed = speed;

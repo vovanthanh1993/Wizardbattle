@@ -15,8 +15,8 @@ public class PlayerController : NetworkBehaviour
     [Header("Movement Settings")]
     [SerializeField] private KCC _kcc;
     [SerializeField] private GameObject _model;
-    [SerializeField] private float _maxPitch = 85f; // Giảm từ 85f xuống 60f
-    [SerializeField] private float _minPitch = -25f; // Giới hạn nhìn xuống (25 độ)
+    [SerializeField] private float _maxPitch = 60f; // Giảm từ 85f xuống 60f
+    [SerializeField] private float _minPitch = -45f; // Giới hạn nhìn xuống (25 độ)
     [SerializeField] private float _lookSensitivity = 0.15f;
     
     [Header("Combat Settings")]
@@ -185,6 +185,7 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SimulationTime < _nextRunTime) return;
         
         StartCoroutine(TemporarySpeedBoost());
+        AudioManager.Instance.PlaySkillRunSound();
         _playerSkill.RpcPlayPowerUp(3);
         _nextRunTime = Runner.SimulationTime + _runRate;
         

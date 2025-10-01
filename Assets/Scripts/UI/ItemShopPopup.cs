@@ -6,6 +6,7 @@ public class ItemShopPopup : MonoBehaviour
     [Header("Number")]
     [SerializeField] private TMP_Text _numberText;
     [SerializeField] private int _goldCost = 200;
+    [SerializeField] private int _randomCost = 150;
 
     [SerializeField] GameObject _shopItemList;
     
@@ -116,6 +117,12 @@ public class ItemShopPopup : MonoBehaviour
     public void BuyRandomBook()
     {
         BuyRandomItem(_goldCost, ItemType.Book);
+    }
+
+    public void BuyRandom()
+    {
+        ItemType itemType = (ItemType)Random.Range(0, 8);
+        BuyRandomItem(_randomCost, itemType);
     }
 
     public void NextItem()

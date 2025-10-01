@@ -13,12 +13,15 @@ public class MainMenuButtonManager : MonoBehaviour
 
     public void ShowSinglePlayerMap()
     {
+        
         if(FirebaseDataManager.Instance.GetCurrentUserFood() >= _foodValue)
         {
             gameObject.SetActive(false);
             _singlePlayerMap.SetActive(true);
+            AudioManager.Instance.PlayGameModeSelectSound();
         } else {
             UIManager.Instance.ShowNoticePopup("You need food to start the journey!");
+            AudioManager.Instance.PlayNotEnoughSound();
         }
     }
 
@@ -28,10 +31,12 @@ public class MainMenuButtonManager : MonoBehaviour
         {
             gameObject.SetActive(false);
             _multiplayerMap.SetActive(true);
+            AudioManager.Instance.PlayGameModeSelectSound();
         }
         else
         {
             UIManager.Instance.ShowNoticePopup("You need food to start the journey!");
+            AudioManager.Instance.PlayNotEnoughSound();
         }
     }
 }

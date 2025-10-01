@@ -178,8 +178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kcc: {fileID: -6361111458387397937}
   _model: {fileID: 5083288727104878275}
-  _maxPitch: 85
-  _minPitch: -30
+  _maxPitch: 60
+  _minPitch: -45
   _lookSensitivity: 0.15
   _fireRate: 2
   _runRate: 40

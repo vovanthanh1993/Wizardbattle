@@ -21,7 +21,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _victoryMusic;
 
     [Header("Sound Effects")]
-    [SerializeField] private AudioClip _healthPickupSound;
     [SerializeField] private AudioClip _fireballSound;
     [SerializeField] private AudioClip _explosionSound;
     [SerializeField] private AudioClip _playerHitSound;
@@ -30,6 +29,15 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _buttonPopupSound;
     [SerializeField] private AudioClip _notEnoughSound;
     [SerializeField] private AudioClip _buySuccessSound;
+
+    [SerializeField] private AudioClip _gameModeSelectSound;
+    [SerializeField] private AudioClip _hunterSelect;
+    [SerializeField] private AudioClip _buttonChangeSound;
+
+    [Header("Sound Effects InGame")]
+    [SerializeField] private AudioClip _healthRecoverSound;
+    [SerializeField] private AudioClip _getXpItemSound;
+    [SerializeField] private AudioClip _skillRunSound;
 
     [Header("Audio Settings")]
     [SerializeField] private float _musicVolume = 0.7f;
@@ -48,6 +56,7 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         
+        LoadSettings();
         InitializeAudioSources();
     }
 
@@ -131,7 +140,7 @@ public class AudioManager : MonoBehaviour
 
     private void PlayMusic(AudioClip musicClip)
     {
-        if (!_musicEnabled || musicClip == null || _musicSource == null) return;
+        if (musicClip == null || _musicSource == null) return;
 
         if (_musicSource.clip != musicClip)
         {
@@ -165,12 +174,6 @@ public class AudioManager : MonoBehaviour
         }
     }
     #endregion
-
-    #region Sound Effects
-    public void PlayHealthPickupSound()
-    {
-        PlaySFX(_healthPickupSound);
-    }
 
     public void PlayFireballSound()
     {
@@ -246,37 +249,57 @@ public class AudioManager : MonoBehaviour
         audioSource.Play();
         Destroy(tempAudio, sfxClip.length);
     }
-    #endregion
 
     #region Audio Settings
     public void SetMusicVolume(float volume)
     {
         _musicVolume = Mathf.Clamp01(volume);
         UpdateVolumes();
+        SaveSettings();
     }
 
     public void SetSFXVolume(float volume)
     {
         _sfxVolume = Mathf.Clamp01(volume);
         UpdateVolumes();
+        SaveSettings();
     }
 
     public void ToggleMusic(bool enabled)
     {
         _musicEnabled = enabled;
         UpdateVolumes();
+        SaveSettings();
     }
 
     public void ToggleSFX(bool enabled)
     {
         _sfxEnabled = enabled;
         UpdateVolumes();
+        SaveSettings();
     }
 
     public float GetMusicVolume() => _musicVolume;
     public float GetSFXVolume() => _sfxVolume;
     public bool IsMusicEnabled() => _musicEnabled;
     public bool IsSFXEnabled() => _sfxEnabled;
+
+    private void SaveSettings()
+    {
+        PlayerPrefs.SetFloat("MusicVolume", _musicVolume);
+        PlayerPrefs.SetFloat("SFXVolume", _sfxVolume);
+        PlayerPrefs.SetInt("MusicEnabled", _musicEnabled ? 1 : 0);
+        PlayerPrefs.SetInt("SFXEnabled", _sfxEnabled ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadSettings()
+    {
+        _musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.7f);
+        _sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        _musicEnabled = PlayerPrefs.GetInt("MusicEnabled", 1) == 1;
+        _sfxEnabled = PlayerPrefs.GetInt("SFXEnabled", 1) == 1;
+    }
     #endregion
 
     private void OnEnable()
@@ -325,5 +348,35 @@ public class AudioManager : MonoBehaviour
                 StopMusic();
                 break;
         }
+    }
+
+    public void PlayHunterSelectSound()
+    {
+        PlaySFX(_hunterSelect);
+    }
+
+    public void PlayGameModeSelectSound()
+    {
+        PlaySFX(_gameModeSelectSound);
+    }
+
+    public void PlayButtonChangeSound()
+    {
+        PlaySFX(_buttonChangeSound);
+    }
+
+    public void PlayHealthRecoverSound()
+    {
+        PlaySFX(_healthRecoverSound);
+    }
+
+    public void PlayGetXpItemSound()
+    {
+        PlaySFX(_getXpItemSound);
+    }
+
+    public void PlaySkillRunSound()
+    {
+        PlaySFX(_skillRunSound);
     }
 } 

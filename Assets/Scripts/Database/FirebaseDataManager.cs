@@ -398,7 +398,7 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
-    public async Task<bool> UpdatePlayerAttributes(float damage, float speed, int level, float xp, float gold, float ruby, int food)
+    public async Task<bool> UpdatePlayerAttributes(int damage, int speed, int level, float xp, float gold, float ruby, int food)
     {
         PlayerData currentData = await LoadPlayerData();
         if (currentData == null)
@@ -469,12 +469,12 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData;
     }
 
-    public float GetCurrentUserDamage()
+    public int GetCurrentUserDamage()
     {
         return currentPlayerData.damage;
     }
 
-    public float GetCurrentUserSpeed()
+    public int GetCurrentUserSpeed()
     {
         return currentPlayerData.speed;
     }
@@ -538,7 +538,7 @@ public class FirebaseDataManager : MonoBehaviour
     public async Task<bool> ResetToDefault()
     {
         currentPlayerData.damage = 100;
-        currentPlayerData.speed = 50f;
+        currentPlayerData.speed = 500;
         currentPlayerData.level = 1;
         currentPlayerData.xp = 0;
         currentPlayerData.gold = 100;

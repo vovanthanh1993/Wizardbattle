@@ -122,6 +122,7 @@ public class PlayerHealth : NetworkBehaviour
     public void Heal(int healAmount)
     {
         CurrentHealth = Mathf.Min(CurrentHealth + healAmount, MaxHealth);
+        AudioManager.Instance.PlayHealthRecoverSound();
         StartCoroutine(PlayHealthParticleEffect());
     }
 

@@ -86,12 +86,14 @@ public class CharacterSelectionUI : MonoBehaviour
         if (success)
         {
             UIManager.Instance.ShowNoticePopup("Change character success!");
+            AudioManager.Instance.PlayHunterSelectSound();
+            UIManager.Instance.ShowLoadingPanel(false);
         }
         else
         {
             Debug.Log("Change character failed!");
+            UIManager.Instance.ShowLoadingPanel(false);
         }
-        UIManager.Instance.ShowLoadingPanel(false);
     }
 
     private void Start() {

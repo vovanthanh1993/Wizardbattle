@@ -44,19 +44,11 @@ public class PlayerModel : NetworkBehaviour
         SetModel();
     }
     public void SetModel()
-    {   
-        // Clear all holders first
-        if (_weaponHolder != null) ClearItemContent(_weaponHolder);
-        if (_armorHolder != null) ClearItemContent(_armorHolder);
-        if (_glovesHolder != null) ClearItemContent(_glovesHolder);
-        if (_bootsHolder != null) ClearItemContent(_bootsHolder);
-        if (_helmetHolder != null) ClearItemContent(_helmetHolder);
-        if (_ringHolder != null) ClearItemContent(_ringHolder);
-        if (_amuletHolder != null) ClearItemContent(_amuletHolder);
-        
+    {    
         // Set weapon
-        if (WeaponMaterialTier != null && _weaponHolder != null)
+        if (!string.IsNullOrEmpty(WeaponMaterialTier) && _weaponHolder != null)
         {
+            ClearItemContent(_weaponHolder);
             _weaponHolder.SetActive(true);
             GameObject weaponPrefab = GameCommonUtils.GetItemPrefab(ItemType.Weapon, WeaponMaterialTier);
             if (weaponPrefab != null)
@@ -66,8 +58,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set armor
-        if (ArmorMaterialTier != null && _armorHolder != null)
+        if (!string.IsNullOrEmpty(ArmorMaterialTier) && _armorHolder != null)
         {
+            ClearItemContent(_armorHolder);
             _armorHolder.SetActive(true);
             GameObject armorPrefab = GameCommonUtils.GetItemPrefab(ItemType.Armor, ArmorMaterialTier);
             if (armorPrefab != null)
@@ -77,8 +70,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set gloves
-        if (GlovesMaterialTier != null && _glovesHolder != null)
+        if (!string.IsNullOrEmpty(GlovesMaterialTier) && _glovesHolder != null)
         {
+            ClearItemContent(_glovesHolder);
             _glovesHolder.SetActive(true);
             GameObject glovesPrefab = GameCommonUtils.GetItemPrefab(ItemType.Gloves, GlovesMaterialTier);
             if (glovesPrefab != null)
@@ -88,8 +82,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set boots
-        if (BootsMaterialTier != null && _bootsHolder != null)
+        if (!string.IsNullOrEmpty(BootsMaterialTier) && _bootsHolder != null)
         {
+            ClearItemContent(_bootsHolder);
             _bootsHolder.SetActive(true);
             GameObject bootsPrefab = GameCommonUtils.GetItemPrefab(ItemType.Boots, BootsMaterialTier);
             if (bootsPrefab != null)
@@ -99,8 +94,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set helmet
-        if (HelmetMaterialTier != null && _helmetHolder != null)
+        if (!string.IsNullOrEmpty(HelmetMaterialTier) && _helmetHolder != null)
         {
+            ClearItemContent(_helmetHolder);
             _helmetHolder.SetActive(true);
             GameObject helmetPrefab = GameCommonUtils.GetItemPrefab(ItemType.Helmet, HelmetMaterialTier);
             if (helmetPrefab != null)
@@ -110,8 +106,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set ring
-        if (RingMaterialTier != null && _ringHolder != null)
+        if (!string.IsNullOrEmpty(RingMaterialTier) && _ringHolder != null)
         {
+            ClearItemContent(_ringHolder);
             _ringHolder.SetActive(true);
             GameObject ringPrefab = GameCommonUtils.GetItemPrefab(ItemType.Ring, RingMaterialTier);
             if (ringPrefab != null)
@@ -121,8 +118,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set amulet
-        if (AmuletMaterialTier != null && _amuletHolder != null)
+        if (!string.IsNullOrEmpty(AmuletMaterialTier) && _amuletHolder != null)
         {
+            ClearItemContent(_amuletHolder);
             _amuletHolder.SetActive(true);
             GameObject amuletPrefab = GameCommonUtils.GetItemPrefab(ItemType.Amulet, AmuletMaterialTier);
             if (amuletPrefab != null)
@@ -134,18 +132,10 @@ public class PlayerModel : NetworkBehaviour
 
     public void SetModel(string weaponMaterialTier, string armorMaterialTier, string glovesMaterialTier, string bootsMaterialTier, string helmetMaterialTier, string ringMaterialTier, string amuletMaterialTier)
     {   
-        // Clear all holders first
-        if (_weaponHolder != null) ClearItemContent(_weaponHolder);
-        if (_armorHolder != null) ClearItemContent(_armorHolder);
-        if (_glovesHolder != null) ClearItemContent(_glovesHolder);
-        if (_bootsHolder != null) ClearItemContent(_bootsHolder);
-        if (_helmetHolder != null) ClearItemContent(_helmetHolder);
-        if (_ringHolder != null) ClearItemContent(_ringHolder);
-        if (_amuletHolder != null) ClearItemContent(_amuletHolder);
-        
         // Set weapon
-        if (weaponMaterialTier != null && _weaponHolder != null)
+        if (!string.IsNullOrEmpty(weaponMaterialTier) && _weaponHolder != null)
         {
+            ClearItemContent(_weaponHolder);
             _weaponHolder.SetActive(true);
             GameObject weaponPrefab = GameCommonUtils.GetItemPrefab(ItemType.Weapon, weaponMaterialTier);
             if (weaponPrefab != null)
@@ -155,8 +145,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set armor
-        if (armorMaterialTier != null && _armorHolder != null)
+        if (!string.IsNullOrEmpty(armorMaterialTier) && _armorHolder != null)
         {
+            ClearItemContent(_armorHolder);
             _armorHolder.SetActive(true);
             GameObject armorPrefab = GameCommonUtils.GetItemPrefab(ItemType.Armor, armorMaterialTier);
             if (armorPrefab != null)
@@ -166,8 +157,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set gloves
-        if (glovesMaterialTier != null && _glovesHolder != null)
+        if (!string.IsNullOrEmpty(glovesMaterialTier) && _glovesHolder != null)
         {
+            ClearItemContent(_glovesHolder);
             _glovesHolder.SetActive(true);
             GameObject glovesPrefab = GameCommonUtils.GetItemPrefab(ItemType.Gloves, glovesMaterialTier);
             if (glovesPrefab != null)
@@ -177,8 +169,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set boots
-        if (bootsMaterialTier != null && _bootsHolder != null)
+        if (!string.IsNullOrEmpty(bootsMaterialTier) && _bootsHolder != null)
         {
+            ClearItemContent(_bootsHolder);
             _bootsHolder.SetActive(true);
             GameObject bootsPrefab = GameCommonUtils.GetItemPrefab(ItemType.Boots, bootsMaterialTier);
             if (bootsPrefab != null)
@@ -188,8 +181,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set helmet
-        if (helmetMaterialTier != null && _helmetHolder != null)
+        if (!string.IsNullOrEmpty(helmetMaterialTier) && _helmetHolder != null)
         {
+            ClearItemContent(_helmetHolder);
             _helmetHolder.SetActive(true);
             GameObject helmetPrefab = GameCommonUtils.GetItemPrefab(ItemType.Helmet, helmetMaterialTier);
             if (helmetPrefab != null)
@@ -199,8 +193,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set ring
-        if (ringMaterialTier != null && _ringHolder != null)
+        if (!string.IsNullOrEmpty(ringMaterialTier) && _ringHolder != null)
         {
+            ClearItemContent(_ringHolder);
             _ringHolder.SetActive(true);
             GameObject ringPrefab = GameCommonUtils.GetItemPrefab(ItemType.Ring, ringMaterialTier);
             if (ringPrefab != null)
@@ -210,8 +205,9 @@ public class PlayerModel : NetworkBehaviour
         }
         
         // Set amulet
-        if (amuletMaterialTier != null && _amuletHolder != null)
+        if (!string.IsNullOrEmpty(amuletMaterialTier) && _amuletHolder != null)
         {
+            ClearItemContent(_amuletHolder);
             _amuletHolder.SetActive(true);
             GameObject amuletPrefab = GameCommonUtils.GetItemPrefab(ItemType.Amulet, amuletMaterialTier);
             if (amuletPrefab != null)
@@ -223,10 +219,10 @@ public class PlayerModel : NetworkBehaviour
     
     private string GetMaterialTier(InventoryData inventoryData, string itemId)
     {
-        if (string.IsNullOrEmpty(itemId)) return null;
+        if (string.IsNullOrEmpty(itemId)) return string.Empty;
         
         var itemData = inventoryData.items.Find(x => x.itemId == itemId);
-        return itemData?.ToInventoryItem().materialTier.ToString();
+        return itemData?.ToInventoryItem().materialTier.ToString() ?? string.Empty;
     }
 
     private void Start()

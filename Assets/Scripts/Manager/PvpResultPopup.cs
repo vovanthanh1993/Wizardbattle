@@ -140,7 +140,7 @@ public class PvpResultPopup : MonoBehaviour
                 }
                 
                 // Check and update level
-                int newLevel = CalculateNewLevel(newXP);
+                int newLevel = GameCommonUtils.CalculateLevelFromXP(newXP);
                 
                 // Update currentData with new values before saving
                 currentData.level = newLevel;
@@ -171,22 +171,6 @@ public class PvpResultPopup : MonoBehaviour
             Debug.LogError($"❌ Exception in UpdatePlayerAttributesAfterGame: {e.Message}");
             Debug.LogError($"Stack trace: {e.StackTrace}");
         }
-    }
-
-    private int CalculateNewLevel(float xp)
-    {
-        // New level calculation: exponential growth
-        // Level 1: 0-99 XP
-        // Level 2: 100-299 XP  
-        // Level 3: 300-599 XP
-        // Level 4: 600-999 XP
-        // Level 5: 1000-1499 XP
-        // Formula: level = floor(sqrt(xp/50)) + 1
-        
-        int level = Mathf.FloorToInt(Mathf.Sqrt(xp / 50f)) + 1;
-        
-        // Ensure minimum level is 1
-        return Mathf.Max(1, level);
     }
 
     private int GetPlayerKills()

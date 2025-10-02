@@ -81,4 +81,95 @@ public static class GameCommonUtils
         GameObject prefab = Resources.Load<GameObject>(prefabPath);
         return prefab;
     }
+
+    
+    // XP System Configuration
+    private const int BASE_XP = 100;
+    private const float XP_MULTIPLIER = 1.5f;
+    
+    /// <summary>
+    /// Calculate level from total XP using exponential growth formula (float version)
+    /// </summary>
+    /// <param name="totalXP">Total XP accumulated</param>
+    /// <returns>Current level</returns>
+    public static int CalculateLevelFromXP(float totalXP)
+    {
+        if (totalXP <= 0) return 1;
+        
+        int level = Mathf.FloorToInt(Mathf.Sqrt(totalXP / 50f));
+        return level;
+    }
+    
+    /// <summary>
+    /// Calculate XP needed to reach a specific level
+    /// Level 1: 0 XP
+    /// Level 2: 200 XP (100-299 range)
+    /// Level 3: 450 XP (300-599 range)  
+    /// Level 4: 800 XP (600-999 range)
+    /// Level 5: 1250 XP (1000-1499 range)
+    /// Formula: maxXP = level^2 * 50
+    /// </summary>
+    /// <param name="level">Target level</param>
+    /// <returns>XP needed to reach that level</returns>
+    public static long CalculateXPForLevel(int level)
+    {
+        if (level <= 1) return 0;
+        return level * level * 50;
+    }
+    
+    /// <summary>
+    /// Calculate XP needed to go from one level to another
+    /// </summary>
+    /// <param name="fromLevel">Starting level</param>
+    /// <param name="toLevel">Target level</param>
+    /// <returns>XP needed to go from fromLevel to toLevel</returns>
+    public static long CalculateXPBetweenLevels(int fromLevel, int toLevel)
+    {
+        if (fromLevel >= toLevel) return 0;
+        
+        long fromXP = CalculateXPForLevel(fromLevel);
+        long toXP = CalculateXPForLevel(toLevel);
+        
+        return toXP - fromXP;
+    }
+    
+    /// <summary>
+    /// Calculate XP needed to reach next level from current level
+    /// </summary>
+    /// <param name="currentLevel">Current level</param>
+    /// <returns>XP needed to reach next level</returns>
+    public static long CalculateXPToNextLevel(int currentLevel)
+    {
+        return CalculateXPBetweenLevels(currentLevel, currentLevel + 1);
+    }
+    
+    /// <summary>
+    /// Calculate current level XP progress (XP within current level)
+    /// </summary>
+    /// <param name="totalXP">Total XP accumulated</param>
+    /// <param name="currentLevel">Current level</param>
+    /// <returns>XP progress within current level</returns>
+    public static float CalculateCurrentLevelXP(float totalXP, int currentLevel)
+    {
+        if (currentLevel <= 1) return totalXP;
+        
+        long xpForCurrentLevel = CalculateXPForLevel(currentLevel);
+        return totalXP - xpForCurrentLevel;
+    }
+    
+    /// <summary>
+    /// Calculate XP progress percentage for current level
+    /// </summary>
+    /// <param name="totalXP">Total XP accumulated</param>
+    /// <param name="currentLevel">Current level</param>
+    /// <returns>Progress percentage (0-1)</returns>
+    public static float CalculateXPProgressPercentage(float totalXP, int currentLevel)
+    {
+        float currentLevelXP = CalculateCurrentLevelXP(totalXP, currentLevel);
+        float xpToNextLevel = CalculateXPToNextLevel(currentLevel);
+        
+        if (xpToNextLevel <= 0) return 1f;
+        
+        return Mathf.Clamp01(currentLevelXP / xpToNextLevel);
+    }
 }

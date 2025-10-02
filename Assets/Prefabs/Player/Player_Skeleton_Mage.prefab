@@ -35378,7 +35378,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7660902288247119557
 Transform:
   m_ObjectHideFlags: 0
@@ -76410,6 +76410,10 @@ PrefabInstance:
     - target: {fileID: 7154387550132593279, guid: 4cdc877ee403f814182ad1fa2627bc93, type: 3}
       propertyPath: m_Name
       value: Weapon_Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154387550132593279, guid: 4cdc877ee403f814182ad1fa2627bc93, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

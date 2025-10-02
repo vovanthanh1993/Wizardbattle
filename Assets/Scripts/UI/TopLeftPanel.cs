@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.UI;
 public class TopLeftPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Text _playerNameText;
@@ -8,6 +8,8 @@ public class TopLeftPanel : MonoBehaviour
     [SerializeField] private TMP_Text _damageText;
     [SerializeField] private TMP_Text _speedText;
     [SerializeField] private TMP_Text _healthText;
+
+    [SerializeField] private Image _xpBarImage;
 
     void Start()
     {
@@ -20,5 +22,6 @@ public class TopLeftPanel : MonoBehaviour
         _damageText.text = FirebaseDataManager.Instance.GetCurrentUserDamage().ToString();
         _speedText.text = FirebaseDataManager.Instance.GetCurrentUserSpeed().ToString();
         _healthText.text = FirebaseDataManager.Instance.GetCurrentPlayerData().health.ToString();
+        _xpBarImage.fillAmount = GameCommonUtils.CalculateXPProgressPercentage(FirebaseDataManager.Instance.GetCurrentUserXp(), FirebaseDataManager.Instance.GetCurrentUserLevel());
     }
 }

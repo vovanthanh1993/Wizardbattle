@@ -489,6 +489,12 @@ public class FirebaseDataManager : MonoBehaviour
         return currentPlayerData.xp;
     }
 
+    public float GetCurrentUserMaxXp()
+    {
+        int currentLevel = GetCurrentUserLevel();
+        return GameCommonUtils.CalculateXPForLevel(currentLevel + 1);
+    }
+
     public float GetCurrentUserGold()
     {
         return currentPlayerData.gold;

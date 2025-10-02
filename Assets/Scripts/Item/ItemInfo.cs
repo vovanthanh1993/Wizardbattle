@@ -19,6 +19,7 @@ public class ItemInfo : MonoBehaviour
 
     public void ShowItemInfo(InventoryItem item, RectTransform slotTransform = null)
     {
+        if(item == null) return;
         _itemHealthText.text = item.healthBonus.ToString();
         _itemDamageText.text = item.damageBonus.ToString();
         _itemSpeedText.text = item.speedBonus.ToString();

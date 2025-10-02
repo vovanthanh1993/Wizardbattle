@@ -53,20 +53,19 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
         Keyboard keyboard = Keyboard.current;
         Mouse mouse = Mouse.current;
 
-        if (SceneManager.GetActiveScene().name != "LobbyScene")
+        if (SceneManager.GetActiveScene().name != GameConstants.HOME_SCENE)
         {
             if (keyboard != null && keyboard.tabKey.wasPressedThisFrame && !IsVisibleMenuInGame)
             {
                 IsVisibleLeaderBoard = !IsVisibleLeaderBoard;
                 UIManager.Instance.ShowScoreBoard(IsVisibleLeaderBoard);
                 UpdateCursorState();
-
             }
 
             if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
             {
                 IsVisibleMenuInGame = !IsVisibleMenuInGame;
-                UIManager.Instance.ShowInGameMenu(IsVisibleMenuInGame);
+                UIManager.Instance.GamePlayPanel.ShowInGameMenu(true);
                 UpdateCursorState();
             }
         }
@@ -79,6 +78,11 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
         {
             Vector2 mouseDelta = mouse.delta.ReadValue();
             Vector2 lookRotationDelta = new(-mouseDelta.y, mouseDelta.x);
+            
+            // Apply mouse sensitivity from settings
+            float mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+            lookRotationDelta *= mouseSensitivity;
+            
             _accumulatedInput.LookDelta += lookRotationDelta;
         }
 

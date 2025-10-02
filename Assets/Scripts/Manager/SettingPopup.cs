@@ -18,8 +18,14 @@ public class SettingPopup : MonoBehaviour
     [SerializeField] private Button _sfxToggleOnButton;
     [SerializeField] private Button _sfxToggleOffButton;
 
+    [Header("Mouse Settings")]
+    [SerializeField] private Image _mouseSensitivityImageFill;
+    [SerializeField] private Button _mouseIncreaseButton;
+    [SerializeField] private Button _mouseDecreaseButton;
+
     [Header("Volume Settings")]
     [SerializeField] private float _volumeStep = 0.1f;
+    [SerializeField] private float _mouseSensitivityStep = 0.1f;
 
     private void OnEnable()
     {
@@ -70,6 +76,16 @@ public class SettingPopup : MonoBehaviour
             _sfxToggleOffButton.onClick.AddListener(ToggleSFX);
         }
 
+        if (_mouseIncreaseButton != null)
+        {
+            _mouseIncreaseButton.onClick.AddListener(IncreaseMouseSensitivity);
+        }
+
+        if (_mouseDecreaseButton != null)
+        {
+            _mouseDecreaseButton.onClick.AddListener(DecreaseMouseSensitivity);
+        }
+
         UpdateUI();
     }
 
@@ -109,6 +125,12 @@ public class SettingPopup : MonoBehaviour
         if (_sfxToggleOffButton != null)
         {
             _sfxToggleOffButton.gameObject.SetActive(!sfxEnabled);
+        }
+
+        // Update mouse sensitivity fill
+        if (_mouseSensitivityImageFill != null)
+        {
+            _mouseSensitivityImageFill.fillAmount = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
         }
     }
 
@@ -178,11 +200,31 @@ public class SettingPopup : MonoBehaviour
             bool currentState = AudioManager.Instance.IsSFXEnabled();
             AudioManager.Instance.ToggleSFX(!currentState);
             UpdateUI();
-            if (!currentState) // Nếu đang bật SFX
+            if (!currentState) // If SFX is enabled
             {
                 AudioManager.Instance.PlayButtonChangeSound();
             }
         }
+    }
+
+    public void IncreaseMouseSensitivity()
+    {
+        float currentSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+        float newSensitivity = Mathf.Min(currentSensitivity + _mouseSensitivityStep, 2f);
+        PlayerPrefs.SetFloat("MouseSensitivity", newSensitivity);
+        PlayerPrefs.Save();
+        UpdateUI();
+        AudioManager.Instance.PlayButtonChangeSound();
+    }
+
+    public void DecreaseMouseSensitivity()
+    {
+        float currentSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+        float newSensitivity = Mathf.Max(currentSensitivity - _mouseSensitivityStep, 0.1f);
+        PlayerPrefs.SetFloat("MouseSensitivity", newSensitivity);
+        PlayerPrefs.Save();
+        UpdateUI();
+        AudioManager.Instance.PlayButtonChangeSound();
     }
 
     public void OnCloseButton()

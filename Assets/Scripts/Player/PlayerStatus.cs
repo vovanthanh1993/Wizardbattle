@@ -77,6 +77,13 @@ public class PlayerStatus : NetworkBehaviour
     {
         Kills++;
         AddXP(50);
+        RpcUpdateKillText();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    private void RpcUpdateKillText()
+    {
+        UIManager.Instance.GamePlayPanel.UpdateKillText(Kills);
     }
 
     public void AddXP(long amount)
@@ -94,6 +101,13 @@ public class PlayerStatus : NetworkBehaviour
     public void AddDeath()
     {
         Deaths++;
+        RpcUpdateDeathText();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    private void RpcUpdateDeathText()
+    {
+       UIManager.Instance.GamePlayPanel.UpdateDeathText(Deaths);
     }
 
     #region UI Updates

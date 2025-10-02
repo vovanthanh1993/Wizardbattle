@@ -22,6 +22,8 @@ public class GameStatusManager : MonoBehaviour
 
     [SerializeField] private GameObject _dragonForestPrefab;
 
+    [SerializeField] private bool _isPause = false;
+
     private void Awake()
     {
     if (Instance == null)
@@ -45,6 +47,16 @@ public class GameStatusManager : MonoBehaviour
             // Check boss spawn after 5 minutes
             CheckBossSpawn();
         }
+    }
+
+    public void SetIsPause(bool isPause)
+    {
+        _isPause = isPause;
+    }
+
+    public bool GetIsPause()
+    {
+        return _isPause;
     }
 
     public void SetGameStatus(GameStatus gameStatus)

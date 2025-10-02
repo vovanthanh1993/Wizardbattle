@@ -22,6 +22,7 @@ public class PlayerSkill : NetworkBehaviour
     public void RpcPlayPowerUp(float time)
     {
         StartCoroutine(PlayPowerUpParticleEffect(time));
+        if (HasInputAuthority) AudioManager.Instance.PlaySkillRunSound();
     }
 
     private IEnumerator PlayPowerUpParticleEffect(float time)

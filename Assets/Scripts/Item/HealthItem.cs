@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HealthItem : NetworkBehaviour
 {
-    [SerializeField] private int _healAmount = 20;
+    [SerializeField] private int _healAmount = 200;
     [Networked] private bool _isPickedUp { get; set; }
 
     public override void Spawned()

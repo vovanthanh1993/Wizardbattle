@@ -43,6 +43,7 @@ public class PlayerAnimation : NetworkBehaviour
         _didShoot = false;
         _hurt = false;
         _isStealth = false;
+        _isDead = false;
         
         if (_animator != null)
         {
@@ -62,7 +63,7 @@ public class PlayerAnimation : NetworkBehaviour
         HandleShootAnimation();
         HandleHurtAnimation();
         HandleMoveSpeedAnimation();
-        HandleDieAnimation();
+        //HandleDieAnimation();
     }
 
     private void HandleShootAnimation()
@@ -101,6 +102,7 @@ public class PlayerAnimation : NetworkBehaviour
 
     public void Die(){
         _isDead = true;
+        _animator?.SetTrigger("Die");
     }
 
     public void Reset(){

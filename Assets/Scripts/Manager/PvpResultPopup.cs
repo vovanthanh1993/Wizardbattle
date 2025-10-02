@@ -82,7 +82,7 @@ public class PvpResultPopup : MonoBehaviour
          _winPanel.SetActive(false);
         _losePanel.SetActive(false);
         _background.SetActive(false);
-        UIManager.Instance.OnBackToMenuClicked();
+        UIManager.Instance.ShowMenu();
     }
 
     

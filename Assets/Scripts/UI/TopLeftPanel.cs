@@ -12,7 +12,7 @@ public class TopLeftPanel : MonoBehaviour
     [SerializeField] private Image _xpBarImage;
     [SerializeField] private Image _avatarImage;
 
-    void Start()
+    void OnEnable()
     {
         InitData();
     }

@@ -122,7 +122,12 @@ public class PlayerHealth : NetworkBehaviour
     public void Heal(int healAmount)
     {
         CurrentHealth = Mathf.Min(CurrentHealth + healAmount, MaxHealth);
-        AudioManager.Instance.PlayHealthRecoverSound();
+         RpcHeal();       
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RpcHeal() {
+        if (HasInputAuthority) AudioManager.Instance.PlayHealthRecoverSound();
         StartCoroutine(PlayHealthParticleEffect());
     }
 

@@ -19,14 +19,10 @@ public class UIManager : MonoBehaviour
 
     [Header("Room UI")]
     [SerializeField] private Button _refreshButton;
-    [SerializeField] private Button _backToMenuButton;
-    [SerializeField] private Button _resumeButton;
 
     [Header("Room List")]
     [SerializeField] private Transform _roomListParent;
     [SerializeField] private GameObject _roomEntryPrefab;
-    
-    [SerializeField] private GameObject _inGameButtonsPanel;
     
     [SerializeField] private RoomScrollView _roomScrollView;
 
@@ -43,6 +39,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _loadingPanel;
     [SerializeField] private NoticePopup _noticePopup;
 
+    [SerializeField] private GameObject _settingPopup;
+    
+
     [SerializeField] public MultiplayerManager multiplayerManager;
     
     [Header("Lobby UI")]
@@ -55,6 +54,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] public ItemInfo ItemToolTip;
 
     [SerializeField] public InventoryPanel InventoryPanel;
+
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -72,44 +73,25 @@ public class UIManager : MonoBehaviour
         _loadingPanel.SetActive(isShow);
     }
 
-    public void ShowNoticePopup(string text){
-        _noticePopup.ShowNoticePopup(text);
+    public void ShowSettingPopup(bool isShow)
+    {
+        _settingPopup.SetActive(isShow);
     }
 
-    public void ShowInGameMenu(bool isShow)
-    {
-        _inGameButtonsPanel.SetActive(isShow);
+    public void ShowNoticePopup(string text){
+        _noticePopup.ShowNoticePopup(text);
     }
 
     private void Start()
     {
         ShowMenu();
         _refreshButton.onClick.AddListener(HandleRefreshRoomClicked);
-        _backToMenuButton.onClick.AddListener(OnBackToMenuClicked);
-        _resumeButton.onClick.AddListener(HandleResumeClicked);
         _roomScrollView.OnCellClicked(HandleCellClicked);
     }
 
     public void BackToMenu()
     {
         SceneManager.LoadScene(GameConstants.HOME_SCENE);
-        ShowMenu();
-    }
-
-    public void HandleResumeClicked()
-    {
-        ShowInGameMenu(false);
-        InputManager.Instance.IsVisibleMenuInGame = false;
-        if (!InputManager.Instance.IsVisibleLeaderBoard)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-    }
-
-    public void OnBackToMenuClicked()
-    {
-        GameCommonUtils.LoadScene(GameConstants.HOME_SCENE);
         ShowMenu();
     }
 
@@ -128,7 +110,6 @@ public class UIManager : MonoBehaviour
     {
         _menuPanel.SetActive(true);
         _gameplayPanel.SetActive(false);
-        _inGameButtonsPanel.SetActive(false);
         _disconnectPopup.SetActive(false);
         _lobbyPanel.SetActive(false);
         _topLeftPanel.InitData();
@@ -145,7 +126,6 @@ public class UIManager : MonoBehaviour
     {
         _menuPanel.SetActive(false);
         _gameplayPanel.SetActive(false);
-        _inGameButtonsPanel.SetActive(false);
         _disconnectPopup.SetActive(false);
         _lobbyPanel.SetActive(true);
     }

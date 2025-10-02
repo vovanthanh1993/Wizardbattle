@@ -33,9 +33,14 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private TMP_Text _bossHealthText;
     [SerializeField] private GameObject _bossHealthBar;
 
-    [Header("Countdown UI")]
+    [Header("Game Info UI")]
+    [SerializeField] private GameObject _gameInfoPVPPanel;
+    [SerializeField] private GameObject _gameInfoPVEPanel;
     [SerializeField] private TMP_Text _timeText;
-     [SerializeField] private TMP_Text _statusText;
+    [SerializeField] private TMP_Text _countdownText;
+    [SerializeField] private TMP_Text _statusText;
+    [SerializeField] private TMP_Text _killText;
+    [SerializeField] private TMP_Text _deathText;
     [SerializeField] private float _statusTextDuration = 3f;
     [SerializeField] private float _statusTextFadeSpeed = 2f;
 
@@ -48,7 +53,7 @@ public class GamePlayPanel : MonoBehaviour
     [Header("Skill UI")]
     [SerializeField] private Image _fireBallCoolDown;
     [SerializeField] private TMP_Text _fireBallCoolDownText;
-        [SerializeField] private Image _healingCoolDown;
+    [SerializeField] private Image _healingCoolDown;
     [SerializeField] private TMP_Text _healingCoolDownText;
     [SerializeField] private Image _runCoolDown;
     [SerializeField] private TMP_Text _runCoolDownText;
@@ -64,6 +69,13 @@ public class GamePlayPanel : MonoBehaviour
 
     [SerializeField] private TMP_Text _respawnCountdownText;
     [SerializeField] private GameObject _respawnCountdownPanel;
+
+    [Header("In Game Buttons Panel")]
+    [SerializeField] private GameObject _inGameButtonsPanel;
+    [SerializeField] private Button _resumeButton;
+    [SerializeField] private Button _settingsButton;
+    [SerializeField] private Button _menuButton;
+
     private void OnEnable() {
         ShowBossHealthBar(false);
         ShowScoreBoard(false);
@@ -71,6 +83,40 @@ public class GamePlayPanel : MonoBehaviour
         InitUI();
         UpdateLevelUI(0);
         UpdateXpBar();
+        UpdateKillText(0);
+        UpdateDeathText(0);
+        _resumeButton.onClick.AddListener(HandleResumeClicked);
+        _settingsButton.onClick.AddListener(HandleSettingsClicked);
+        _menuButton.onClick.AddListener(HandleMenuClicked);
+    }
+
+    public void ShowInGameMenu(bool isShow)
+    {
+        _inGameButtonsPanel.SetActive(isShow);
+        Cursor.lockState = isShow ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isShow;
+    }
+
+     public void HandleResumeClicked()
+    {
+        ShowInGameMenu(false);
+        InputManager.Instance.IsVisibleMenuInGame = false;
+        if (!InputManager.Instance.IsVisibleLeaderBoard)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    public void HandleMenuClicked()
+    {
+        GameCommonUtils.LoadScene(GameConstants.HOME_SCENE);
+        UIManager.Instance.ShowMenu();
+    }
+
+    public void HandleSettingsClicked()
+    {
+        UIManager.Instance.ShowSettingPopup(true);
     }
 
     public void UpdateXpBar()
@@ -96,6 +142,14 @@ public class GamePlayPanel : MonoBehaviour
         _respawnCountdownPanel.SetActive(false);
         _respawnCountdownText.text = "";
         _statusText.text = "";
+        _inGameButtonsPanel.SetActive(false);
+        if (NetworkRunnerHandler.Instance.GameType == GameType.PVE) {
+            _gameInfoPVPPanel.SetActive(false);
+            _gameInfoPVEPanel.SetActive(true);
+        } else {
+            _gameInfoPVPPanel.SetActive(true);
+            _gameInfoPVEPanel.SetActive(false);
+        }
     }
     public void UpdateXpBar(long xp, long xpToNextLevel)
     {
@@ -118,8 +172,8 @@ public class GamePlayPanel : MonoBehaviour
     {
         int level = CalculateLevelFromXP(xp);
         IsEnableSkill1 = level >= 2 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
-        IsEnableSkill2 = level >= 4 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
-        IsEnableSkill3 = level >= 6 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill2 = level >= 5 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill3 = level >= 8 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
         _skillUI1.SetActive(!IsEnableSkill1);
         _skillUI2.SetActive(!IsEnableSkill2);
         _skillUI3.SetActive(!IsEnableSkill3);
@@ -199,14 +253,13 @@ public class GamePlayPanel : MonoBehaviour
 
     public void SetTimeText(string time)
     {
-        if (_timeText != null) {
-            _timeText.text = time;
-        }
+        _timeText.text = time;
+        _countdownText.text = time;
     }
 
     public void SetStatusText(string status)
     {
-        if (_statusText != null) {
+        if (_statusText != null && gameObject.activeInHierarchy) {
             _statusText.text = status;
             StartCoroutine(ShowAndHideStatusText());
         }
@@ -384,5 +437,15 @@ public class GamePlayPanel : MonoBehaviour
     {
         _respawnCountdownPanel.SetActive(!string.IsNullOrEmpty(respawnMess));
         _respawnCountdownText.text = respawnMess;
+    }
+
+    public void UpdateKillText(int kill) {
+        _killText.gameObject.SetActive(true);
+        _killText.text = $"{kill}";
+    }
+
+    public void UpdateDeathText(int death) {
+        _deathText.gameObject.SetActive(true);
+        _deathText.text = $"{death}";
     }
 }

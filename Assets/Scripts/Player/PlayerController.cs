@@ -185,7 +185,6 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SimulationTime < _nextRunTime) return;
         
         StartCoroutine(TemporarySpeedBoost());
-        AudioManager.Instance.PlaySkillRunSound();
         _playerSkill.RpcPlayPowerUp(3);
         _nextRunTime = Runner.SimulationTime + _runRate;
         

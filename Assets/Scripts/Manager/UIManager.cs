@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour
 
     public void BackToMenu()
     {
-        SceneManager.LoadScene(GameConstants.HOME_SCENE);
+        GameCommonUtils.LoadScene(GameConstants.HOME_SCENE);
         ShowMenu();
     }
 

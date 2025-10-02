@@ -71,5 +71,5 @@ MonoBehaviour:
   _PrefabNames:
     _items: []
   _GameState: 0
-  _killsToWin: 100
+  _killsToWin: 2
   _gameTotalTime: 300

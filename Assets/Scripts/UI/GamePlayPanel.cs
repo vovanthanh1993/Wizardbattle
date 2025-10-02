@@ -137,7 +137,6 @@ public class GamePlayPanel : MonoBehaviour
         _healingCoolDownText.gameObject.SetActive(false);
         _runCoolDownText.gameObject.SetActive(false);
         _stealthCoolDownText.gameObject.SetActive(false);
-        _killFeedText.gameObject.SetActive(false);
         _killFeedBackGround.SetActive(false);
         _respawnCountdownPanel.SetActive(false);
         _respawnCountdownText.text = "";

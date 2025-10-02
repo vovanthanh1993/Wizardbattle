@@ -379,6 +379,7 @@ public class LobbyManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RpcShowKillFeed(string killer, string victim)
     {
+        Debug.Log($"Show kill feed: {killer} killed {victim}");
         UIManager.Instance.GamePlayPanel.ShowKillFeed(killer, victim);
     }
 }

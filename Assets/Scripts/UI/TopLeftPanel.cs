@@ -10,6 +10,7 @@ public class TopLeftPanel : MonoBehaviour
     [SerializeField] private TMP_Text _healthText;
 
     [SerializeField] private Image _xpBarImage;
+    [SerializeField] private Image _avatarImage;
 
     void Start()
     {
@@ -23,5 +24,6 @@ public class TopLeftPanel : MonoBehaviour
         _speedText.text = FirebaseDataManager.Instance.GetCurrentUserSpeed().ToString();
         _healthText.text = FirebaseDataManager.Instance.GetCurrentPlayerData().health.ToString();
         _xpBarImage.fillAmount = GameCommonUtils.CalculateXPProgressPercentage(FirebaseDataManager.Instance.GetCurrentUserXp(), FirebaseDataManager.Instance.GetCurrentUserLevel());
+        _avatarImage.sprite = GameCommonUtils.GetAvatarSprite(FirebaseDataManager.Instance.GetCurrentPlayerData().playerPrefabName);
     }
 }

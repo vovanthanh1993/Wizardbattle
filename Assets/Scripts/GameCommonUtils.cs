@@ -82,6 +82,13 @@ public static class GameCommonUtils
         return prefab;
     }
 
+    public static Sprite GetAvatarSprite(string prefabName)
+    {
+        string spritePath = $"Avatars/Avatar_{prefabName}";
+        Sprite sprite = Resources.Load<Sprite>(spritePath);
+        return sprite;
+    }
+
     
     // XP System Configuration
     private const int BASE_XP = 100;

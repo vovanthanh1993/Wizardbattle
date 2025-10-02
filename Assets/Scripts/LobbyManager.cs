@@ -125,6 +125,18 @@ public class LobbyManager : NetworkBehaviour
         return result;
     }
 
+    public string[] GetAllPlayerPrefabNames()
+    {
+        var result = new string[PrefabNames.Count];
+        int index = 0;
+        foreach (var kvp in PrefabNames)
+        {
+            result[index++] = kvp.Value;
+            Debug.Log($"Player prefab name: {kvp.Value}");
+        }
+        return result;
+    }
+
     /// <summary>
     /// Lấy số lượng players hiện tại
     /// </summary>

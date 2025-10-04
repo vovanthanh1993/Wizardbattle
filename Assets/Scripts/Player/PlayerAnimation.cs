@@ -60,10 +60,10 @@ public class PlayerAnimation : NetworkBehaviour
     
     public void UpdateAnimations()
     {
+        if (_isDead) return;
         HandleShootAnimation();
         HandleHurtAnimation();
         HandleMoveSpeedAnimation();
-        //HandleDieAnimation();
     }
 
     private void HandleShootAnimation()
@@ -94,18 +94,20 @@ public class PlayerAnimation : NetworkBehaviour
         if (_isDead)
         {
             _animator?.SetTrigger("Die");
-            _isDead = false;
         }
     }
     
     #endregion
 
     public void Die(){
+        Debug.Log("Die");
         _isDead = true;
         _animator?.SetTrigger("Die");
+        Debug.Log("Run Die");
     }
 
     public void Reset(){
+        Debug.Log("Reset");
         _isDead = false;
         SetIdleAnimation();
     }

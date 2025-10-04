@@ -93,15 +93,6 @@ public class GameStatusManager : MonoBehaviour
         _gameEndTime = Time.time;
         _totalGameTime = _gameEndTime - _gameStartTime;
         Debug.Log("Game ended. Total time: " + _totalGameTime + " seconds");
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            var playerController = playerObj.GetComponent<PlayerController>();
-            if (playerController != null)
-            {
-                playerController.SetDisable(true);
-            }
-        }
     }
     
     // Get current game time (if playing)

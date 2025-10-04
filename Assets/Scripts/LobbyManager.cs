@@ -100,6 +100,7 @@ public class LobbyManager : NetworkBehaviour
             RpcUpdateLobbyUI();
             RpcCheckIfReadyToStart();
             Debug.Log($"Removed player name for player {player}");
+            Runner.Despawn(Runner.GetPlayerObject(player));
         }
     }
 
@@ -191,11 +192,8 @@ public class LobbyManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RpcSendPlayerData(PlayerRef player, string playerName, string prefabName)
     {
-        if (Runner.IsServer)
-        {
-            AddPlayerData(player, playerName, prefabName);
-            Debug.Log($"Received player name from client: {playerName}");
-        }
+        AddPlayerData(player, playerName, prefabName);
+        Debug.Log($"Received player name from client: {playerName}");
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

@@ -262,6 +262,7 @@ public class EnemySpawner : MonoBehaviour
     }
     
     // Debug methods
+    /*
     [ContextMenu("Spawn Enemy")]
     private void DebugSpawnEnemy()
     {
@@ -338,5 +339,5 @@ public class EnemySpawner : MonoBehaviour
             specificEnemyPrefab = null;
         }
         GUILayout.EndArea();
-    }
+    }*/
 }

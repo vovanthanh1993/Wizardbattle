@@ -18634,7 +18634,7 @@ MonoBehaviour:
   _gameEndTime: 0
   _totalGameTime: 0
   _bossSpawnPoint: {fileID: 1230297009}
-  _bossSpawnTime: 300
+  _bossSpawnTime: 60
   _bossSpawned: 0
   _dragonForestPrefab: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
   _isPause: 0

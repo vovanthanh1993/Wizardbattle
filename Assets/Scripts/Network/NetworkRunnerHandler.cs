@@ -276,14 +276,28 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             // Host thêm trực tiếp
-            LobbyManager.Instance.AddPlayerData(player, displayName, prefabName);
-            Debug.Log($"Added player data (host): {displayName}");
+            if (LobbyManager.Instance != null)
+            {
+                LobbyManager.Instance.AddPlayerData(player, displayName, prefabName);
+                Debug.Log($"Added player data (host): {displayName}");
+            }
+            else
+            {
+                Debug.LogError("LobbyManager.Instance is null when trying to add player data as host");
+            }
         }
         else
         {
             // Client gửi lên host
-            LobbyManager.Instance.RpcSendPlayerData(player, displayName, prefabName);
-            Debug.Log($"Sent player data to host: {displayName}");
+            if (LobbyManager.Instance != null)
+            {
+                LobbyManager.Instance.RpcSendPlayerData(player, displayName, prefabName);
+                Debug.Log($"Sent player data to host: {displayName}");
+            }
+            else
+            {
+                Debug.LogError("LobbyManager.Instance is null when trying to send player data as client");
+            }
         }
     }
 
@@ -292,10 +306,14 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log($"Player {player} left lobby");
         
         // Host xóa player data
-        if (Runner.IsServer)
+        if (Runner.IsServer && LobbyManager.Instance != null)
         {
             LobbyManager.Instance.RemovePlayerData(player);
             Debug.Log($"Removed player data for player {player}");
+        }
+        else if (Runner.IsServer && LobbyManager.Instance == null)
+        {
+            Debug.LogWarning($"LobbyManager.Instance is null when trying to remove player {player} data");
         }
     }
 
@@ -312,28 +330,49 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="shutdownReason">Reason for the shutdown</param>
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        // If in lobby when server shuts down, return to menu
-        if (LobbyManager.Instance.GameState == GameState.Lobby)
+        // Kiểm tra LobbyManager.Instance có null không
+        if (LobbyManager.Instance != null)
         {
-            Debug.Log("Server shutdown during lobby, returning to menu");
+            // If in lobby when server shuts down, return to menu
+            if (LobbyManager.Instance.GameState == GameState.Lobby)
+            {
+                Debug.Log("Server shutdown during lobby, returning to menu");
+                
+                // Only show popup if not voluntarily leaving lobby
+                if (!_isLeavingLobby)
+                {
+                    // Only show popup for clients, not for host
+                    if (!runner.IsServer)
+                    {
+                        UIManager.Instance.ShowNoticePopup("Host left the lobby, returning to menu!");
+                    }
+                }
+                
+                _isLeavingLobby = false;
+                UIManager.Instance.BackToMenu();
+            }
+            else if (LobbyManager.Instance.GameState != GameState.Ended)
+            {
+                // Show disconnect popup for other game states
+                UIManager.Instance.ShowDisconnectPopup(true);
+            }
+        }
+        else
+        {
+            // LobbyManager.Instance is null, handle gracefully
+            Debug.Log("LobbyManager.Instance is null during shutdown, handling gracefully");
             
-            // Only show popup if not voluntarily leaving lobby
             if (!_isLeavingLobby)
             {
                 // Only show popup for clients, not for host
                 if (!runner.IsServer)
                 {
-                    UIManager.Instance.ShowNoticePopup("Host left the lobby, returning to menu!");
+                    UIManager.Instance.ShowNoticePopup("Connection lost, returning to menu!");
                 }
             }
             
             _isLeavingLobby = false;
             UIManager.Instance.BackToMenu();
-        }
-        else if (LobbyManager.Instance.GameState != GameState.Ended)
-        {
-            // Show disconnect popup for other game states
-            UIManager.Instance.ShowDisconnectPopup(true);
         }
     }
     
@@ -344,17 +383,28 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="runner">The NetworkRunner instance</param>
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        // If in lobby when disconnected, return to menu
-        if (LobbyManager.Instance.GameState == GameState.Lobby)
+        // Kiểm tra LobbyManager.Instance có null không
+        if (LobbyManager.Instance != null)
         {
-            Debug.Log("Disconnected from server during lobby. Return to menu!");
-            UIManager.Instance.BackToMenu();
-            UIManager.Instance.ShowNoticePopup("Disconnected from server during lobby. Return to menu!");
+            // If in lobby when disconnected, return to menu
+            if (LobbyManager.Instance.GameState == GameState.Lobby)
+            {
+                Debug.Log("Disconnected from server during lobby. Return to menu!");
+                UIManager.Instance.BackToMenu();
+                UIManager.Instance.ShowNoticePopup("Disconnected from server during lobby. Return to menu!");
+            }
+            else if (LobbyManager.Instance.GameState != GameState.Ended)
+            {
+                // Show disconnect popup for other game states
+                UIManager.Instance.ShowDisconnectPopup(true);
+            }
         }
-        else if (LobbyManager.Instance.GameState != GameState.Ended)
+        else
         {
-            // Show disconnect popup for other game states
-            UIManager.Instance.ShowDisconnectPopup(true);
+            // LobbyManager.Instance is null, handle gracefully
+            Debug.Log("LobbyManager.Instance is null during disconnect, handling gracefully");
+            UIManager.Instance.BackToMenu();
+            UIManager.Instance.ShowNoticePopup("Connection lost, returning to menu!");
         }
     }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
@@ -367,16 +417,26 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="reason">Specific reason for the disconnect</param>
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) 
     {
-        // If in lobby when disconnected, return to menu
-        if (LobbyManager.Instance.GameState == GameState.Lobby)
+        // Kiểm tra LobbyManager.Instance có null không
+        if (LobbyManager.Instance != null)
         {
-            Debug.Log($"Disconnected from server during lobby (reason: {reason}), returning to menu");
-            UIManager.Instance.BackToMenu();
+            // If in lobby when disconnected, return to menu
+            if (LobbyManager.Instance.GameState == GameState.Lobby)
+            {
+                Debug.Log($"Disconnected from server during lobby (reason: {reason}), returning to menu");
+                UIManager.Instance.BackToMenu();
+            }
+            else if (LobbyManager.Instance.GameState != GameState.Ended)
+            {
+                // Show disconnect popup for other game states
+                UIManager.Instance.ShowDisconnectPopup(true);
+            }
         }
-        else if (LobbyManager.Instance.GameState != GameState.Ended)
+        else
         {
-            // Show disconnect popup for other game states
-            UIManager.Instance.ShowDisconnectPopup(true);
+            // LobbyManager.Instance is null, handle gracefully
+            Debug.Log($"LobbyManager.Instance is null during disconnect (reason: {reason}), handling gracefully");
+            UIManager.Instance.BackToMenu();
         }
     }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }

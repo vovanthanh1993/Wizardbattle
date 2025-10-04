@@ -543,14 +543,14 @@ public class FirebaseDataManager : MonoBehaviour
 
     public async Task<bool> ResetToDefault()
     {
-        currentPlayerData.damage = 100;
-        currentPlayerData.speed = 500;
+        currentPlayerData.baseDamage = 200;
+        currentPlayerData.baseSpeed = 500;
         currentPlayerData.level = 1;
         currentPlayerData.xp = 0;
         currentPlayerData.gold = 100;
         currentPlayerData.ruby = 100;
         currentPlayerData.cash = 10000;
-        currentPlayerData.health = 1000;
+        currentPlayerData.baseHealth = 1000;
         currentPlayerData.food = 0;
         return await SavePlayerData(currentPlayerData);
     }

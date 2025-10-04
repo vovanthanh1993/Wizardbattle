@@ -424,13 +424,13 @@ public class PlayerController : NetworkBehaviour
             _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
         }
-        _playerAnimation.Die();
 
         if (NetworkRunnerHandler.Instance.GameType == GameType.PVE) {
+            _playerAnimation.Die();
             GameStatusManager.Instance.SetGameStatus(GameStatus.ENDGAME);
             PvpResultPopup.Instance.ShowLosePopup(2f);
         } else {
-            StartCoroutine(HideModelAfterDelay(1f));
+            StartCoroutine(HideModelAfterDelay(0f));
         }
     }
 
@@ -449,13 +449,13 @@ public class PlayerController : NetworkBehaviour
         UIManager.Instance.GamePlayPanel.ShowReSpawnTime("");
         
         Respawn();
-        ShowPlayerModel();
     }
 
     private void Respawn()
     {
         Transform spawnPoint = PlayerSpawnManager.Instance.GetSpawnPoint();
         if(Object.HasInputAuthority) _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
+        ShowPlayerModel();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

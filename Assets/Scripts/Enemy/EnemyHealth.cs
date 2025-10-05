@@ -32,7 +32,9 @@ public class EnemyHealth : MonoBehaviour
     public void Init() {
         _currentHealth = _maxHealth;
         UpdateHealthBar(_currentHealth, _maxHealth);
-        _enemyController = GetComponent<EnemyController>();
+        if (_enemyController == null) {
+            _enemyController = GetComponent<EnemyController>();
+        }
         damageText.gameObject.SetActive(false);
         if (_pivotHealthBar != null) {
             _pivotHealthBar.SetActive(false);

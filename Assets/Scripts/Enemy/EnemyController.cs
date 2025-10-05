@@ -40,7 +40,9 @@ public class EnemyController : MonoBehaviour
         // Get components
         _navAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
-        _enemyHealth = GetComponent<EnemyHealth>();
+        if(_enemyHealth == null) {
+            _enemyHealth = GetComponent<EnemyHealth>();
+        }
         
         // Set up nav agent
         if (_navAgent != null)

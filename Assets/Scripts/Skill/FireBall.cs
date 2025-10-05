@@ -9,7 +9,7 @@ public class FireBall : MonoBehaviour
     [SerializeField] private float _explosionRadius = 3f;
     [SerializeField] private float _explosionDamage = 200f;
 
-    [SerializeField] private float _fireballSpeed = 25f;
+    [SerializeField] private float _fireballSpeed = 30f;
     [SerializeField] private float _fireballLifetime = 3f;
 
     private Vector3 _direction;

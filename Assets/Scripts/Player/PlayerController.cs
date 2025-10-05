@@ -9,49 +9,23 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour
-{
-    #region Serialized Fields
-    
+{ 
     [Header("Movement Settings")]
     [SerializeField] private KCC _kcc;
     [SerializeField] private GameObject _model;
-    [SerializeField] private float _maxPitch = 60f; // Giảm từ 85f xuống 60f
-    [SerializeField] private float _minPitch = -45f; // Giới hạn nhìn xuống (25 độ)
+    [SerializeField] private float _maxPitch = 60f;
+    [SerializeField] private float _minPitch = -45f;
     [SerializeField] private float _lookSensitivity = 0.15f;
-    
-    [Header("Combat Settings")]
-    [SerializeField] private float _fireRate = 2f;
-    [SerializeField] private float _runRate = 40f;
-    [SerializeField] private float _runAmount = 5f;
-    [SerializeField] private float _healRate = 60f;
-    [SerializeField] private int _healAmount = 300;
-
-    [SerializeField] private GameObject _fireBallPrefab;
-    [SerializeField] private Transform _firePoint;
     
     [Header("Camera Settings")]
     [SerializeField] private Transform _camTarget;
     
     [Header("Respawn Settings")]
     [SerializeField] private float _respawnTime = 3f;
-    
-    #endregion
-
-    #region Networked Properties
-    
     [Networked] private NetworkButtons _previousButtons { get; set; }
     
-    
-    #endregion
-
-    #region Properties
     [SerializeField] private bool _isDead;
     [SerializeField] private bool _isDisable;
-    
-
-    #endregion
-
-    #region Private Fields
     
     private Vector2 _baseLookRotation;
     private float _timeRemaining;
@@ -61,9 +35,6 @@ public class PlayerController : NetworkBehaviour
     private PlayerStatus _playerStatus;
     private PlayerAnimation _playerAnimation;
     private PlayerHealth _playerHealth;
-    private float _nextFireTime;
-    private float _nextRunTime;
-    private float _nextHealTime;
     
     private PlayerSkill _playerSkill;
     private GameObject _kccCollider;
@@ -71,7 +42,6 @@ public class PlayerController : NetworkBehaviour
 
     public override void Spawned()
     {
-        
         InitializeComponents();
         SetupInputAuthority();
         Transform kccTransform = transform.Find("KCCCollider");
@@ -115,8 +85,6 @@ public class PlayerController : NetworkBehaviour
             }
         }
     }
-    
-    #endregion
 
     #region Initialization
     
@@ -175,31 +143,18 @@ public class PlayerController : NetworkBehaviour
         if (_isDisable) return;
         if (input.Buttons.WasPressed(_previousButtons, InputButtons.Run) && Object.HasInputAuthority && _kcc.FixedData.IsGrounded && UIManager.Instance.GamePlayPanel.IsEnableSkill2)
         { 
-            RpcRun();
+            _playerSkill.RpcRun();
         }
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    private void RpcRun()
-    {
-        if (Runner.SimulationTime < _nextRunTime) return;
-        
-        StartCoroutine(TemporarySpeedBoost());
-        _playerSkill.RpcPlayPowerUp(3);
-        _nextRunTime = Runner.SimulationTime + _runRate;
-        
-        if (Object.HasInputAuthority)
-        {
-            UIManager.Instance.GamePlayPanel.StartRunCooldown(_runRate);
-        }
-    }
+    
 
     private void HandleShoot(NetworkInputData input)
     {
         if (_isDisable) return;
         if (input.Buttons.WasPressed(_previousButtons, InputButtons.Fire) && Object.HasInputAuthority)
         {
-            Shoot();
+            _playerSkill.Shoot();
         }
     }
 
@@ -208,7 +163,7 @@ public class PlayerController : NetworkBehaviour
         if (_isDisable) return;
         if (input.Buttons.WasPressed(_previousButtons, InputButtons.Heal) && Object.HasInputAuthority && UIManager.Instance.GamePlayPanel.IsEnableSkill1)
         {
-            RpcHeal();
+            _playerSkill.RpcHeal();
         }
     }
 
@@ -248,123 +203,11 @@ public class PlayerController : NetworkBehaviour
         if (_isDisable) return;
         _previousButtons = input.Buttons;
     }
-
-    private IEnumerator TemporarySpeedBoost()
-    {
-        var processors = _kcc.LocalProcessors;
-        foreach (var processor in processors)
-        {
-            if (processor is EnvironmentProcessor envProcessor)
-            {
-                envProcessor.KinematicSpeed = _playerStatus.Speed + _runAmount;
-                break;
-            }
-        }
-
-        yield return new WaitForSeconds(3f);
-        foreach (var processor in processors)
-        {
-            if (processor is EnvironmentProcessor envProcessor)
-            {
-                envProcessor.KinematicSpeed = _playerStatus.Speed;
-            }
-        }
-    }
-    
     #endregion
 
     #region Combat
     
-    public void Shoot()
-    {
-        if (Runner.SimulationTime < _nextFireTime) return;
 
-        UIManager.Instance.GamePlayPanel.StartFireballCooldown(_fireRate);
-        // Get camera direction and start position
-        Vector3 cameraDirection = GetCameraDirection();
-        Vector3 start = GetFireballStartPosition();
-        Vector3 direction = cameraDirection;
-
-        RpcSpawnFireBallLocal(start, direction);
-
-        _playerAnimation?.TriggerShoot();
-        _nextFireTime = Runner.SimulationTime + _fireRate;
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcHeal()
-    {
-        if (Runner.SimulationTime < _nextHealTime) return;
-        _playerHealth.Heal(_healAmount);
-        _nextHealTime = Runner.SimulationTime + _healRate;
-        if (Object.HasInputAuthority) UIManager.Instance.GamePlayPanel.StartHealingCooldown(_healRate);
-        if (AudioManager.Instance != null)
-        {
-            //AudioManager.Instance.PlayHealSound();
-        }
-    }
-    
-    private Vector3 GetCameraDirection()
-    {
-        // Get the camera's forward direction
-        Camera mainCamera = Camera.main;
-        if (mainCamera != null)
-        {
-            Vector3 cameraDirection = mainCamera.transform.forward;
-            return cameraDirection.normalized;
-        }
-        
-        // Fallback to firePoint direction if camera not found
-        return _firePoint.forward;
-    }
-    
-    private Vector3 GetFireballStartPosition()
-    {
-        Camera mainCamera = Camera.main;
-        if (mainCamera != null)
-        {
-            // Always start from player position (firePoint) but use camera direction
-            Vector3 cameraDirection = GetCameraDirection();
-            return _firePoint.position + cameraDirection * 1.5f;
-        }
-        
-        // Fallback to firePoint position
-        return _firePoint.position + _firePoint.forward * 1.5f;
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcSpawnFireBallLocal(Vector3 position, Vector3 direction)
-    {
-        FireBall fireball = GetFireBallFromPool(position, direction);
-        if (fireball != null)
-        {
-            fireball.Init(direction, Object);
-            AudioManager.Instance.PlayFireballSoundAtPosition(_firePoint.position);
-        }
-    }
-
-    private FireBall GetFireBallFromPool(Vector3 position, Vector3 direction)
-    {
-        FireBall fireball = null;
-        
-        if (GamePoolManager.Instance != null)
-        {
-            fireball = GamePoolManager.Instance.GetFireBall();
-        }
-        else
-        {
-            var fireballObj = Instantiate(_fireBallPrefab, position, Quaternion.LookRotation(direction));
-            fireball = fireballObj.GetComponent<FireBall>();
-        }
-        
-        if (fireball != null)
-        {
-            fireball.transform.position = position;
-            fireball.transform.rotation = Quaternion.LookRotation(direction);
-        }
-        
-        return fireball;
-    }
     #endregion
 
     #region Visual & Camera
@@ -438,7 +281,8 @@ public class PlayerController : NetworkBehaviour
     {
         yield return new WaitForSeconds(delay);
         HidePlayerModel();
-        float countdownTime = 3f;
+        float countdownTime = _respawnTime;
+        Respawn();
         while (countdownTime > 0)
         {
             if(Object.HasInputAuthority)
@@ -447,15 +291,14 @@ public class PlayerController : NetworkBehaviour
             yield return null;
         }
         UIManager.Instance.GamePlayPanel.ShowReSpawnTime("");
-        
-        Respawn();
+        yield return null;
+        ShowPlayerModel();
     }
 
     private void Respawn()
     {
         Transform spawnPoint = PlayerSpawnManager.Instance.GetSpawnPoint();
         if(Object.HasInputAuthority) _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
-        ShowPlayerModel();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

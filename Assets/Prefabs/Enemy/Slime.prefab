@@ -563,7 +563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3097c5e9dcc5fc9458dda82b662ed9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 400
+  _maxHealth: 800
   _currentHealth: 0
   damageText: {fileID: 2615118131466733794}
   _healthBarImage: {fileID: 8542699640352146658}

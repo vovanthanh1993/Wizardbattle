@@ -165,7 +165,6 @@ public class UIManager : MonoBehaviour
     {
         RoomData selectedRoom = this._currentRoomList[index];
         string roomNameToJoin = selectedRoom.RoomName;
-        //SetStatus(string.Format(GameConstants.JOIN_ROOM_FORMAT, roomNameToJoin));
         NetworkRunnerHandler.Instance.ConnectToSession(roomNameToJoin, GameMode.Client);
     }
 

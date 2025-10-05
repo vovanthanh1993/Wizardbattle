@@ -265,7 +265,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         {
             yield return null;
         }
-        
+         yield return 1;
         Debug.Log("LobbyManager.Instance is now available");
         
         // Lấy displayName từ Firebase

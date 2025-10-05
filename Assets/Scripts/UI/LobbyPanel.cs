@@ -36,14 +36,7 @@ public class LobbyPanel : MonoBehaviour
         {
             var players = LobbyManager.Instance.GetAllPlayerNames();
             var prefabNames = LobbyManager.Instance.GetAllPlayerPrefabNames();
-            
-            // Xóa tất cả children hiện tại
-            foreach (Transform child in _content.transform)
-            {
-                Destroy(child.gameObject);
-            }
-            
-            // Tạo UI cho mỗi player
+            RemoveLobbyContent();
             int index = 0;
             foreach (var player in players)
             {
@@ -51,6 +44,13 @@ public class LobbyPanel : MonoBehaviour
                 obj.GetComponent<PlayerLobbyInfo>().SetData(player, prefabNames[index]);
                 index++;
             }
+        }
+    }
+
+    public void RemoveLobbyContent() {
+        foreach (Transform child in _content.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
     

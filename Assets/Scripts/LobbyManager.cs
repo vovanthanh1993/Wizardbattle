@@ -192,6 +192,7 @@ public class LobbyManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RpcSendPlayerData(PlayerRef player, string playerName, string prefabName)
     {
+        Debug.Log($"[HOST] RpcSendPlayerData called - Player: {player}, Name: {playerName}, Prefab: {prefabName}");
         AddPlayerData(player, playerName, prefabName);
         Debug.Log($"Received player name from client: {playerName}");
     }
@@ -264,8 +265,7 @@ public class LobbyManager : NetworkBehaviour
             
             Runner.LoadScene(SceneRef.FromIndex(GameConstants.SCENE_PVP_FOREST_INDEX));
             StartCoroutine(WaitForPlayerSpawnManager(Runner));
-        }
-        UIManager.Instance.ShowLoadingPanel(false);
+        } 
     }
 
     private IEnumerator WaitForPlayerSpawnManager(NetworkRunner runner)
@@ -279,6 +279,7 @@ public class LobbyManager : NetworkBehaviour
             PlayerSpawnManager.Instance.SpawnPlayer(player);
         }
         GameState = GameState.Playing;
+        UIManager.Instance.ShowLoadingPanel(false);
     }
 
     public void EndGame()
@@ -379,5 +380,9 @@ public class LobbyManager : NetworkBehaviour
     {
         Debug.Log($"Show kill feed: {killer} killed {victim}");
         UIManager.Instance.GamePlayPanel.ShowKillFeed(killer, victim);
+    }
+
+    private void OnDestroy() {
+        UIManager.Instance.LobbyPanel.RemoveLobbyContent();
     }
 }

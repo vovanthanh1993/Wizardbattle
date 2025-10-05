@@ -13,7 +13,7 @@ public class HealthItem : NetworkBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
+    {   
         if (_isPickedUp) return;
 
         var playerHealth = other.GetComponentInParent<PlayerHealth>();
@@ -21,7 +21,7 @@ public class HealthItem : NetworkBehaviour
         {
             _isPickedUp = true;
             playerHealth.Heal(_healAmount);
-            RpcHideItem();
+            //RpcHideItem();
             ItemSpawner.Instance.OnHealthItemPickedUp();
         }
     }

@@ -8,7 +8,15 @@ public enum InputButtons
 
     Heal,
 
-    Stealth
+    Stealth,
+
+    Emoji1,
+
+    Emoji2,
+
+    Emoji3,
+
+    Emoji4
 }
 public struct NetworkInputData : INetworkInput
 {

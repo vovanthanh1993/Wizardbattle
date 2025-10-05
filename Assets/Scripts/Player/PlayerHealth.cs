@@ -112,7 +112,7 @@ public class PlayerHealth : NetworkBehaviour
 
     public void UpdateHealthBarBillboard()
     {
-        if (_pivotHealthBar != null)
+        if (_pivotHealthBar != null && _pivotHealthBar.activeInHierarchy)
         {
             _pivotHealthBar.transform.LookAt(Camera.main.transform);
             _pivotHealthBar.transform.Rotate(0, 180, 0);

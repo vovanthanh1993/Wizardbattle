@@ -100,10 +100,14 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
                 moveDirection += Vector2.right;
 
             _accumulatedInput.Direction += moveDirection;
-            buttons.Set(InputButtons.Run, keyboard.shiftKey.isPressed);
-            buttons.Set(InputButtons.Fire, mouse.leftButton.isPressed);
             buttons.Set(InputButtons.Heal, keyboard.qKey.isPressed);
-            buttons.Set(InputButtons.Stealth, keyboard.eKey.isPressed);
+            buttons.Set(InputButtons.Fire, mouse.leftButton.isPressed);
+            buttons.Set(InputButtons.Run, keyboard.eKey.isPressed);
+            buttons.Set(InputButtons.Stealth, keyboard.rKey.isPressed);
+            buttons.Set(InputButtons.Emoji1, keyboard.digit1Key.isPressed);
+            buttons.Set(InputButtons.Emoji2, keyboard.digit2Key.isPressed);
+            buttons.Set(InputButtons.Emoji3, keyboard.digit3Key.isPressed);
+            buttons.Set(InputButtons.Emoji4, keyboard.digit4Key.isPressed);
         }
 
         _accumulatedInput.Buttons = new NetworkButtons(_accumulatedInput.Buttons.Bits | buttons.Bits);

@@ -89,6 +89,13 @@ public static class GameCommonUtils
         return sprite;
     }
 
+    public static Sprite GetEmojiSprite(EmojiType emojiType)
+    {
+        string spritePath = $"Emojis/Emoji_{emojiType}";
+        Sprite sprite = Resources.Load<Sprite>(spritePath);
+        return sprite;
+    }
+
     
     // XP System Configuration
     private const int BASE_XP = 100;

@@ -10,6 +10,7 @@ public class PlayerModel : NetworkBehaviour
     [SerializeField] private GameObject _bootsHolder;
     [SerializeField] private GameObject _helmetHolder;
     [SerializeField] private GameObject _armorHolder;
+    [SerializeField] private GameObject _bookHolder;
 
     [Networked] public string WeaponMaterialTier { get; set; }
     [Networked] public string ArmorMaterialTier { get; set; }
@@ -18,6 +19,7 @@ public class PlayerModel : NetworkBehaviour
     [Networked] public string HelmetMaterialTier { get; set; }
     [Networked] public string RingMaterialTier { get; set; }
     [Networked] public string AmuletMaterialTier { get; set; }
+    [Networked] public string BookMaterialTier { get; set; }
 
     public void SetMaterialTier() {
         PlayerData playerData = FirebaseDataManager.Instance.GetCurrentPlayerData();
@@ -28,12 +30,13 @@ public class PlayerModel : NetworkBehaviour
         string helmetMaterialTier = GetMaterialTier(playerData.inventoryData, playerData.inventoryData.equippedHelmetId);
         string ringMaterialTier = GetMaterialTier(playerData.inventoryData, playerData.inventoryData.equippedRingId);
         string amuletMaterialTier = GetMaterialTier(playerData.inventoryData, playerData.inventoryData.equippedAmuletId);
-        if (Object != null) RpcSetData(weaponMaterialTier, armorMaterialTier, glovesMaterialTier, bootsMaterialTier, helmetMaterialTier, ringMaterialTier, amuletMaterialTier);
-        else SetModel(weaponMaterialTier, armorMaterialTier, glovesMaterialTier, bootsMaterialTier, helmetMaterialTier, ringMaterialTier, amuletMaterialTier);
+        string bookMaterialTier = GetMaterialTier(playerData.inventoryData, playerData.inventoryData.equippedBookId);
+        if (Object != null) RpcSetData(weaponMaterialTier, armorMaterialTier, glovesMaterialTier, bootsMaterialTier, helmetMaterialTier, ringMaterialTier, amuletMaterialTier, bookMaterialTier);
+        else SetModel(weaponMaterialTier, armorMaterialTier, glovesMaterialTier, bootsMaterialTier, helmetMaterialTier, ringMaterialTier, amuletMaterialTier, bookMaterialTier);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RpcSetData(string weaponMaterialTier, string armorMaterialTier, string glovesMaterialTier, string bootsMaterialTier, string helmetMaterialTier, string ringMaterialTier, string amuletMaterialTier) {
+    public void RpcSetData(string weaponMaterialTier, string armorMaterialTier, string glovesMaterialTier, string bootsMaterialTier, string helmetMaterialTier, string ringMaterialTier, string amuletMaterialTier, string bookMaterialTier) {
         WeaponMaterialTier = weaponMaterialTier;
         ArmorMaterialTier = armorMaterialTier;
         GlovesMaterialTier = glovesMaterialTier;
@@ -41,6 +44,7 @@ public class PlayerModel : NetworkBehaviour
         HelmetMaterialTier = helmetMaterialTier;
         RingMaterialTier = ringMaterialTier;
         AmuletMaterialTier = amuletMaterialTier;
+        BookMaterialTier = bookMaterialTier;
         SetModel();
     }
     public void SetModel()
@@ -128,9 +132,21 @@ public class PlayerModel : NetworkBehaviour
                 Instantiate(amuletPrefab, _amuletHolder.transform);
             }
         }
+        
+        // Set book
+        if (!string.IsNullOrEmpty(BookMaterialTier) && _bookHolder != null)
+        {
+            ClearItemContent(_bookHolder);
+            _bookHolder.SetActive(true);
+            GameObject bookPrefab = GameCommonUtils.GetItemPrefab(ItemType.Book, BookMaterialTier);
+            if (bookPrefab != null)
+            {
+                Instantiate(bookPrefab, _bookHolder.transform);
+            }
+        }
     }
 
-    public void SetModel(string weaponMaterialTier, string armorMaterialTier, string glovesMaterialTier, string bootsMaterialTier, string helmetMaterialTier, string ringMaterialTier, string amuletMaterialTier)
+    public void SetModel(string weaponMaterialTier, string armorMaterialTier, string glovesMaterialTier, string bootsMaterialTier, string helmetMaterialTier, string ringMaterialTier, string amuletMaterialTier, string bookMaterialTier)
     {   
         // Set weapon
         if (!string.IsNullOrEmpty(weaponMaterialTier) && _weaponHolder != null)
@@ -213,6 +229,18 @@ public class PlayerModel : NetworkBehaviour
             if (amuletPrefab != null)
             {
                 Instantiate(amuletPrefab, _amuletHolder.transform);
+            }
+        }
+        
+        // Set book
+        if (!string.IsNullOrEmpty(bookMaterialTier) && _bookHolder != null)
+        {
+            ClearItemContent(_bookHolder);
+            _bookHolder.SetActive(true);
+            GameObject bookPrefab = GameCommonUtils.GetItemPrefab(ItemType.Book, bookMaterialTier);
+            if (bookPrefab != null)
+            {
+                Instantiate(bookPrefab, _bookHolder.transform);
             }
         }
     }

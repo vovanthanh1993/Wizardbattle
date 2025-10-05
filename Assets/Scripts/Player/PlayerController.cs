@@ -37,6 +37,7 @@ public class PlayerController : NetworkBehaviour
     private PlayerHealth _playerHealth;
     
     private PlayerSkill _playerSkill;
+    private PlayerEmoji _playerEmoji;
     private GameObject _kccCollider;
     private Rigidbody _rb;
 
@@ -79,9 +80,11 @@ public class PlayerController : NetworkBehaviour
         if (!_isDisable)
         {
             // Only update UI every few frames to reduce AABB calculations
-            if (Time.frameCount % 3 == 0) // Update every 3rd frame
+            if (Time.frameCount % 1 == 0) // Update every 3rd frame
             {
+                _playerEmoji?.UpdateUIElements();
                 _playerStatus?.UpdateUIElements();
+                
             }
         }
     }
@@ -95,6 +98,7 @@ public class PlayerController : NetworkBehaviour
         _playerAnimation = GetComponent<PlayerAnimation>();
         _playerHealth = GetComponent<PlayerHealth>();
         _playerSkill = GetComponent<PlayerSkill>();
+        _playerEmoji = GetComponent<PlayerEmoji>();
     }
 
     private void SetupInputAuthority()
@@ -133,6 +137,7 @@ public class PlayerController : NetworkBehaviour
         HandleShoot(input);
         HandleSkillHeal(input);
         HandleSkillStealth(input);
+        HandleEmoji(input);
         HandleLookRotation(input);
         HandleMovement(input);
         UpdatePreviousInput(input);
@@ -147,7 +152,26 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    
+    private void HandleEmoji(NetworkInputData input)
+    {
+        if (_isDisable) return;
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Emoji1) && Object.HasInputAuthority)
+        {
+            _playerEmoji.RpcShowEmoji(EmojiType.Fight);
+        }
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Emoji2) && Object.HasInputAuthority)
+        {
+            _playerEmoji.RpcShowEmoji(EmojiType.Angry);
+        }
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Emoji3) && Object.HasInputAuthority)
+        {
+            _playerEmoji.RpcShowEmoji(EmojiType.Happy);
+        }
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Emoji4) && Object.HasInputAuthority)
+        {
+            _playerEmoji.RpcShowEmoji(EmojiType.Sad);
+        }
+    }
 
     private void HandleShoot(NetworkInputData input)
     {

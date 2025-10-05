@@ -114,6 +114,7 @@ public class PlayerStatus : NetworkBehaviour
     
     public void UpdateUIElements()
     {
+        Debug.Log("PlayerStatus: UpdateUIElements");
         UpdatePlayerNameBillboard();
         _playerHealth.UpdateHealthBarBillboard();
     }

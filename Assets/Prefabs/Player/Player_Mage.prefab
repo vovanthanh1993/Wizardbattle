@@ -77051,6 +77051,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Armor_Mythril
       objectReference: {fileID: 0}
+    - target: {fileID: 5765628755718828338, guid: ba7fb5acd2b0340479eb04a360c5d34a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6577630825638374280, guid: ba7fb5acd2b0340479eb04a360c5d34a, type: 3}
       propertyPath: m_LocalScale.z
       value: 1.07

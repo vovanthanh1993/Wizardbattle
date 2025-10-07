@@ -17,9 +17,11 @@ public class FirebaseDataManager : MonoBehaviour
     private FirebaseAuth auth;
     private bool isInitialized = false;
     private PlayerData currentPlayerData;
+    private GameData currentGameData;
 
     // Events
     public event Action<PlayerData> OnPlayerDataLoaded;
+    public event Action<GameData> OnGameDataLoaded;
     public event Action<bool> OnPlayerDataSaved;
     public event Action<string> OnError;
 
@@ -281,6 +283,82 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
+    public async Task<GameData> LoadGameData()
+    {
+        if (!isInitialized)
+        {
+            OnError?.Invoke("Firebase not initialized");
+            return null;
+        }
+
+        try
+        {
+            Debug.Log("Attempting to load game data");
+            
+            // Add timeout to prevent hanging
+            var timeoutTask = Task.Delay(10000); // 10 second timeout
+            var loadTask = databaseReference.Child("gamedata").GetValueAsync();
+            
+            var completedTask = await Task.WhenAny(loadTask, timeoutTask);
+            
+            if (completedTask == timeoutTask)
+            {
+                Debug.LogError("Timeout while loading game data");
+                OnError?.Invoke("Timeout while loading game data");
+                return null;
+            }
+            
+            if (loadTask.IsFaulted)
+            {
+                HandleTaskFault("loading game data", loadTask.Exception);
+                return null;
+            }
+            
+            var snapshot = await loadTask;
+            
+            if (snapshot.Exists)
+            {
+                string jsonData = snapshot.GetRawJsonValue();
+                if (string.IsNullOrEmpty(jsonData))
+                {
+                    Debug.LogError("Game data snapshot exists but JSON is empty");
+                    OnError?.Invoke("Game data exists but JSON is empty");
+                    return null;
+                }
+                
+                GameData gameData = null;
+                try
+                {
+                    gameData = JsonUtility.FromJson<GameData>(jsonData);
+                }
+                catch (Exception jsonEx)
+                {
+                    Debug.LogError($"Failed to parse game data JSON: {jsonEx.Message}");
+                    Debug.LogError($"JSON content: {jsonData}");
+                    OnError?.Invoke($"Failed to parse game data JSON: {jsonEx.Message}");
+                    return null;
+                }
+                
+                Debug.Log("Game data loaded successfully");
+                currentGameData = gameData;
+                OnGameDataLoaded?.Invoke(gameData);
+                return gameData;
+            }
+            else
+            {
+                Debug.Log("No existing game data found");
+                return null; // Return null so calling code can create new data
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error loading game data: {e}");
+            Debug.LogError($"Stack trace: {e.StackTrace}");
+            OnError?.Invoke($"Error loading game data: {e.Message}");
+            return null;
+        }
+    }
+
     public async Task<bool> UpdatePlayerStats(int kills, int deaths, bool won, float playTime, int damageDealt, int damageReceived)
     {
         PlayerData currentData = await LoadPlayerData();
@@ -467,6 +545,11 @@ public class FirebaseDataManager : MonoBehaviour
     public PlayerData GetCurrentPlayerData()
     {
         return currentPlayerData;
+    }
+
+    public GameData GetCurrentGameData()
+    {
+        return currentGameData;
     }
 
     public int GetCurrentUserDamage()
@@ -680,6 +763,37 @@ public class FirebaseDataManager : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError($"Error while handling task fault for {context}: {ex.Message}");
+        }
+    }
+
+    public async Task UpdatePlayerAttributesAfterGame(float xpReward, float goldReward, float rubyReward)
+    {
+        try
+        {  
+            float newXP = currentPlayerData.xp;
+            float newGold = currentPlayerData.gold;
+            float newRuby = currentPlayerData.ruby;
+
+            newXP += xpReward;
+            newGold += goldReward;
+            newRuby += rubyReward;
+            
+            // Check and update level
+            int newLevel = GameCommonUtils.CalculateLevelFromXP(newXP);
+            
+            // Update currentData with new values before saving
+            currentPlayerData.level = newLevel;
+            currentPlayerData.xp = newXP;
+            currentPlayerData.gold = newGold;
+            currentPlayerData.ruby = newRuby;
+            
+            // Update PlayerData
+            await SavePlayerData(currentPlayerData);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Exception in UpdatePlayerAttributesAfterGame: {e.Message}");
+            Debug.LogError($"Stack trace: {e.StackTrace}");
         }
     }
 }

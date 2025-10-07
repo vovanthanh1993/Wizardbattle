@@ -342,6 +342,7 @@ public class EmailPassLogin : MonoBehaviour
         {
             if (FirebaseDataManager.Instance != null && FirebaseDataManager.Instance.IsInitialized())
             {
+                // Load player data and update last login time
                 PlayerData currentData = await FirebaseDataManager.Instance.LoadPlayerData();
                 if (currentData != null)
                 {
@@ -349,11 +350,15 @@ public class EmailPassLogin : MonoBehaviour
                     await FirebaseDataManager.Instance.SavePlayerData(currentData);
                     Debug.Log("Last login time updated successfully");
                 }
+
+                // Load game data
+                await FirebaseDataManager.Instance.LoadGameData();
+                Debug.Log("Game data loaded successfully");
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning($"Failed to update last login time: {e.Message}");
+            Debug.LogWarning($"Failed to update last login time or load game data: {e.Message}");
         }
     }
     #endregion

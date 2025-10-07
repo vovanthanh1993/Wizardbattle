@@ -19,6 +19,7 @@ public class GameStatusManager : MonoBehaviour
     [SerializeField] private Transform _bossSpawnPoint;
     [SerializeField] private float _bossSpawnTime = 300f; // 5 phút = 300 giây
     [SerializeField] private bool _bossSpawned = false;
+    [SerializeField] private bool _bossWarningPlayed = false;
 
     [SerializeField] private GameObject _dragonForestPrefab;
 
@@ -120,6 +121,7 @@ public class GameStatusManager : MonoBehaviour
         _gameEndTime = 0f;
         _totalGameTime = 0f;
         _bossSpawned = false; // Reset boss spawn status
+        _bossWarningPlayed = false; // Reset boss warning status
     }
     
     // Check and spawn boss
@@ -128,9 +130,11 @@ public class GameStatusManager : MonoBehaviour
         if (!_bossSpawned && GetCurrentGameTime() >= _bossSpawnTime)
         {
             SpawnBoss();
-        } else if(!_bossSpawned && GetCurrentGameTime() >= _bossSpawnTime - 5)
+        } else if(!_bossSpawned && !_bossWarningPlayed && GetCurrentGameTime() >= _bossSpawnTime - 5)
         {
+            _bossWarningPlayed = true;
             UIManager.Instance.GamePlayPanel.SetStatusText("Alert! Boss is comming!");
+            //AudioManager.Instance.PlayBossWarningSound();
         }
     }
     

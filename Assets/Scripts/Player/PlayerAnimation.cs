@@ -51,6 +51,7 @@ public class PlayerAnimation : NetworkBehaviour
             _animator.ResetTrigger("Fire");
             _animator.ResetTrigger("Hurt");
             _animator.ResetTrigger("Die");
+            _animator.SetBool("IsDead", _isDead);
         }
     }
     
@@ -93,21 +94,20 @@ public class PlayerAnimation : NetworkBehaviour
     {
         if (_isDead)
         {
-            _animator?.SetTrigger("Die");
+            _animator.SetTrigger("Die");
+            _animator.SetBool("IsDead", _isDead);
         }
     }
     
     #endregion
 
     public void Die(){
-        Debug.Log("Die");
         _isDead = true;
-        _animator?.SetTrigger("Die");
-        Debug.Log("Run Die");
+        _animator.SetBool("IsDead", _isDead);
+        _animator.SetTrigger("Die");
     }
 
     public void Reset(){
-        Debug.Log("Reset");
         _isDead = false;
         SetIdleAnimation();
     }

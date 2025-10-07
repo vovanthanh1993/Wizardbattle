@@ -285,6 +285,7 @@ public class PlayerController : NetworkBehaviour
         _isDisable = true;
         _kcc.enabled = false;
         _kccCollider.SetActive(false);
+        _playerAnimation.Die();
 
         if (_rb != null) {
             _rb.isKinematic = true;
@@ -293,11 +294,11 @@ public class PlayerController : NetworkBehaviour
         }
 
         if (NetworkRunnerHandler.Instance.GameType == GameType.PVE) {
-            _playerAnimation.Die();
+            
             GameStatusManager.Instance.SetGameStatus(GameStatus.ENDGAME);
-            PvpResultPopup.Instance.ShowLosePopup(2f);
+            GameResultPopup.Instance.ShowLosePopup(2f);
         } else {
-            StartCoroutine(HideModelAfterDelay(0f));
+            StartCoroutine(HideModelAfterDelay(1f));
         }
     }
 
@@ -306,7 +307,7 @@ public class PlayerController : NetworkBehaviour
         yield return new WaitForSeconds(delay);
         HidePlayerModel();
         float countdownTime = _respawnTime;
-        Respawn();
+        
         while (countdownTime > 0)
         {
             if(Object.HasInputAuthority)
@@ -314,15 +315,19 @@ public class PlayerController : NetworkBehaviour
             countdownTime -= Time.deltaTime;
             yield return null;
         }
+        Respawn();
         UIManager.Instance.GamePlayPanel.ShowReSpawnTime("");
-        yield return null;
+        
         ShowPlayerModel();
+        yield return 0.5f;
+        _model.SetActive(true);
     }
 
     private void Respawn()
     {
         Transform spawnPoint = PlayerSpawnManager.Instance.GetSpawnPoint();
         if(Object.HasInputAuthority) _kcc.TeleportRPC(spawnPoint.position, spawnPoint.rotation.eulerAngles.x, spawnPoint.rotation.eulerAngles.y);
+        _playerAnimation.Reset();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -353,7 +358,6 @@ public class PlayerController : NetworkBehaviour
 
     public void ShowPlayerModel()
     {
-        _model.SetActive(true);
         _kccCollider.layer = LayerMask.NameToLayer("Default");
         Reset();
     }

@@ -14,7 +14,6 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
     public static InputManager Instance { get; private set; }
     private NetworkInputData _accumulatedInput;
     private bool _resetInput;
-    public bool IsVisibleLeaderBoard { get; set; }
     public bool IsVisibleMenuInGame { get; set; }
 
     private void Awake()
@@ -31,7 +30,7 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
     }
     private void UpdateCursorState()
     {
-        if (IsVisibleLeaderBoard || IsVisibleMenuInGame)
+        if (IsVisibleMenuInGame)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -53,19 +52,18 @@ public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCa
         Keyboard keyboard = Keyboard.current;
         Mouse mouse = Mouse.current;
 
-        if (SceneManager.GetActiveScene().name != GameConstants.HOME_SCENE)
+        if (SceneManager.GetActiveScene().name != GameConstants.SCENE_LOBBY && !UIManager.Instance.SettingPopup.IsVisible())
         {
-            if (keyboard != null && keyboard.tabKey.wasPressedThisFrame && !IsVisibleMenuInGame)
+            if (keyboard != null && !IsVisibleMenuInGame)
             {
-                IsVisibleLeaderBoard = !IsVisibleLeaderBoard;
-                UIManager.Instance.ShowScoreBoard(IsVisibleLeaderBoard);
-                UpdateCursorState();
+                bool tabPressed = keyboard.tabKey.isPressed;
+                UIManager.Instance.ShowScoreBoard(tabPressed);
             }
 
             if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
             {
                 IsVisibleMenuInGame = !IsVisibleMenuInGame;
-                UIManager.Instance.GamePlayPanel.ShowInGameMenu(true);
+                UIManager.Instance.GamePlayPanel.ShowInGameMenu(IsVisibleMenuInGame);
                 UpdateCursorState();
             }
         }

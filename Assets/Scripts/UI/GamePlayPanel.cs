@@ -101,11 +101,6 @@ public class GamePlayPanel : MonoBehaviour
     {
         ShowInGameMenu(false);
         InputManager.Instance.IsVisibleMenuInGame = false;
-        if (!InputManager.Instance.IsVisibleLeaderBoard)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
     }
 
     public void HandleMenuClicked()

@@ -33,6 +33,11 @@ public class SettingPopup : MonoBehaviour
         AudioManager.Instance.PlayButtonPopupSound();
     }
 
+    public bool IsVisible()
+    {
+        return gameObject.activeSelf;
+    }
+
     private void Start()
     {
         // Setup button listeners
@@ -230,6 +235,5 @@ public class SettingPopup : MonoBehaviour
     public void OnCloseButton()
     {
         AudioManager.Instance.PlayButtonCloseSound();
-        gameObject.SetActive(false);
     }
 }

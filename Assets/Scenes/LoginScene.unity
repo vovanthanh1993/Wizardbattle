@@ -7673,6 +7673,7 @@ GameObject:
   - component: {fileID: 942225833}
   - component: {fileID: 942225834}
   - component: {fileID: 942225835}
+  - component: {fileID: 942225836}
   m_Layer: 5
   m_Name: AudioButtonGroupOn
   m_TagString: Untagged
@@ -7743,6 +7744,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &942225836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942225832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a465a4d31134f4a8a59b4c635706f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _musicButtonOn: {fileID: 55407129}
+  _musicButtonOff: {fileID: 1331999239}
+  _sfxButtonOn: {fileID: 636592877}
+  _sfxButtonOff: {fileID: 1413348431}
 --- !u!1 &957062477
 GameObject:
   m_ObjectHideFlags: 0
@@ -17100,6 +17117,9 @@ MonoBehaviour:
   _healthRecoverSound: {fileID: 8300000, guid: 6eb3fa5933ba99a4699e9b80ed4452ec, type: 3}
   _getXpItemSound: {fileID: 8300000, guid: e5b4470380a88eb4bb41873cb1e520c7, type: 3}
   _skillRunSound: {fileID: 8300000, guid: 18888ee772356a4439d30bd358b288cb, type: 3}
+  _bossWarningSound: {fileID: 8300000, guid: e92803728373d6b468b3f337793fa2b5, type: 3}
+  _pveWinSound: {fileID: 8300000, guid: 1499d77b99ae11841ade058cb6b98574, type: 3}
+  _pvpLoseSound: {fileID: 8300000, guid: eebe84683dd562e469e0897f3bf9615e, type: 3}
   _musicVolume: 1
   _sfxVolume: 2
   _musicEnabled: 1
@@ -20156,9 +20176,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 55365581}
   - {fileID: 315746968}
+  - {fileID: 1882944195}
   - {fileID: 1236168800}
   - {fileID: 19347528}
   - {fileID: 973093817}
   - {fileID: 388404520}
   - {fileID: 1179060281}
-  - {fileID: 1882944195}

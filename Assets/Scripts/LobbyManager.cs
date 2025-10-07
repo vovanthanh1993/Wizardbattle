@@ -331,12 +331,14 @@ public class LobbyManager : NetworkBehaviour
         if (players.Count > 0)
         {
             players[0].IsWin = true;
+            players[0].Rank = 1;
             Debug.Log($"Winner: {players[0].PlayerName} with {players[0].Kills} kills");
             
             // Đặt tất cả player khác là thua
             for (int i = 1; i < players.Count; i++)
             {
                 players[i].IsWin = false;
+                players[i].Rank = i+1;
             }
         }
     }
@@ -349,7 +351,7 @@ public class LobbyManager : NetworkBehaviour
         mainCamera.GetComponent<CameraController>().SetTarget(null);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        PvpResultPopup.Instance.ShowResultPopupForPlayer();
+        GameResultPopup.Instance.ShowPVPResult();
 
         if(NetworkRunnerHandler.Instance.Runner != null)
         {

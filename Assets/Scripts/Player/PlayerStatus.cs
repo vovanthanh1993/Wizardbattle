@@ -16,6 +16,8 @@ public class PlayerStatus : NetworkBehaviour
 
     [Networked] public bool IsWin { get; set; } = false;
 
+    [Networked] public int Rank { get; set; } = 0;
+
     private PlayerHealth _playerHealth;
 
     [Networked] public long XP { get; set; }

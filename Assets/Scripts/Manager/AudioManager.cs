@@ -38,6 +38,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _healthRecoverSound;
     [SerializeField] private AudioClip _getXpItemSound;
     [SerializeField] private AudioClip _skillRunSound;
+    [SerializeField] private AudioClip _bossWarningSound;
+    [SerializeField] private AudioClip _pveWinSound;
+    [SerializeField] private AudioClip _pvpLoseSound;
 
     [Header("Audio Settings")]
     [SerializeField] private float _musicVolume = 0.7f;
@@ -378,5 +381,20 @@ public class AudioManager : MonoBehaviour
     public void PlaySkillRunSound()
     {
         PlaySFX(_skillRunSound);
+    }
+
+    public void PlayBossWarningSound()
+    {
+        PlaySFX(_bossWarningSound);
+    }
+
+    public void PlayPVEWinSound()
+    {
+        PlaySFX(_pveWinSound);
+    }
+
+    public void PlayPVELoseSound()
+    {
+        PlaySFX(_pvpLoseSound);
     }
 } 

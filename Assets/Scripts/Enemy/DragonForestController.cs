@@ -100,6 +100,6 @@ public class DragonForestController : EnemyController
         // Kill all enemies when DragonForest dies  
         EnemyPoolManager.Instance.KillAllEnemies();
         // Show victory popup after 2 seconds
-        PvpResultPopup.Instance.ShowVictoryPopup(2f);
+        GameResultPopup.Instance.ShowVictoryPopup(2f);
     }
 }

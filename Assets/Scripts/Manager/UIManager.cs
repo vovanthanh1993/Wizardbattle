@@ -40,7 +40,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private NoticePopup _noticePopup;
 
     [SerializeField] private GameObject _settingPopup;
-    
+    public SettingPopup SettingPopup => _settingPopup?.GetComponent<SettingPopup>();
 
     [SerializeField] public MultiplayerManager multiplayerManager;
     
@@ -144,12 +144,6 @@ public class UIManager : MonoBehaviour
     public void UpdateHealth(float current, float maxHealth)
     {
         GamePlayPanel.UpdateHealth(current, maxHealth);
-    }
-
-    public void ShowWinScreen(string winnerName)
-    {
-        _menuPanel.SetActive(false);
-        PvpResultPopup.Instance.ShowResultPopup(true);
     }
 
     public void QuitGame()

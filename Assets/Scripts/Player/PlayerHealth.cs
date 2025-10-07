@@ -3,6 +3,7 @@ using Fusion;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 public class PlayerHealth : NetworkBehaviour
 {
     [Header("UI References")]
@@ -34,7 +35,7 @@ public class PlayerHealth : NetworkBehaviour
         float fillAmount = Mathf.Clamp01(currentHealth / maxHealth);
         if (_healthBarImage != null)
         {
-            _healthBarImage.fillAmount = fillAmount;
+            _healthBarImage.DOFillAmount(fillAmount, 0.5f).SetEase(Ease.OutQuad);
         }
     }
 

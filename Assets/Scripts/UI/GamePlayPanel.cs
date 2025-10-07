@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Fusion;
-
+using DG.Tweening;
 public class GamePlayPanel : MonoBehaviour
 {
     [SerializeField] private Image _xpBarImage;
@@ -219,20 +219,31 @@ public class GamePlayPanel : MonoBehaviour
 
     public void UpdateHealth(float current, float maxHealth)
     {
-        float fill = Mathf.Clamp01(current / maxHealth);
+        float fillAmount = Mathf.Clamp01(current / maxHealth);
         if (_healthBarImage != null) {
-            _healthBarImage.fillAmount = fill;
+            _healthBarImage.DOKill();
+            _healthBarImage.DOFillAmount(fillAmount, 0.5f).SetEase(Ease.OutQuad);
             _healthText.text = $"{current}/{maxHealth}";
         }    
     }
 
     public void UpdateBossHealth(float current, float maxHealth)
     {
-        float fill = Mathf.Clamp01(current / maxHealth);
+        float fillAmount = Mathf.Clamp01(current / maxHealth);
         if (_bossHealthBarImage != null) {
-            _bossHealthBarImage.fillAmount = fill;
+            if (fillAmount == 1)  _bossHealthBarImage.fillAmount = fillAmount;
+            else _bossHealthBarImage.DOFillAmount(fillAmount, 0.5f).SetEase(Ease.OutQuad);
+            _bossHealthText.gameObject.SetActive(true);
             _bossHealthText.text = $"{current}/{maxHealth}";
         }
+    }
+
+    public void ShowIntroBossHealth(float duration)
+    {
+        ShowBossHealthBar(true);
+        _bossHealthText.gameObject.SetActive(false);
+        _bossHealthBarImage.fillAmount = 0;
+        _bossHealthBarImage.DOFillAmount(1, duration).SetEase(Ease.Linear);
     }
 
     public void ShowBossHealthBar(bool isShow)
@@ -251,18 +262,18 @@ public class GamePlayPanel : MonoBehaviour
         _countdownText.text = time;
     }
 
-    public void SetStatusText(string status)
+    public void SetWarningText(string status)
     {
         if (_statusText != null && gameObject.activeInHierarchy) {
             _statusText.text = status;
-            StartCoroutine(ShowAndHideStatusText());
+            StartCoroutine(ShowAndHideWarningText());
         }
     }
 
-    private IEnumerator ShowAndHideStatusText()
+    private IEnumerator ShowAndHideWarningText()
     {
         if (_statusText == null) yield break;
-        
+
         // Show status text
         _statusText.gameObject.SetActive(true);
         _statusText.color = new Color(_statusText.color.r, _statusText.color.g, _statusText.color.b, 1f);

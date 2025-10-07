@@ -17,7 +17,7 @@ public class GameStatusManager : MonoBehaviour
     [SerializeField] private float _totalGameTime;
 
     [SerializeField] private Transform _bossSpawnPoint;
-    [SerializeField] private float _bossSpawnTime = 300f; // 5 phút = 300 giây
+    [SerializeField] private float _bossSpawnTime = 300f;
     [SerializeField] private bool _bossSpawned = false;
     [SerializeField] private bool _bossWarningPlayed = false;
 
@@ -130,11 +130,11 @@ public class GameStatusManager : MonoBehaviour
         if (!_bossSpawned && GetCurrentGameTime() >= _bossSpawnTime)
         {
             SpawnBoss();
-        } else if(!_bossSpawned && !_bossWarningPlayed && GetCurrentGameTime() >= _bossSpawnTime - 5)
+        } else if(!_bossSpawned && !_bossWarningPlayed && GetCurrentGameTime() >= _bossSpawnTime - 3)
         {
             _bossWarningPlayed = true;
-            UIManager.Instance.GamePlayPanel.SetStatusText("Alert! Boss is comming!");
-            //AudioManager.Instance.PlayBossWarningSound();
+            UIManager.Instance.GamePlayPanel.SetWarningText("Alert! Boss is comming!");
+            UIManager.Instance.GamePlayPanel.ShowIntroBossHealth(3);
         }
     }
     

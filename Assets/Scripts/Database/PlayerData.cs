@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class PlayerData
@@ -55,11 +56,12 @@ public class PlayerData
     public string playerPrefabName;
     public InventoryData inventoryData;
 
-    
     // Total equipment bonuses
     public int totalDamageBonus = 0;
     public int totalSpeedBonus = 0;
     public int totalHealthBonus = 0;
+
+    public List<int> missionIDsCompleted = new List<int>();
     
     // Constructor for new player
     public PlayerData(string email, string displayName, string userId)
@@ -106,6 +108,7 @@ public class PlayerData
         this.baseDamage = 200;
         this.baseSpeed = 500;
         this.baseHealth = 1000;
+        missionIDsCompleted = new List<int>();
     }
     
     private string GenerateRandomPlayerName()
@@ -157,5 +160,18 @@ public class PlayerData
             Array.Resize(ref unlockedCosmetics, unlockedCosmetics.Length + 1);
             unlockedCosmetics[unlockedCosmetics.Length - 1] = cosmeticName;
         }
+    }
+
+    public void CompleteMission(int missionID)
+    {
+        if (!missionIDsCompleted.Contains(missionID))
+        {
+            missionIDsCompleted.Add(missionID);
+        }
+    }
+
+    public bool IsMissionCompleted(int missionID)
+    {
+        return missionIDsCompleted.Contains(missionID);
     }
 }

@@ -2,13 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Fusion;
+using System.Collections.Generic;
+using System.Linq;
 
 public class MultiplayerManager : MonoBehaviour
 {
     [SerializeField] private Button _createRoomButton;
     [SerializeField] private Button _joinButton;
     [SerializeField] private Button _quickJoinButton;
-
+    [SerializeField] private Button _refreshButton;
     [SerializeField] private TMP_InputField _createRoomInput;
     [SerializeField] private TMP_InputField _joinRoomInput;
     [SerializeField] private Button _joinRoomButton;
@@ -16,11 +18,16 @@ public class MultiplayerManager : MonoBehaviour
     [SerializeField] private GameObject _createPanel;
     [SerializeField] private GameObject _joinPanel;
 
+    [SerializeField] private RoomScrollView _roomScrollView;
+    private List<RoomData> _currentRoomList = new List<RoomData>();
+
     void Start() {
         _createRoomButton.onClick.AddListener(HandleCreateRoom);
         _joinButton.onClick.AddListener(HandleJoinClicked);
         _quickJoinButton.onClick.AddListener(HandleQuickJoin);
         _joinRoomButton.onClick.AddListener(HandleJoinOKClicked);
+        _refreshButton.onClick.AddListener(HandleRefreshRoomClicked);
+        _roomScrollView.OnCellClicked(HandleCellClicked);
     }
 
     private void HandleJoinClicked()
@@ -57,5 +64,30 @@ public class MultiplayerManager : MonoBehaviour
 
     public void ShowJoinPanel(bool isShow) {
         _joinPanel.SetActive(isShow);
+    }
+
+    public void HandleCellClicked(int index)
+    {
+        RoomData selectedRoom = this._currentRoomList[index];
+        string roomNameToJoin = selectedRoom.RoomName;
+        NetworkRunnerHandler.Instance.ConnectToSession(roomNameToJoin, GameMode.Client);
+    }
+
+    public void UpdateRoomListUI(List<SessionInfo> sessions)
+    {
+        List<RoomData> roomDataList = sessions.Select(session => new RoomData(
+            roomName: session.Name,
+            playerCount: session.PlayerCount,
+            maxPlayers: session.MaxPlayers
+        )).ToList();
+
+        _currentRoomList = roomDataList;
+        _roomScrollView.UpdateData(roomDataList);
+    }
+
+    public void HandleRefreshRoomClicked()
+    {
+        NetworkRunnerHandler.Instance.JoinLobby();
+        UpdateRoomListUI(new List<SessionInfo>());
     }
 }

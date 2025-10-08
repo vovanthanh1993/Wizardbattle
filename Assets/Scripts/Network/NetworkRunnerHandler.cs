@@ -52,14 +52,6 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
-    /// <summary>
-    /// Refresh the room list by joining the lobby.
-    /// </summary>
-    public async void RefreshRoomList()
-    {
-        await JoinLobbyAsync();
-    }
-
     public async void JoinLobby()
     {
         await JoinLobbyAsync();
@@ -100,7 +92,7 @@ public class NetworkRunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
             _sessionListTcs = null;
         }
 
-        UIManager.Instance.UpdateRoomListUI(sessionList);
+        UIManager.Instance.multiplayerManager.UpdateRoomListUI(sessionList);
     }
 
     public async void CreatePVERoom()

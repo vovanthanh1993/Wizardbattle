@@ -23,6 +23,8 @@ public class GameStatusManager : MonoBehaviour
 
     [SerializeField] private GameObject _dragonForestPrefab;
 
+    [SerializeField] private GameObject _dragonSpawnVFXPrefab;
+
     [SerializeField] private bool _isPause = false;
 
     private void Awake()
@@ -135,6 +137,7 @@ public class GameStatusManager : MonoBehaviour
             _bossWarningPlayed = true;
             UIManager.Instance.GamePlayPanel.SetWarningText("Alert! Boss is comming!");
             UIManager.Instance.GamePlayPanel.ShowIntroBossHealth(3);
+            //AudioManager.Instance.PlayBossWarningSound();
         }
     }
     
@@ -144,6 +147,7 @@ public class GameStatusManager : MonoBehaviour
         if (_bossSpawnPoint != null && _dragonForestPrefab != null)
         {
             _bossSpawned = true;
+            _dragonSpawnVFXPrefab.SetActive(true);
             Instantiate(_dragonForestPrefab, _bossSpawnPoint.position, _bossSpawnPoint.rotation);
         }
     }

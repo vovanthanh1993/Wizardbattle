@@ -156,7 +156,7 @@ public class SettingPopup : MonoBehaviour
         if (AudioManager.Instance != null)
         {
             float currentVolume = AudioManager.Instance.GetMusicVolume();
-            float newVolume = Mathf.Max(currentVolume - _volumeStep, 0f);
+            float newVolume = Mathf.Max(currentVolume - _volumeStep, 0.1f);
             AudioManager.Instance.SetMusicVolume(newVolume);
             UpdateUI();
             AudioManager.Instance.PlayButtonChangeSound();
@@ -191,7 +191,7 @@ public class SettingPopup : MonoBehaviour
         if (AudioManager.Instance != null)
         {
             float currentVolume = AudioManager.Instance.GetSFXVolume();
-            float newVolume = Mathf.Max(currentVolume - _volumeStep, 0f);
+            float newVolume = Mathf.Max(currentVolume - _volumeStep, 0.1f);
             AudioManager.Instance.SetSFXVolume(newVolume);
             UpdateUI();
             AudioManager.Instance.PlayButtonChangeSound();

@@ -20,4 +20,8 @@ public class TopRightPanel : MonoBehaviour
         _goldText.text = FirebaseDataManager.Instance.GetCurrentUserGold().ToString();
         _foodText.text = FirebaseDataManager.Instance.GetCurrentUserFood().ToString();
     }
+
+    private void OnEnable() {
+        if(FirebaseDataManager.Instance.IsInitialized()) InitData();
+    }
 }

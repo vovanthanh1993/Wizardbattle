@@ -23,12 +23,8 @@ public class UIManager : MonoBehaviour
     [Header("Room List")]
     [SerializeField] private Transform _roomListParent;
     [SerializeField] private GameObject _roomEntryPrefab;
-    
-    [SerializeField] private RoomScrollView _roomScrollView;
 
     [SerializeField] private GameObject _disconnectPopup;
-    
-    private List<RoomData> _currentRoomList = new List<RoomData>();
 
     [SerializeField] private TopLeftPanel _topLeftPanel;
     [SerializeField] private TopRightPanel _topRightPanel;
@@ -55,7 +51,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] public InventoryPanel InventoryPanel;
 
-    
+    [SerializeField] public PVERewardPanel RewardPanel;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -66,6 +63,12 @@ public class UIManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void ShowRewardPanel(MissionReward missionReward) {
+        RewardPanel.SetData(missionReward.xpReward, missionReward.goldReward, missionReward.rubyReward, missionReward.foodReward);
+        RewardPanel.gameObject.SetActive(true);
+        AudioManager.Instance.PlayOpenRewardSound();
     }
 
     public void ShowLoadingPanel(bool isShow)
@@ -85,8 +88,6 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         ShowMenu();
-        _refreshButton.onClick.AddListener(HandleRefreshRoomClicked);
-        _roomScrollView.OnCellClicked(HandleCellClicked);
     }
 
     public void BackToMenu()
@@ -99,11 +100,6 @@ public class UIManager : MonoBehaviour
     {
         GamePlayPanel.ShowScoreBoard(active);
         GamePlayPanel.UpdateAllScoreBoard();
-    }
-
-    private void HandleRefreshRoomClicked()
-    {
-        UpdateRoomListUI(new List<SessionInfo>());
     }
 
     public void ShowMenu()
@@ -153,25 +149,6 @@ public class UIManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
-    }
-
-    private void HandleCellClicked(int index)
-    {
-        RoomData selectedRoom = this._currentRoomList[index];
-        string roomNameToJoin = selectedRoom.RoomName;
-        NetworkRunnerHandler.Instance.ConnectToSession(roomNameToJoin, GameMode.Client);
-    }
-
-    public void UpdateRoomListUI(List<SessionInfo> sessions)
-    {
-        List<RoomData> roomDataList = sessions.Select(session => new RoomData(
-            roomName: session.Name,
-            playerCount: session.PlayerCount,
-            maxPlayers: session.MaxPlayers
-        )).ToList();
-
-        this._currentRoomList = roomDataList;
-        _roomScrollView.UpdateData(roomDataList);
     }
 
     public void ShowDisconnectPopup(bool isShow)

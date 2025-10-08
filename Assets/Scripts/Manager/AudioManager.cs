@@ -33,11 +33,13 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _gameModeSelectSound;
     [SerializeField] private AudioClip _hunterSelect;
     [SerializeField] private AudioClip _buttonChangeSound;
+    [SerializeField] private AudioClip _openRewardSound;
 
     [Header("Sound Effects InGame")]
     [SerializeField] private AudioClip _healthRecoverSound;
     [SerializeField] private AudioClip _getXpItemSound;
     [SerializeField] private AudioClip _skillRunSound;
+    [SerializeField] private AudioClip _skillStealthSound;
     [SerializeField] private AudioClip _bossWarningSound;
     [SerializeField] private AudioClip _pveWinSound;
     [SerializeField] private AudioClip _pvpLoseSound;
@@ -228,6 +230,11 @@ public class AudioManager : MonoBehaviour
         PlaySFX(_buySuccessSound);
     }
 
+    public void PlayOpenRewardSound()
+    {
+        PlaySFX(_openRewardSound);
+    }
+
     private void PlaySFX(AudioClip sfxClip)
     {
         if (!_sfxEnabled || sfxClip == null || _sfxSource == null) return;
@@ -396,5 +403,15 @@ public class AudioManager : MonoBehaviour
     public void PlayPVELoseSound()
     {
         PlaySFX(_pvpLoseSound);
+    }
+
+    public void PlayBossWarningSoundAtPosition(Vector3 position)
+    {
+        PlaySFXAtPosition(_bossWarningSound, position);
+    }
+
+    public void PlaySkillStealthSound()
+    {
+        PlaySFX(_skillStealthSound);
     }
 } 

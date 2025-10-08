@@ -17114,10 +17114,12 @@ MonoBehaviour:
   _gameModeSelectSound: {fileID: 8300000, guid: 62481dea3fc016647be938db575e8f78, type: 3}
   _hunterSelect: {fileID: 8300000, guid: 34c876574003a5f418a083702ed5fd37, type: 3}
   _buttonChangeSound: {fileID: 8300000, guid: f51336625e85d234782fecc177e4d888, type: 3}
+  _openRewardSound: {fileID: 8300000, guid: e256d2f7e31f5904191932851011e6ef, type: 3}
   _healthRecoverSound: {fileID: 8300000, guid: 6eb3fa5933ba99a4699e9b80ed4452ec, type: 3}
   _getXpItemSound: {fileID: 8300000, guid: e5b4470380a88eb4bb41873cb1e520c7, type: 3}
   _skillRunSound: {fileID: 8300000, guid: 18888ee772356a4439d30bd358b288cb, type: 3}
-  _bossWarningSound: {fileID: 8300000, guid: e92803728373d6b468b3f337793fa2b5, type: 3}
+  _skillStealthSound: {fileID: 8300000, guid: d242cf25e39fce64b96f63b031794621, type: 3}
+  _bossWarningSound: {fileID: 8300000, guid: dff504ec0d62c49469b619ed090d480a, type: 3}
   _pveWinSound: {fileID: 8300000, guid: 1499d77b99ae11841ade058cb6b98574, type: 3}
   _pvpLoseSound: {fileID: 8300000, guid: eebe84683dd562e469e0897f3bf9615e, type: 3}
   _musicVolume: 1

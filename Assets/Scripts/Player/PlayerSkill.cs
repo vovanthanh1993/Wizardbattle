@@ -124,13 +124,12 @@ public class PlayerSkill : NetworkBehaviour
         if (Runner.SimulationTime < _nextStealthTime) return;
         
         _nextStealthTime = Runner.SimulationTime + _stealthRate;
-        if (Object.HasInputAuthority) UIManager.Instance.GamePlayPanel.StartStealthCooldown(_stealthRate);
+        if (Object.HasInputAuthority) {
+            UIManager.Instance.GamePlayPanel.StartStealthCooldown(_stealthRate);
+            AudioManager.Instance.PlaySkillStealthSound();
+        }
         StartCoroutine(StealthCoroutine());
         
-        if (AudioManager.Instance != null)
-        {
-            //AudioManager.Instance.PlayHealSound();
-        }
     }
 
     private IEnumerator StealthCoroutine()

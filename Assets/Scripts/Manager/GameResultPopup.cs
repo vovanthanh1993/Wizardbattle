@@ -138,7 +138,7 @@ public class GameResultPopup : MonoBehaviour
 
         if (isWin) {
             _pveWinPanel.gameObject.SetActive(true);
-            _pveWinPanel.SetData(xpReward, goldReward, rubyReward);
+            _pveWinPanel.SetData(xpReward, goldReward, rubyReward, 0);
             _pveLosePanel.gameObject.SetActive(false);
         } else {
             xpReward = xpReward/2;
@@ -146,7 +146,7 @@ public class GameResultPopup : MonoBehaviour
             rubyReward = rubyReward/2;
             _pveWinPanel.gameObject.SetActive(false);
             _pveLosePanel.gameObject.SetActive(true);
-            _pveLosePanel.SetData(xpReward, goldReward, rubyReward);
+            _pveLosePanel.SetData(xpReward, goldReward, rubyReward, 0);
         }
 
         UpdatePlayerDataAfterGame(xpReward, goldReward, rubyReward);

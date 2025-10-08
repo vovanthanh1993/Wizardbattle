@@ -105,6 +105,9 @@ public class FirebaseDataManager : MonoBehaviour
                         
                         // Notify that initialization is complete
                         Debug.Log("Firebase Data Manager is ready to use");
+                        
+                        // Auto create game data
+                        CreateInitialGameData();
                     }
                     catch (Exception e)
                     {
@@ -794,6 +797,171 @@ public class FirebaseDataManager : MonoBehaviour
         {
             Debug.LogError($"Exception in UpdatePlayerAttributesAfterGame: {e.Message}");
             Debug.LogError($"Stack trace: {e.StackTrace}");
+        }
+    }
+
+    public async Task<bool> ClaimMissionReward(MissionReward missionReward)
+    {
+        currentPlayerData.gold += missionReward.goldReward;
+        currentPlayerData.ruby += missionReward.rubyReward;
+        currentPlayerData.food += missionReward.foodReward;
+        currentPlayerData.CompleteMission(missionReward.missionId);
+        return await SavePlayerData(currentPlayerData);
+    }
+
+    public async Task<bool> SaveGameData(GameData gameData)
+    {
+        if (!isInitialized)
+        {
+            OnError?.Invoke("Firebase not initialized");
+            return false;
+        }
+
+        try
+        {
+            Debug.Log("Attempting to save game data");
+            
+            string jsonData = JsonUtility.ToJson(gameData);
+            
+            // Add timeout to prevent hanging
+            var timeoutTask = Task.Delay(10000); // 10 second timeout
+            var saveTask = databaseReference.Child("gamedata").SetRawJsonValueAsync(jsonData);
+            
+            var completedTask = await Task.WhenAny(saveTask, timeoutTask);
+            
+            if (completedTask == timeoutTask)
+            {
+                Debug.LogError("Timeout while saving game data");
+                OnError?.Invoke("Timeout while saving game data");
+                return false;
+            }
+            
+            if (saveTask.IsFaulted)
+            {
+                HandleTaskFault("saving game data", saveTask.Exception);
+                return false;
+            }
+            
+            await saveTask;
+            
+            Debug.Log("Game data saved successfully");
+            currentGameData = gameData;
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error saving game data: {e.Message}");
+            Debug.LogError($"Stack trace: {e.StackTrace}");
+            OnError?.Invoke($"Error saving game data: {e.Message}");
+            return false;
+        }
+    }
+
+
+    /// <summary>
+    /// Create initial game data
+    /// </summary>
+    public async Task<bool> CreateInitialGameData()
+    {
+        try
+        {
+            GameData initialGameData = new GameData();
+            
+            // Tạo missions mẫu
+            initialGameData.missionRewards = new List<MissionReward>
+            {
+                new MissionReward
+                {
+                    missionType = MissionType.LevelUp,
+                    missionId = 1,
+                    missionName = "Novice Reward",
+                    missionDescription = "Reach level 2 to unlock rewards",
+                    levelRequirement = 2,
+                    xpReward = 0,
+                    goldReward = 50,
+                    rubyReward = 1,
+                    foodReward = 1,
+                },
+                new MissionReward
+                {
+                    missionType = MissionType.LevelUp,
+                    missionId = 2,
+                    missionName = "Apprentice Reward",
+                    missionDescription = "Reach level 5 to unlock rewards",
+                    levelRequirement = 5,
+                    xpReward = 0,
+                    goldReward = 100,
+                    rubyReward = 2,
+                    foodReward = 1,
+                },
+                new MissionReward
+                {
+                    missionType = MissionType.LevelUp,
+                    missionId = 3,
+                    missionName = "Adept Reward",
+                    missionDescription = "Reach level 8 for ruby rewards",
+                    levelRequirement = 8,
+                    xpReward = 0,
+                    goldReward = 75,
+                    rubyReward = 1,
+                    foodReward = 1,
+                },
+                new MissionReward   
+                {
+                    missionType = MissionType.LevelUp,
+                    missionId = 4,
+                    missionName = "Expert Reward",
+                    missionDescription = "Reach level 10 for food rewards",
+                    levelRequirement = 10,
+                    xpReward = 0,
+                    goldReward = 150,
+                    rubyReward = 3,
+                    foodReward = 1,
+                },
+                new MissionReward {
+                    missionType = MissionType.LevelUp,
+                    missionId = 5,
+                    missionName = "Master Reward",
+                    missionDescription = "Reach level 12 for food rewards",
+                    levelRequirement = 12,
+                    xpReward = 0,
+                    goldReward = 200,
+                    rubyReward = 4,
+                    foodReward = 2,
+                },
+                new MissionReward {
+                    missionType = MissionType.LevelUp,
+                    missionId = 6,
+                    missionName = "Grandmaster Reward",
+                    missionDescription = "Reach level 15 for food rewards",
+                    levelRequirement = 15,
+                    xpReward = 0,
+                    goldReward = 250,
+                    rubyReward = 5,
+                    foodReward = 3,
+                }, 
+                new MissionReward {
+                    missionType = MissionType.LevelUp,
+                    missionId = 7,
+                    missionName = "Legendary Reward",
+                    missionDescription = "Reach level 20 for food rewards",
+                    levelRequirement = 20,
+                    xpReward = 0,
+                    goldReward = 300,
+                    rubyReward = 6,
+                    foodReward = 4,
+                }  
+            };
+
+            Debug.Log("Creating initial game data...");
+            Debug.Log($"JSON Data: {JsonUtility.ToJson(initialGameData, true)}");
+            
+            return await SaveGameData(initialGameData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error creating initial game data: {e.Message}");
+            return false;
         }
     }
 }

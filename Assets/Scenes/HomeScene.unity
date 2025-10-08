@@ -4111,7 +4111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &94698101
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4128,9 +4128,9 @@ RectTransform:
   - {fileID: 2120166133}
   m_Father: {fileID: 1633147203}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 134, y: -10}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 134, y: -340}
   m_SizeDelta: {x: 268, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &94698102
@@ -4489,7 +4489,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 134, y: -240}
+  m_AnchoredPosition: {x: 134, y: -140}
   m_SizeDelta: {x: 268, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &113919205
@@ -23726,7 +23726,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 134, y: -140}
+  m_AnchoredPosition: {x: 134, y: -240}
   m_SizeDelta: {x: 268, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &601388868
@@ -45243,7 +45243,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 134, y: -240}
+  m_AnchoredPosition: {x: 134, y: -140}
   m_SizeDelta: {x: 268, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1222451073
@@ -80502,7 +80502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2041156748
 RectTransform:
   m_ObjectHideFlags: 0
@@ -80519,9 +80519,9 @@ RectTransform:
   - {fileID: 203400253}
   m_Father: {fileID: 4378661424782593138}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 134, y: -10}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 134, y: -340}
   m_SizeDelta: {x: 268, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2041156749
@@ -83660,7 +83660,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 134, y: -140}
+  m_AnchoredPosition: {x: 134, y: -240}
   m_SizeDelta: {x: 268, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &522444372003757124
@@ -86078,6 +86078,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 203002135}
+        m_TargetAssemblyTypeName: AudioConfig, Assembly-CSharp
+        m_MethodName: PlayButtonCloseSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3802427710978090738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87508,6 +87520,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2871326036109331673}
         m_TargetAssemblyTypeName: GameResultPopup, Assembly-CSharp
         m_MethodName: ReturnMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 203002135}
+        m_TargetAssemblyTypeName: AudioConfig, Assembly-CSharp
+        m_MethodName: PlayButtonCloseSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -89054,6 +89078,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2871326036109331673}
         m_TargetAssemblyTypeName: GameResultPopup, Assembly-CSharp
         m_MethodName: ReturnMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 203002135}
+        m_TargetAssemblyTypeName: AudioConfig, Assembly-CSharp
+        m_MethodName: PlayButtonCloseSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

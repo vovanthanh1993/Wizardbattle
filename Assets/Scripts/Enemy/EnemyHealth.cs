@@ -184,7 +184,7 @@ public class EnemyHealth : MonoBehaviour
         if (_pivotHealthBar != null && _pivotHealthBar.activeInHierarchy)
         {
             _pivotHealthBar.transform.LookAt(Camera.main.transform);
-            _pivotHealthBar.transform.Rotate(0, 180, 0);
+            _pivotHealthBar.transform.Rotate(0, 0, 0);
         }
     }
 }

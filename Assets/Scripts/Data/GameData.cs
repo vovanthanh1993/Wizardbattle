@@ -15,6 +15,8 @@ public class GameData
 
     public List<MissionReward> missionRewards;
 
+    public List<ShopData> shopData;
+
     public GameData()
     {
         missionRewards = new List<MissionReward>(); // Khởi tạo List rỗng

@@ -1,9 +1,9 @@
 {
   "project_info": {
-    "project_number": "381819246771",
-    "firebase_url": "https://wizardbattle-b3901-default-rtdb.firebaseio.com",
-    "project_id": "wizardbattle-b3901",
-    "storage_bucket": "wizardbattle-b3901.firebasestorage.app"
+    "project_number": "1029394152521",
+    "firebase_url": "https://winzardbattle-default-rtdb.firebaseio.com",
+    "project_id": "winzardbattle",
+    "storage_bucket": "winzardbattle.firebasestorage.app"
   },
   "client": [
     {
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBpCFf3slBsB2CbRaCVjw2lRpoZTAkYVko"
+          "current_key": "AIzaSyD5dlwJFJnoD-NFkILzQ3KZIQMDPtkFgKs"
         }
       ],
       "services": {

@@ -11,7 +11,7 @@ public class FirebaseDataManager : MonoBehaviour
     public static FirebaseDataManager Instance { get; private set; }
 
     [Header("Firebase Configuration")]
-    [SerializeField] private string databaseUrl = "https://wizardbattle-b3901-default-rtdb.firebaseio.com/";
+    [SerializeField] private string databaseUrl = "https://winzardbattle-default-rtdb.firebaseio.com/";
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
@@ -951,6 +951,110 @@ public class FirebaseDataManager : MonoBehaviour
                     rubyReward = 6,
                     foodReward = 4,
                 }  
+            };
+
+            // Create shop data
+            initialGameData.shopData = new List<ShopData>
+            {
+                new ShopData
+                {
+                    buyType = ShopType.Ruby,
+                    paidType = ShopType.Gold,
+                    shopName = "Ruby Pack - Small",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Fruby_1.png?alt=media&token=4b99568c-0f6f-4a76-8532-f0ca19eea370",
+                    buyAmount = 50,
+                    paidAmount = 0.99f,
+                    width = 109,
+                    height = 169
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Ruby,
+                    paidType = ShopType.Gold,
+                    shopName = "Ruby Pack - Medium",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Fruby_2.png?alt=media&token=73e0d8f0-9398-4fca-840c-4eec609da699",
+                    buyAmount = 200,
+                    paidAmount = 1.99f,
+                    width = 147,
+                    height = 175
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Ruby,
+                    paidType = ShopType.Gold,
+                    shopName = "Ruby Pack - Large",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Fruby_3.png?alt=media&token=e0c73f10-7a73-4b22-8e59-da7cb0f8a0b4",
+                    buyAmount = 500,
+                    paidAmount = 2.5f,
+                    width = 159,
+                    height = 175
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Gold,
+                    paidType = ShopType.Ruby,
+                    shopName = "Gold Pack - Small",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Fgold_1.png?alt=media&token=eb2dff1a-8aac-4a67-821a-eb244498707f",
+                    buyAmount = 200,
+                    paidAmount = 50f,
+                    width = 155,
+                    height = 120
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Gold,
+                    paidType = ShopType.Ruby,
+                    shopName = "Gold Pack - Medium",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Fgold_2.png?alt=media&token=35344a59-aaf2-4640-9376-ff7a416c1a8c",
+                    buyAmount = 500,
+                    paidAmount = 120f,
+                    width = 155,
+                    height = 120
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Gold,
+                    paidType = ShopType.Ruby,
+                    shopName = "Gold Pack - Large",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Fgold_3.png?alt=media&token=061e6ace-57f0-4456-885d-72a784ee31a2",
+                    buyAmount = 1000,
+                    paidAmount = 200f,
+                    width = 155,
+                    height = 120
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Food,
+                    paidType = ShopType.Ruby,
+                    shopName = "Food Pack - Small",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Ffood_1.png?alt=media&token=6749df43-ffa8-4c39-b89d-8df33936089e",
+                    buyAmount = 10,
+                    paidAmount = 50f,
+                    width = 160,
+                    height = 130
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Food,
+                    paidType = ShopType.Ruby,
+                    shopName = "Food Pack - Medium",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Ffood_2.png?alt=media&token=83a9e12f-1169-48dc-a1ea-c9edee4439c3",
+                    buyAmount = 30,
+                    paidAmount = 140f,
+                    width = 160,
+                    height = 130
+                },
+                new ShopData
+                {
+                    buyType = ShopType.Food,
+                    paidType = ShopType.Ruby,
+                    shopName = "Food Pack - Large",
+                    imageURL = "https://firebasestorage.googleapis.com/v0/b/winzardbattle.firebasestorage.app/o/ShopPackage%2Ffood_3.png?alt=media&token=0f47c368-a8b2-464b-8401-51988bc89b67",
+                    buyAmount = 60,
+                    paidAmount = 250f,
+                    width = 160,
+                    height = 130
+                }
             };
 
             Debug.Log("Creating initial game data...");

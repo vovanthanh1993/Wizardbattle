@@ -23,7 +23,7 @@ public class LobbyManager : NetworkBehaviour
     public NetworkDictionary<PlayerRef, string> PrefabNames => default;
 
     [SerializeField] private int _minPlayersToStart = 2;
-    [SerializeField] private int _maxPlayers = 8;
+    [SerializeField] private int _maxPlayers = 4;
 
     [Networked] public GameState GameState { get; set; } = GameState.Lobby;
 

@@ -254,6 +254,7 @@ MonoBehaviour:
   _Kills: 0
   _Deaths: 0
   _IsWin: 0
+  _Rank: 0
   _XP: 0
   _Level: 1
   _Damage: 0
@@ -323,10 +324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 137596e6ca6f9bd479af958f2acc49dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterName: Rogue
-  _characterDescription: The Rogue is a swift and cunning fighter who thrives in
-    agility and precision. Masters of stealth and speed, they excel at striking enemies
-    from the shadows and swiftly retreating before being caught.
+  _characterName: Lila Frost
+  _characterDescription: She slows and freezes foes to control distance and punish
+    overextensions.
 --- !u!114 &9039097056260814484
 MonoBehaviour:
   m_ObjectHideFlags: 0

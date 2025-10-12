@@ -66579,6 +66579,7 @@ MonoBehaviour:
   _Kills: 0
   _Deaths: 0
   _IsWin: 0
+  _Rank: 0
   _XP: 0
   _Level: 1
   _Damage: 0
@@ -66648,11 +66649,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 137596e6ca6f9bd479af958f2acc49dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterName: Skeleton Mage
-  _characterDescription: The Skeleton Mage is an undead spellcaster animated by dark
-    sorcery. Once mortal practitioners of magic, their bones now serve as vessels
-    for forbidden power. They summon fire, frost, or shadow energy to attack from
-    a distance, often overwhelming intruders with relentless barrages of spells.
+  _characterName: Thorne Marrow
+  _characterDescription: He animates skeletal guards and hurls bone spikes, excelling
+    at attrition but lacking burst.
 --- !u!114 &6555724773594445754
 MonoBehaviour:
   m_ObjectHideFlags: 0

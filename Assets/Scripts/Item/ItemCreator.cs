@@ -37,45 +37,59 @@ public class ItemCreator : ScriptableObject
         switch (itemType)
         {
             case ItemType.Weapon:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10f, 50f) * combinedMultiplier);
+                // Vũ khí - Damage cao, health và speed thấp
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(12f, 28f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3, 8) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(1f, 4f) * combinedMultiplier);
                 break;
 
             case ItemType.Helmet:
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(20, 80) * combinedMultiplier);
+                // Mũ - Health trung bình, damage và speed thấp
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(15, 35) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 8f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 5f) * combinedMultiplier);
                 break;
 
             case ItemType.Armor:
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(50, 150) * combinedMultiplier);
+                // Giáp - Health rất cao, damage và speed trung bình
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(30, 70) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(6f, 18f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 9f) * combinedMultiplier);
                 break;
 
             case ItemType.Gloves:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 25f) * combinedMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 8f) * combinedMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * combinedMultiplier);
+                // Găng tay - Damage trung bình, speed và health thấp
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(6f, 15f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 6f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5, 12) * combinedMultiplier);
                 break;
 
             case ItemType.Boots:
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 15f) * combinedMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * combinedMultiplier);
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 25f) * combinedMultiplier);
+                // Giày - Speed cao, damage và health thấp
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(6f, 15f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5, 12) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 8f) * combinedMultiplier);
                 break;
 
             case ItemType.Ring:
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(10, 40) * combinedMultiplier);
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 15f) * combinedMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(1f, 5f) * combinedMultiplier);
+                // Nhẫn - Tất cả chỉ số thấp, cân bằng
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(6, 15) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 9f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 5f) * combinedMultiplier);
                 break;
 
             case ItemType.Amulet:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(8f, 30f) * combinedMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 12f) * combinedMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(15, 60) * combinedMultiplier);
+                // Dây chuyền - Damage và health tốt, speed trung bình
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(8f, 22f) * combinedMultiplier);
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(12, 28) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(3f, 7f) * combinedMultiplier);
                 break;
 
             case ItemType.Book:
-                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 20f) * combinedMultiplier);
-                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 8f) * combinedMultiplier);
-                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(20, 80) * combinedMultiplier);
+                // Sách - Health tốt, damage trung bình, speed thấp
+                item.healthBonus = Mathf.RoundToInt(UnityEngine.Random.Range(15, 40) * combinedMultiplier);
+                item.damageBonus = Mathf.RoundToInt(UnityEngine.Random.Range(5f, 13f) * combinedMultiplier);
+                item.speedBonus = Mathf.RoundToInt(UnityEngine.Random.Range(2f, 5f) * combinedMultiplier);
                 break;
         }
     }

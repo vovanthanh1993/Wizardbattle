@@ -254,6 +254,7 @@ MonoBehaviour:
   _Kills: 0
   _Deaths: 0
   _IsWin: 0
+  _Rank: 0
   _XP: 0
   _Level: 1
   _Damage: 0
@@ -323,10 +324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 137596e6ca6f9bd479af958f2acc49dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterName: Mage
-  _characterDescription: The Mage is a master of elemental magic, specializing in
-    devastating ranged attacks. They can incinerate foes with fire, freeze the battlefield
-    with ice, or strike swiftly with lightning.
+  _characterName: Aiden Blaze
+  _characterDescription: He strikes with aggressive bursts and area control, but
+    risks heavy mana burn
 --- !u!114 &1336829047840266190
 MonoBehaviour:
   m_ObjectHideFlags: 0

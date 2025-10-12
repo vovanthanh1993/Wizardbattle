@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minPlayersToStart: 1
-  _maxPlayers: 8
+  _maxPlayers: 4
   _PlayerNames:
     _items: []
   _PrefabNames:

@@ -559,7 +559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 3
-  _attackDamage: 20
+  _attackDamage: 150
   _attackRange: 3
   _attackCooldown: 2
   _navAgent: {fileID: 2654641659202407227}
@@ -580,7 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3097c5e9dcc5fc9458dda82b662ed9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 2000
+  _maxHealth: 1500
   _currentHealth: 0
   damageText: {fileID: 4410234699917008019}
   _healthBarImage: {fileID: 1922625222273834198}

@@ -165,7 +165,7 @@ public class UIManager : MonoBehaviour
         CheatCode();
     }
     private async void CheatCode() {
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.F5))
         {
             bool success = await FirebaseDataManager.Instance.ResetToDefault();
             if (success)

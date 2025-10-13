@@ -25,10 +25,17 @@ public class PlayerSkill : NetworkBehaviour
     [SerializeField] private int  _stealthRate = 30;
     [SerializeField] private int  _stealthDuration = 5;
 
+    [Header("Buff damage Skill")]
+    [SerializeField] private ParticleSystem _buffDamageParticleSystem;
+    [SerializeField] private int  _buffDamageRate = 30;
+    [SerializeField] private int  _buffDamageDuration = 5;
+    [SerializeField] private int  _buffDamageAmount = 100;
+
     private float _nextFireTime;
     private float _nextRunTime;
     private float _nextHealTime;
     private float _nextStealthTime;
+    private float _nextBuffDamageTime;
     private Material[] _originalMaterials;
      
 
@@ -52,6 +59,13 @@ public class PlayerSkill : NetworkBehaviour
         if (HasInputAuthority) AudioManager.Instance.PlaySkillRunSound();
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RpcPlayBuffDamageEffect(float time)
+    {
+        StartCoroutine(PlayBuffDamageParticleEffect(time));
+        if (HasInputAuthority) AudioManager.Instance.PlaySkillStealthSound();
+    }
+
     private IEnumerator PlayRunEffectParticleEffect(float time)
     {
         _runEffectParticleSystem.gameObject.SetActive(true);
@@ -60,6 +74,15 @@ public class PlayerSkill : NetworkBehaviour
         yield return new WaitForSeconds(time);
 
         _runEffectParticleSystem.gameObject.SetActive(false);
+    }
+
+    private IEnumerator PlayBuffDamageParticleEffect(float time)
+    {
+        _buffDamageParticleSystem.gameObject.SetActive(true);
+        _buffDamageParticleSystem.Play();
+        
+        yield return new WaitForSeconds(time);
+        _buffDamageParticleSystem.gameObject.SetActive(false);
     }
 
     public void SetHideMaterial()
@@ -116,6 +139,29 @@ public class PlayerSkill : NetworkBehaviour
             }
             renderer.materials = materials;
         }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RpcBuffDamage()
+    {
+        if (Runner.SimulationTime < _nextBuffDamageTime) return;
+        _nextBuffDamageTime = Runner.SimulationTime + _buffDamageRate;
+        if (Object.HasInputAuthority) {
+            UIManager.Instance.GamePlayPanel.StartBuffDamageCooldown(_buffDamageRate);
+            RpcPlayBuffDamageEffect(_buffDamageDuration);
+        }
+        StartCoroutine(TemporaryDamageBoost());
+    }
+
+    private IEnumerator TemporaryDamageBoost()
+    {
+        // Increase damage
+        _playerStatus.Damage += _buffDamageAmount;
+        
+        yield return new WaitForSeconds(_buffDamageDuration);
+        
+        // Restore original damage
+        _playerStatus.Damage -= _buffDamageAmount;
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]

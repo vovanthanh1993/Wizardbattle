@@ -137,6 +137,7 @@ public class PlayerController : NetworkBehaviour
         HandleShoot(input);
         HandleSkillHeal(input);
         HandleSkillStealth(input);
+        HandleSkillBuffDamage(input);
         HandleEmoji(input);
         HandleLookRotation(input);
         HandleMovement(input);
@@ -194,9 +195,20 @@ public class PlayerController : NetworkBehaviour
     private void HandleSkillStealth(NetworkInputData input)
     {
         if (_isDisable) return;
+        if(NetworkRunnerHandler.Instance.GameType == GameType.PVE) return;
         if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
         {
             _playerSkill.RpcStealth();
+        }
+    }
+
+    private void HandleSkillBuffDamage(NetworkInputData input)
+    {
+        if (_isDisable) return;
+        if(NetworkRunnerHandler.Instance.GameType == GameType.PVP) return;
+        if (input.Buttons.WasPressed(_previousButtons, InputButtons.Stealth) && Object.HasInputAuthority && UIManager.Instance.GamePlayPanel.IsEnableSkill3)
+        {
+            _playerSkill.RpcBuffDamage();
         }
     }
 

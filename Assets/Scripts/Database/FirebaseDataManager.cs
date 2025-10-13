@@ -107,7 +107,7 @@ public class FirebaseDataManager : MonoBehaviour
                         Debug.Log("Firebase Data Manager is ready to use");
                         
                         // Auto create game data
-                        CreateInitialGameData();
+                        //CreateInitialGameData();
                     }
                     catch (Exception e)
                     {

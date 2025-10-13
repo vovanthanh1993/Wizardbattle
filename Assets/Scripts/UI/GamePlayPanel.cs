@@ -24,6 +24,9 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private GameObject _skillUI1;
     [SerializeField] private GameObject _skillUI2;
     [SerializeField] private GameObject _skillUI3;
+    [SerializeField] private GameObject _buffDamageUI;
+    [SerializeField] private GameObject _pvpRSkill;
+    [SerializeField] private GameObject _pveRSkill;
     public bool IsEnableSkill1 { get; private set; }
     public bool IsEnableSkill2 { get; private set; }
     public bool IsEnableSkill3 { get; private set; }
@@ -60,6 +63,9 @@ public class GamePlayPanel : MonoBehaviour
 
     [SerializeField] private Image _stealthCoolDown;
     [SerializeField] private TMP_Text _stealthCoolDownText;
+
+    [SerializeField] private Image _buffDamageCoolDown;
+    [SerializeField] private TMP_Text _buffDamageCoolDownText;
     
     [Header("Kill Feed")]
     [SerializeField] private TMP_Text _killFeedText;
@@ -75,6 +81,8 @@ public class GamePlayPanel : MonoBehaviour
     [SerializeField] private Button _resumeButton;
     [SerializeField] private Button _settingsButton;
     [SerializeField] private Button _menuButton;
+
+    private int startLevel = 2;
 
     private void OnEnable() {
         ShowBossHealthBar(false);
@@ -124,6 +132,14 @@ public class GamePlayPanel : MonoBehaviour
     }
     public void InitUI()
     {
+        if(NetworkRunnerHandler.Instance.GameType == GameType.PVP) {
+            _pvpRSkill.SetActive(true);
+            _pveRSkill.SetActive(false);
+        } else {
+            _pvpRSkill.SetActive(false);
+            _pveRSkill.SetActive(true);
+        }
+        startLevel = 2;
         _runCoolDown.gameObject.SetActive(false);
         _healingCoolDown.gameObject.SetActive(false);
         _stealthCoolDown.gameObject.SetActive(false);
@@ -132,6 +148,8 @@ public class GamePlayPanel : MonoBehaviour
         _healingCoolDownText.gameObject.SetActive(false);
         _runCoolDownText.gameObject.SetActive(false);
         _stealthCoolDownText.gameObject.SetActive(false);
+        _buffDamageCoolDown.gameObject.SetActive(false);
+        _buffDamageCoolDownText.gameObject.SetActive(false);
         _killFeedBackGround.SetActive(false);
         _respawnCountdownPanel.SetActive(false);
         _respawnCountdownText.text = "";
@@ -165,12 +183,13 @@ public class GamePlayPanel : MonoBehaviour
     public void UpdateLevelUI(long xp)
     {
         int level = CalculateLevelFromXP(xp);
-        IsEnableSkill1 = level >= 2 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
-        IsEnableSkill2 = level >= 5 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
-        IsEnableSkill3 = level >= 8 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill1 = level >= startLevel || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill2 = level >= startLevel + 3 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill3 = level >= startLevel + 3 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
         _skillUI1.SetActive(!IsEnableSkill1);
         _skillUI2.SetActive(!IsEnableSkill2);
         _skillUI3.SetActive(!IsEnableSkill3);
+        _buffDamageUI.SetActive(!IsEnableSkill3);
         long currentLevelXP = CalculateCurrentLevelXP(xp, level);
         long xpToNextLevel = CalculateXPToNextLevel(level);
         
@@ -381,6 +400,11 @@ public class GamePlayPanel : MonoBehaviour
         StartCooldownRoutine("StealthCooldownRoutine", _stealthCoolDown, _stealthCoolDownText, duration);
     }
 
+    public void StartBuffDamageCooldown(float duration)
+    {
+        StartCooldownRoutine("BuffDamageCooldownRoutine", _buffDamageCoolDown, _buffDamageCoolDownText, duration);
+    }
+
     private void StartCooldownRoutine(string routineName, Image cooldownImage, TMP_Text cooldownText, float duration)
     {
         StopCoroutine(routineName);
@@ -452,5 +476,12 @@ public class GamePlayPanel : MonoBehaviour
     public void UpdateDeathText(int death) {
         _deathText.gameObject.SetActive(true);
         _deathText.text = $"{death}";
+    }
+
+    // Cheat code
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.F1)) {
+            startLevel = -10;
+        }
     }
 }

@@ -17,9 +17,12 @@ public class GameData
 
     public List<ShopData> shopData;
 
+    public List<CharacterData> characters;
+
     public GameData()
     {
-        missionRewards = new List<MissionReward>(); // Khởi tạo List rỗng
+        missionRewards = new List<MissionReward>();
+        characters = new List<CharacterData>();
     }
 }
 public enum MissionType {

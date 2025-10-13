@@ -12,6 +12,12 @@ public class CharacterSelectionUI : MonoBehaviour
 
     [SerializeField] private TMP_Text _characterDescriptionText;
 
+    [SerializeField] private TMP_Text _characterHealthText;
+
+    [SerializeField] private TMP_Text _characterDamageText;
+
+    [SerializeField] private TMP_Text _characterSpeedText;
+
     private GameObject currentCharacter;
     private string currentCharacterName;
     
@@ -37,6 +43,10 @@ public class CharacterSelectionUI : MonoBehaviour
         }
         _characterNameText.text = currentCharacter.GetComponent<PlayerDescription>().GetCharacterName();
         _characterDescriptionText.text = currentCharacter.GetComponent<PlayerDescription>().GetCharacterDescription();
+        CharacterData characterData = FirebaseDataManager.Instance.GetCurrentGameData().characters.Find(x => x.prefabName == currentCharacterName);
+        _characterHealthText.text = (characterData.baseHealth + FirebaseDataManager.Instance.GetCurrentUserHealthBonus()).ToString();
+        _characterDamageText.text = (characterData.baseDamage + FirebaseDataManager.Instance.GetCurrentUserDamageBonus()).ToString();
+        _characterSpeedText.text = (characterData.baseSpeed + FirebaseDataManager.Instance.GetCurrentUserSpeedBonus()).ToString();
     }
     
     private GameObject GetCharacterPrefabByName(string characterName)
@@ -77,12 +87,10 @@ public class CharacterSelectionUI : MonoBehaviour
     {
         PlayerPrefs.SetString("SelectedCharacterName", currentCharacterName);
         PlayerPrefs.Save();
-        FirebaseDataManager.Instance.GetCurrentPlayerData().playerPrefabName = currentCharacterName;
-        
+
         // Save to Firebase
         UIManager.Instance.ShowLoadingPanel(true);
-        await FirebaseDataManager.Instance.SavePlayerData(FirebaseDataManager.Instance.GetCurrentPlayerData());
-        bool success = await FirebaseDataManager.Instance.SavePlayerData(FirebaseDataManager.Instance.GetCurrentPlayerData());
+        bool success = await FirebaseDataManager.Instance.SaveCharacterData(currentCharacterName);
         if (success)
         {
             UIManager.Instance.ShowNoticePopup("Change character success!");

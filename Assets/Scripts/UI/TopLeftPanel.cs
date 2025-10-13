@@ -22,7 +22,7 @@ public class TopLeftPanel : MonoBehaviour
         _levelText.text = FirebaseDataManager.Instance.GetCurrentUserLevel().ToString();
         _damageText.text = FirebaseDataManager.Instance.GetCurrentUserDamage().ToString();
         _speedText.text = FirebaseDataManager.Instance.GetCurrentUserSpeed().ToString();
-        _healthText.text = FirebaseDataManager.Instance.GetCurrentPlayerData().health.ToString();
+        _healthText.text = FirebaseDataManager.Instance.GetCurrentUserHealth().ToString();
         _xpBarImage.fillAmount = GameCommonUtils.CalculateXPProgressPercentage(FirebaseDataManager.Instance.GetCurrentUserXp(), FirebaseDataManager.Instance.GetCurrentUserLevel());
         _avatarImage.sprite = GameCommonUtils.GetAvatarSprite(FirebaseDataManager.Instance.GetCurrentPlayerData().playerPrefabName);
     }

@@ -557,12 +557,12 @@ public class FirebaseDataManager : MonoBehaviour
 
     public int GetCurrentUserDamage()
     {
-        return currentPlayerData.damage;
+        return currentPlayerData.baseDamage + currentPlayerData.totalDamageBonus;
     }
 
     public int GetCurrentUserSpeed()
     {
-        return currentPlayerData.speed;
+        return currentPlayerData.baseSpeed + currentPlayerData.totalSpeedBonus;
     }
 
     public int GetCurrentUserLevel()
@@ -593,7 +593,11 @@ public class FirebaseDataManager : MonoBehaviour
 
     public float GetCurrentUserHealth()
     {
-        return currentPlayerData.health;
+        return currentPlayerData.baseHealth + currentPlayerData.totalHealthBonus;
+    }
+    public int GetCurrentUserHealthBonus()
+    {
+        return currentPlayerData.totalHealthBonus;
     }
 
     public int GetCurrentUserFood()
@@ -604,6 +608,16 @@ public class FirebaseDataManager : MonoBehaviour
     public float GetCurrentUserCash()
     {
         return currentPlayerData.cash;
+    }
+
+    public int GetCurrentUserDamageBonus()
+    {
+        return currentPlayerData.totalDamageBonus;
+    }
+
+    public int GetCurrentUserSpeedBonus()
+    {
+        return currentPlayerData.totalSpeedBonus;
     }
 
     public async Task<bool> BuyGold(int ruby, int gold)
@@ -857,6 +871,16 @@ public class FirebaseDataManager : MonoBehaviour
         }
     }
 
+    public async Task<bool> SaveCharacterData(string characterName)
+    {
+        CharacterData characterData = currentGameData.characters.Find(x => x.prefabName == characterName);
+        Debug.Log("Character data: " + characterData.prefabName);
+        currentPlayerData.playerPrefabName = characterName;
+        currentPlayerData.baseDamage = characterData.baseDamage;
+        currentPlayerData.baseSpeed = characterData.baseSpeed;
+        currentPlayerData.baseHealth = characterData.baseHealth;
+        return await SavePlayerData(currentPlayerData);
+    }
 
     /// <summary>
     /// Create initial game data
@@ -1054,6 +1078,34 @@ public class FirebaseDataManager : MonoBehaviour
                     paidAmount = 250f,
                     width = 160,
                     height = 130
+                }
+            };
+
+            initialGameData.characters = new List<CharacterData>
+            {
+                new CharacterData
+                {
+                    prefabName = "Player_Mage",
+                    baseHealth = 1000,
+                    baseDamage = 200,
+                    baseSpeed = 500,
+                    id = 1
+                },
+                new CharacterData 
+                {
+                    prefabName = "Player_Rogue",
+                    baseHealth = 800,
+                    baseDamage = 250,
+                    baseSpeed = 500,
+                    id = 2
+                },
+                new CharacterData
+                {
+                    prefabName = "Player_Skeleton_Mage",
+                    baseHealth = 1200,
+                    baseDamage = 200,
+                    baseSpeed = 450,
+                    id = 3
                 }
             };
 

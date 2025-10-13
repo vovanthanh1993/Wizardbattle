@@ -23,7 +23,7 @@ public class PlayerHealth : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             _pivotHealthBar.gameObject.SetActive(false);
-            RpcUpdateData(FirebaseDataManager.Instance.GetCurrentPlayerData().health);
+            RpcUpdateData((int)FirebaseDataManager.Instance.GetCurrentUserHealth());
             UIManager.Instance?.UpdateHealth(CurrentHealth, MaxHealth);
         } else {
             _pivotHealthBar.gameObject.SetActive(true);

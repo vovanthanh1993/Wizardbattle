@@ -45,6 +45,7 @@ public class GameResultPopup : MonoBehaviour
                     int rubyReward = (int)(FirebaseDataManager.Instance.GetCurrentGameData().pvpRubyReward / rank + kills/2);
                     _pvpRewardPanel.SetData(rank, xpReward, goldReward, rubyReward);
                     UpdatePlayerDataAfterGame(xpReward, goldReward, rubyReward);
+                    AudioManager.Instance.PlayPVEWinSound();
                 }
             }
         }

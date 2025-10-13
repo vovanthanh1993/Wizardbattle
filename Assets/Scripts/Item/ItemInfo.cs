@@ -30,7 +30,7 @@ public class ItemInfo : MonoBehaviour
 
         if(slotTransform != null) {
             Vector2 slotSize = slotTransform.sizeDelta;
-            Vector3 topRightPosition = slotTransform.position + new Vector3(slotSize.x / 2.2f, slotSize.y / 2.2f, 0);
+            Vector3 topRightPosition = slotTransform.position + new Vector3(slotSize.x / 2.2f, 0, 0);
             _tooltipRect.position = topRightPosition;
             
             // Keep tooltip within screen bounds

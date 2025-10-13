@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using DG.Tweening;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class EnemyHealth : MonoBehaviour
     [Header("Damage Text Settings")]
     [SerializeField] private float damageTextDuration = 1f;
     [SerializeField] private float damageTextFadeSpeed = 2f;
+    
+    // Track current damage text coroutine
+    private Coroutine currentDamageTextCoroutine;
     
     [Header("Health Bar Settings")]
     [SerializeField] private float healthBarHideDelay = 5f;
@@ -56,12 +60,21 @@ public class EnemyHealth : MonoBehaviour
 
     public void ShowDamageText(float damage)
     {
+        // Stop previous coroutine if running
+        if (currentDamageTextCoroutine != null)
+        {
+            StopCoroutine(currentDamageTextCoroutine);
+        }
+        
+        // Set damage text
         damageText.text = damage.ToString();
-        StartCoroutine(ShowAndHideDamageText());
+        
+        // Start new coroutine
+        currentDamageTextCoroutine = StartCoroutine(ShowAndHideDamageText());
     }
-    
+        
     private IEnumerator ShowAndHideDamageText()
-    {
+        {
         if (damageText == null) yield break;
         
         // Show damage text
@@ -86,6 +99,9 @@ public class EnemyHealth : MonoBehaviour
         
         // Hide damage text
         damageText.gameObject.SetActive(false);
+        
+        // Clear coroutine reference
+        currentDamageTextCoroutine = null;
     }
 
     public virtual void TakeDamage(float damage)

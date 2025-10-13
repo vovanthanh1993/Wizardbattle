@@ -28,7 +28,7 @@ public class GameResultPopup : MonoBehaviour
 
     public void ShowPVPResult() {
         _pvpRewardPanel.gameObject.SetActive(true);
-        _background.SetActive(true);
+        _background.SetActive(false);
         var runner = NetworkRunnerHandler.Instance?.Runner;
         if (runner != null)
         {

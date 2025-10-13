@@ -18955,7 +18955,7 @@ MonoBehaviour:
   _gameEndTime: 0
   _totalGameTime: 0
   _bossSpawnPoint: {fileID: 1230297009}
-  _bossSpawnTime: 10
+  _bossSpawnTime: 120
   _bossSpawned: 0
   _bossWarningPlayed: 0
   _dragonForestPrefab: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}
@@ -23689,7 +23689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4131062105692079671, guid: 53e1939cdeda3f04caaa240bfd830e5e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.1700144
+      value: 2.402
       objectReference: {fileID: 0}
     - target: {fileID: 4131062105692079671, guid: 53e1939cdeda3f04caaa240bfd830e5e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24824,7 +24824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4131062105692079671, guid: 53e1939cdeda3f04caaa240bfd830e5e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7503309
+      value: -0.22
       objectReference: {fileID: 0}
     - target: {fileID: 4131062105692079671, guid: 53e1939cdeda3f04caaa240bfd830e5e, type: 3}
       propertyPath: m_LocalPosition.z

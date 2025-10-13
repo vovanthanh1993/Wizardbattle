@@ -119,6 +119,7 @@ public class FirebaseImageHelper : MonoBehaviour
     
     private IEnumerator LoadImageCoroutine(Image imageComponent, string imageUrl, Sprite defaultSprite)
     {
+        UIManager.Instance.ShowLoadingPanel(true);
         LogDebug($"Loading image from URL: {imageUrl}");
         
         using (UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequestTexture.GetTexture(imageUrl))
@@ -167,6 +168,7 @@ public class FirebaseImageHelper : MonoBehaviour
     
     private IEnumerator WaitForImageLoad(Image imageComponent, string imageUrl, Sprite defaultSprite)
     {
+        UIManager.Instance.ShowLoadingPanel(true);
         // Wait until image is loaded or timeout
         float timeout = 10f;
         float elapsed = 0f;
@@ -186,6 +188,7 @@ public class FirebaseImageHelper : MonoBehaviour
         {
             ShowDefaultImage(imageComponent, defaultSprite);
         }
+        UIManager.Instance.ShowLoadingPanel(false);
     }
     
     private void ShowDefaultImage(Image imageComponent, Sprite defaultSprite)

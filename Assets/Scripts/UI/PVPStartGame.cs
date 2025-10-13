@@ -7,29 +7,29 @@ public class PVPStartGame : MonoBehaviour
     [SerializeField] private TMP_Text _startGameText;
     
     [Header("Animation Settings")]
-    [SerializeField] private float showDelay = 1f;    // Hiện sau 1 giây
-    [SerializeField] private float hideDelay = 3f;    // Ẩn sau 3 giây
-    [SerializeField] private float fadeSpeed = 2f;    // Tốc độ fade
+    [SerializeField] private float showDelay = 1f;    // Show after 1 second
+    [SerializeField] private float hideDelay = 3f;    // Hide after 3 seconds
+    [SerializeField] private float fadeSpeed = 2f;    // Fade speed
 
     void Start()
     {
-        // Ẩn text ban đầu
+        // Hide text initially
         if (_startGameText != null)
         {
             _startGameText.gameObject.SetActive(false);
             _startGameText.color = new Color(_startGameText.color.r, _startGameText.color.g, _startGameText.color.b, 0f);
         }
         
-        // Bắt đầu animation sequence
+        // Start animation sequence
         StartCoroutine(StartGameAnimation());
     }
     
     private IEnumerator StartGameAnimation()
     {
-        // Đợi 1 giây trước khi hiện
+        // Wait 1 second before showing
         yield return new WaitForSeconds(showDelay);
         
-        // Hiện text
+        // Show text
         if (_startGameText != null)
         {
             _startGameText.gameObject.SetActive(true);
@@ -37,13 +37,13 @@ public class PVPStartGame : MonoBehaviour
             // Fade in
             yield return StartCoroutine(FadeIn());
             
-            // Đợi 3 giây
+            // Wait 3 seconds
             yield return new WaitForSeconds(hideDelay);
             
             // Fade out
             yield return StartCoroutine(FadeOut());
             
-            // Ẩn text
+            // Hide text
             _startGameText.gameObject.SetActive(false);
         }
     }

@@ -3472,6 +3472,7 @@ MonoBehaviour:
   _mouseSensitivityImageFill: {fileID: 6850798716157409049}
   _mouseIncreaseButton: {fileID: 1844550335876626644}
   _mouseDecreaseButton: {fileID: 7571864426211547958}
+  _qualityDropdown: {fileID: 3791867630115048986}
   _volumeStep: 0.1
   _mouseSensitivityStep: 0.1
 --- !u!114 &1058030395356102504

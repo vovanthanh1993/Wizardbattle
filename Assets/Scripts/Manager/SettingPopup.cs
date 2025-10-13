@@ -23,6 +23,9 @@ public class SettingPopup : MonoBehaviour
     [SerializeField] private Button _mouseIncreaseButton;
     [SerializeField] private Button _mouseDecreaseButton;
 
+    [Header("Quality Settings")]
+    [SerializeField] private TMP_Dropdown _qualityDropdown;
+
     [Header("Volume Settings")]
     [SerializeField] private float _volumeStep = 0.1f;
     [SerializeField] private float _mouseSensitivityStep = 0.1f;
@@ -91,6 +94,13 @@ public class SettingPopup : MonoBehaviour
             _mouseDecreaseButton.onClick.AddListener(DecreaseMouseSensitivity);
         }
 
+        // Setup quality dropdown
+        if (_qualityDropdown != null)
+        {
+            InitializeQualityDropdown();
+            _qualityDropdown.onValueChanged.AddListener(OnQualityChanged);
+        }
+
         UpdateUI();
     }
 
@@ -136,6 +146,12 @@ public class SettingPopup : MonoBehaviour
         if (_mouseSensitivityImageFill != null)
         {
             _mouseSensitivityImageFill.fillAmount = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+        }
+
+        // Update quality dropdown
+        if (_qualityDropdown != null)
+        {
+            _qualityDropdown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
         }
     }
 
@@ -232,8 +248,34 @@ public class SettingPopup : MonoBehaviour
         AudioManager.Instance.PlayButtonChangeSound();
     }
 
+    private void InitializeQualityDropdown()
+    {
+        _qualityDropdown.ClearOptions();
+        
+        // Get all quality levels from Unity
+        string[] qualityNames = QualitySettings.names;
+        _qualityDropdown.AddOptions(new System.Collections.Generic.List<string>(qualityNames));
+        
+        // Set current value
+        _qualityDropdown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
+    }
+
+    public void OnQualityChanged(int qualityIndex)
+    {
+        QualitySettings.SetQualityLevel(qualityIndex);
+        PlayerPrefs.SetInt("QualityLevel", qualityIndex);
+        PlayerPrefs.Save();
+        
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonChangeSound();
+        }
+    }
+
     public void OnCloseButton()
     {
         AudioManager.Instance.PlayButtonCloseSound();
     }
+
+    
 }

@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 676032a82e3a9c640af615fbb6a5f59f
-  m_OcclusionCullingData: {fileID: 36300000, guid: d6f5c35e003cf2940baf57bc86ca48ff, type: 2}
+  m_SceneGUID: 76bf58489d5a44249b130cb2691cfbd3
+  m_OcclusionCullingData: {fileID: 36300000, guid: 6325aa8a387bcf1409495e1af6b1d0eb, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -18955,7 +18955,7 @@ MonoBehaviour:
   _gameEndTime: 0
   _totalGameTime: 0
   _bossSpawnPoint: {fileID: 1230297009}
-  _bossSpawnTime: 120
+  _bossSpawnTime: 300
   _bossSpawned: 0
   _bossWarningPlayed: 0
   _dragonForestPrefab: {fileID: 2738259454128635612, guid: 08f6261d4a9c4a64083d2fc6cb45690c, type: 3}

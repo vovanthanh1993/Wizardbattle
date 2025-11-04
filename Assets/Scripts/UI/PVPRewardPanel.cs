@@ -5,8 +5,8 @@ public class PVPRewardPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Text _rankText;
     [SerializeField] private TMP_Text _xpText;
-    [SerializeField] private TMP_Text _goldText;
     [SerializeField] private TMP_Text _rubyText;
+    [SerializeField] private TMP_Text _goldText;
 
     public void SetData(int rank, int xpReward, int goldReward, int rubyReward)
     {

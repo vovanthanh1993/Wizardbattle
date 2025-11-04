@@ -185,7 +185,7 @@ public class GamePlayPanel : MonoBehaviour
         int level = CalculateLevelFromXP(xp);
         IsEnableSkill1 = level >= startLevel || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
         IsEnableSkill2 = level >= startLevel + 3 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
-        IsEnableSkill3 = level >= startLevel + 3 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
+        IsEnableSkill3 = level >= startLevel + 6 || NetworkRunnerHandler.Instance.GameType == GameType.PVP;
         _skillUI1.SetActive(!IsEnableSkill1);
         _skillUI2.SetActive(!IsEnableSkill2);
         _skillUI3.SetActive(!IsEnableSkill3);
